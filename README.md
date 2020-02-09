@@ -1,3 +1,3 @@
-### Schem bootstrapper
+### Scheme bootstrapper
 
 #### Status: in progress
