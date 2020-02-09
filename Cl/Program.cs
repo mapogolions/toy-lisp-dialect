@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cl
 {
@@ -7,7 +8,7 @@ namespace Cl
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Scheme bootstrap");
         }
     }
 
@@ -19,7 +20,7 @@ namespace Cl
 
         private EmptyEnv() { }
 
-        public static IEnv Self
+        public static IEnv Given
         {
             get
             {
@@ -31,21 +32,52 @@ namespace Cl
 
     public class Env : IEnv
     {
-        private readonly IEnv _scope;
-        private readonly IDictionary<IClObj, IClObj> _table;
+        private readonly IEnv _frame;
+        private readonly IDictionary<IClObj, IClObj> _bindings;
 
-        public Env(IDictionary<IClObj, IClObj> table, IEnv scope)
+        public Env(IDictionary<IClObj, IClObj> bindings, IEnv frame)
         {
-            _table = table;
-            _scope = scope;
+            _bindings = bindings;
+            _frame = frame;
         }
 
-        public Env(IDictionary<IClObj, IClObj> table) : this(table, null) { }
+        public IEnv Setup() => new Env(new Dictionary<IClObj, IClObj>(), EmptyEnv.Given);
+
+        // TODO: check case when the key already taken
+        public void Bind(IClObj key, IClObj value) => _bindings.Add(key, value);
     }
 
     public interface IClObj { }
 
-    public class ClCarCdr
+    public sealed class Nil : IClObj
+    {
+        private static Nil _instance;
+
+        private Nil () { }
+
+        public Nil Given
+        {
+            get
+            {
+                if (_instance is null) _instance = new Nil();
+                return _instance;
+            }
+        }
+    }
+
+    public class Proc<A, B> : IClObj
+    {
+        private readonly Func<A, B> _proc;
+
+        public Proc(Func<A, B> proc)
+        {
+            _proc = proc;
+        }
+
+        public B Apply(A domain) => _proc.Invoke(domain);
+    }
+
+    public class ClPair
     {
         public IClObj Car { get; set; }
         public IClObj Cdr { get; set; }
@@ -76,5 +108,42 @@ namespace Cl
     public class ClBool : ClAtom<bool>
     {
         public ClBool(bool flag) : base(flag) { }
+    }
+
+    public class BuiltIn
+    {
+        private readonly IDictionary<string, ClSymbol> _symbolsTable;
+
+        public BuiltIn(IDictionary<string, ClSymbol> symbolsTable)
+        {
+            _symbolsTable = symbolsTable;
+        }
+
+        public BuiltIn() : this(new Dictionary<string, ClSymbol>()) { }
+
+        public ClSymbol MakeSymbol(string name)
+        {
+            var foundSymbol = _symbolsTable.FirstOrDefault(it => it.Key.Equals(name)).Value;
+            if (foundSymbol != null) return foundSymbol;
+            var symbol = new ClSymbol(name);
+            _symbolsTable.Add(name, symbol);
+            return symbol;
+        }
+
+        public ClPair MakePair(IClObj car, IClObj cdr) => new ClPair { Car = car, Cdr = cdr };
+
+        public IClObj Car(IClObj obj) =>
+            obj switch
+            {
+                ClPair pair => pair.Car,
+                _ => throw new ArgumentException(nameof(obj), $"Argument is not a {nameof(ClPair)}")
+            };
+
+        public IClObj Cdr(IClObj obj) =>
+            obj switch
+            {
+                ClPair pair => pair.Cdr,
+                _ => throw new ArgumentException(nameof(obj), $"Argument is not a {nameof(ClPair)}")
+            };
     }
 }
