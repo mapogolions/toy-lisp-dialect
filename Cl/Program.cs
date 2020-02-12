@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Cl
+﻿namespace Cl
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Entry point");
+            new Repl().Start(sign: "#");
         }
     }
 }
