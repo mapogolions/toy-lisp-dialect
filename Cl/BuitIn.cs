@@ -16,6 +16,9 @@ namespace Cl
 
         public BuiltIn() : this(new Dictionary<string, ClSymbol>()) { }
 
+        public ClBool TheTrue = new ClBool(true);
+        public ClBool TheFalse = new ClBool(false);
+
         public ClSymbol MakeSymbol(string name)
         {
             var foundSymbol = _symbolsTable.FirstOrDefault(it => it.Key.Equals(name)).Value;
