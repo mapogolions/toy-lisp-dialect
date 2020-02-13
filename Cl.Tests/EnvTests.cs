@@ -29,7 +29,37 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Lookup_ByKey_ThrowExceptionWhenChainOfFramesDoesNotContainKey()
+        public void Assign_ValueByKey_ThrowException_WhenChainOfFrameDoesNotContainKey()
+        {
+            var env = new Env(new Env());
+
+            Assert.That(() => env.Assign(_foo, _theFalse), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void Assign_ValueByKey_ReturnTrue_WhenAtLeastOneFrameHasBinding()
+        {
+            var outer = new Env();
+            var inner = new Env(outer);
+            outer.Bind(_bar, _theFalse);
+
+            Assert.That(inner.Assign(_bar, _theTrue), Is.True);
+            Assert.That(inner.Lookup(_bar), Is.EqualTo(_theTrue));
+            Assert.That(outer.Lookup(_bar), Is.EqualTo(_theTrue));
+        }
+
+        [Test]
+        public void Assign_ValueByKey_ReturnTrue_WhenInnerFrameHasBinding()
+        {
+            var env = new Env();
+            env.Bind(_foo, _theFalse);
+
+            Assert.That(env.Assign(_foo, _theTrue), Is.True);
+            Assert.That(env.Lookup(_foo), Is.EqualTo(_theTrue));
+        }
+
+        [Test]
+        public void Lookup_ByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()
         {
             var env = new Env(new Env(new Env()));
 
