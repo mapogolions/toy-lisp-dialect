@@ -14,15 +14,12 @@ namespace Cl
     public class Env : IEnv
     {
         private readonly IEnv _parent;
-        private readonly IDictionary<IClObj, IClObj> _bindings;
+        private readonly IDictionary<IClObj, IClObj> _bindings = new Dictionary<IClObj, IClObj>();
 
-        public Env(IDictionary<IClObj, IClObj> bindings, IEnv parent)
+        public Env(IEnv parent = null)
         {
-            _bindings = bindings;
             _parent = parent;
         }
-
-        public Env() : this(new Dictionary<IClObj, IClObj>(), null) { }
 
         public bool Bind(IClObj symbol, IClObj obj)
         {
@@ -34,7 +31,10 @@ namespace Cl
         {
             if (_bindings.TryGetValue(symbol, out var obj))
                 return obj;
-            throw new InvalidOperationException("Unbound variable");
+            var result = _parent?.Lookup(symbol);
+            if (result is null)
+                throw new InvalidOperationException("Unbound variable");
+            return result;
         }
 
         public bool Assign(IClObj symbol, IClObj obj)
