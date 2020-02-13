@@ -15,7 +15,7 @@ namespace Cl
             _symbolsTable = symbolsTable;
         }
 
-        public Repl() : this(EmptyEnv.Given, new Dictionary<string, IClObj>()) { }
+        public Repl() : this(new Env(), new Dictionary<string, IClObj>()) { }
 
         public void Start(string sign = ">")
         {
