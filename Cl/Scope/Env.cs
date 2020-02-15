@@ -2,15 +2,8 @@ using System;
 using System.Collections.Generic;
 using Cl.Types;
 
-namespace Cl
+namespace Cl.Scope
 {
-    public interface IEnv
-    {
-        bool Bind(IClObj symbol, IClObj obj);
-        IClObj Lookup(IClObj symbol);
-        bool Assign(IClObj symbol, IClObj obj);
-    }
-
     public class Env : IEnv
     {
         private readonly IEnv _parent;

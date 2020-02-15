@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cl.Scope;
 using Cl.Types;
 
 namespace Cl
