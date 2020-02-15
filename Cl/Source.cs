@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -17,7 +16,6 @@ namespace Cl
 
         public Source(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source)))
         {
-
         }
 
         public void Dispose()
@@ -27,17 +25,21 @@ namespace Cl
 
         public int Read()
         {
-            if (_buffer.TryPop(out var code)) return (char) code;
+            if (_buffer.TryPop(out var charCode)) return (char) charCode;
             return _stream.ReadByte();
         }
 
+        public void Buffer(int charCode) => _buffer.Push(charCode);
+
         public int Peek()
         {
-            var code = Read();
-            if (code == -1) return -1;
-            _buffer.Push(code);
-            return code;
+            var charCode = Read();
+            if (charCode == -1) return -1;
+            _buffer.Push(charCode);
+            return charCode;
         }
+
+        public bool Eof() => Peek() == -1;
 
         public override string ToString()
         {
