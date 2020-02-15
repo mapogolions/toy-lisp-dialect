@@ -21,7 +21,7 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Assign_ValueByKey_ThrowException_WhenChainOfFrameDoesNotContainKey()
+        public void Assign_ValueByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()
         {
             var env = new Env(new Env());
 
