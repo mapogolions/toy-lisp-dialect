@@ -3,12 +3,12 @@ using NUnit.Framework;
 namespace Cl.Tests
 {
     [TestFixture]
-    public class SourceCodeTests
+    public class SourceTests
     {
         [Test]
         public void Read_Return_MinusOne_WhenSourceCodeIsEmpty()
         {
-            using var source = new SourceCode(string.Empty);
+            using var source = new Source(string.Empty);
 
             Assert.That(source.Read(), Is.EqualTo(-1));
         }
@@ -16,7 +16,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnAllCharsStepByStep()
         {
-            using var source = new SourceCode("foo");
+            using var source = new Source("foo");
 
             Assert.That("foo", Is.EqualTo(source.ToString()));
         }
@@ -24,7 +24,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnFirstCharFromString()
         {
-            using var source = new SourceCode("foo");
+            using var source = new Source("foo");
 
             Assert.That((char) source.Read(), Is.EqualTo('f'));
         }

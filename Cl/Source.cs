@@ -1,19 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Cl
 {
-    public class SourceCode : ISourceCode, IDisposable
+    public class Source : ISource
     {
+        private readonly Stack<int> _buffer = new Stack<int>();
         private readonly Stream _stream;
 
-        public SourceCode(Stream stream)
+        public Source(Stream stream)
         {
             _stream = stream;
         }
 
-        public SourceCode(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source)))
+        public Source(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source)))
         {
 
         }
@@ -25,7 +27,16 @@ namespace Cl
 
         public int Read()
         {
+            if (_buffer.TryPop(out var code)) return (char) code;
             return _stream.ReadByte();
+        }
+
+        public int Peek()
+        {
+            var code = Read();
+            if (code == -1) return -1;
+            _buffer.Push(code);
+            return code;
         }
 
         public override string ToString()
