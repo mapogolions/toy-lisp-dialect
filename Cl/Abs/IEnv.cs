@@ -1,6 +1,6 @@
 using Cl.Types;
 
-namespace Cl.Scope
+namespace Cl.Abs
 {
     public interface IEnv
     {

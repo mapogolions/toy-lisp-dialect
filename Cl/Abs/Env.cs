@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cl.Types;
 
-namespace Cl.Scope
+namespace Cl.Abs
 {
     public class Env : IEnv
     {

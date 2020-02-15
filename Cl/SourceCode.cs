@@ -27,5 +27,14 @@ namespace Cl
         {
             return _stream.ReadByte();
         }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            var ch = -1;
+            while ((ch = Read()) != -1)
+                builder.Append((char) ch);
+            return builder.ToString();
+        }
     }
 }

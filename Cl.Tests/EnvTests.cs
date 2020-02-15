@@ -1,5 +1,5 @@
 using Cl.Types;
-using Cl.Scope;
+using Cl.Abs;
 using NUnit.Framework;
 
 namespace Cl.Tests
