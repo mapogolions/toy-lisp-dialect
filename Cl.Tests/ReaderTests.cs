@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Cl.Tests
@@ -5,10 +6,21 @@ namespace Cl.Tests
     [TestFixture]
     public class ReaderTests
     {
-        [Test]
-        public void SkipEol_IgnoreWinEol()
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_ReturnRestOfTheSource(string eol)
         {
-            var source = new Source("\r\n");
+            var source = new Source($"{eol}foo");
+            using var reader = new Reader(source);
+
+            reader.SkipEol();
+
+            Assert.That(source.ToString(), Is.EqualTo("foo"));
+        }
+
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_IsCrossPlatform(string eol)
+        {
+            var source = new Source(eol);
             using var reader = new Reader(source);
 
             reader.SkipEol();
@@ -16,37 +28,23 @@ namespace Cl.Tests
             Assert.That(source.Eof(), Is.True);
         }
 
-        [Test]
-        public void SkipEol_IgnoreOsxEol()
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_DoesNotDrainSource(string eol)
         {
-            var source = new Source("\n\r");
-            using var reader = new Reader(source);
-
-            reader.SkipEol();
-
-            Assert.That(source.Eof(), Is.True);
-        }
-
-        [Test]
-        public void SkipEol_IgnoreUnixEol()
-        {
-            var source = new Source("\n");
-            using var reader = new Reader(source);
-
-            reader.SkipEol();
-
-            Assert.That(source.Eof(), Is.True);
-        }
-
-        [Test]
-        public void Eof_ReturnFalse_WhenSourceContainAtLeastOneItem()
-        {
-            var source = new Source("foo");
+            var source = new Source($"foo{eol}");
             using var reader = new Reader(source);
 
             reader.SkipEol();
 
             Assert.That(source.Eof(), Is.False);
+            Assert.That(source.ToString(), Is.EqualTo($"foo{eol}"));
+        }
+
+        static IEnumerable<string> EndOfLineCases()
+        {
+            yield return "\r\n";
+            yield return "\n\r";
+            yield return "\n";
         }
     }
 }
