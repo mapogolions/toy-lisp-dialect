@@ -7,33 +7,31 @@ namespace Cl.Tests
     // [TestFixture]
     public class FilteredSourceTests
     {
-        // [Test]
-        // public void SkipLine_DrainSource()
-        // {
-        //     var source = new FilteredSource("fi\rst\nsecond\r\nthird\n\r");
-        //     using var reader = new Reader(source);
+        [Test]
+        public void SkipLine_DrainSource()
+        {
+            var source = new FilteredSource("fi\rst\nsecond\r\nthird\n\r");
 
-        //     source.SkipLine();
-        //     Assert.That(source.ToString(), Is.EqualTo("second\r\nthird\n\r"));
-        // }
+            Assert.That(source.SkipLine(), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo("second\r\nthird\n\r"));
+        }
 
-        // [TestCaseSource(nameof(EndOfLineCases))]
-        // public void SkipLine_IgnoreEntireStringUntilEol(string eol)
-        // {
-        //     var source = new FilteredSource($"foo{eol}bar");
-        //     using var reader = new Reader(source);
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipLine_IgnoreEntireStringUntilEol(string eol)
+        {
+            var source = new FilteredSource($"foo{eol}bar");
 
-        //     Assert.That(reader.SkipLine(), Is.True);
-        //     Assert.That(source.ToString(), Is.EqualTo("bar"));
-        // }
+            Assert.That(source.SkipLine(), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo("bar"));
+        }
 
-        // [Test]
-        // public void SkipLine_ReturnTrue_WhenSourceIsEmpty()
-        // {
-        //     using var reader = new Reader(new FilteredSource(string.Empty));
+        [Test]
+        public void SkipLine_ReturnFalse_WhenSourceIsEmpty()
+        {
+            using var source = new FilteredSource(string.Empty);
 
-        //     Assert.That(reader.SkipLine(), Is.True);
-        // }
+            Assert.That(source.SkipLine(), Is.False);
+        }
 
 
         // SkipEol
