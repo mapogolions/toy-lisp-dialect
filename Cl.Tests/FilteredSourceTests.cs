@@ -36,60 +36,56 @@ namespace Cl.Tests
         // }
 
 
-        // // SkipEol
-        // [Test]
-        // public void SkipEol_ReturnFalse_WhenSourceContainOnlyCarriageReturn()
-        // {
-        //     var source = new FilteredSource("foo\r");
-        //     using var reader = new Reader(source);
+        // SkipEol
+        [Test]
+        public void SkipEol_ReturnFalse_WhenSourceContainOnlyCarriageReturn()
+        {
+            var source = new FilteredSource("foo\r");
 
-        //     Assert.That(reader.SkipEol(), Is.False);
-        //     Assert.That(source.ToString(), Is.EqualTo("foo\r"));
-        // }
+            Assert.That(source.SkipEol(), Is.False);
+            Assert.That(source.ToString(), Is.EqualTo("foo\r"));
+        }
 
-        // [Test]
-        // public void SkipEol_ReturnTrue_WhenSourceIsEmpty()
-        // {
-        //     using var reader = new Reader(new FilteredSource(string.Empty));
+        [Test]
+        public void SkipEol_ReturnFalse_WhenSourceIsEmpty()
+        {
+            using var source = new FilteredSource(string.Empty);
 
-        //     Assert.That(reader.SkipEol(), Is.True);
-        // }
+            Assert.That(source.SkipEol(), Is.False);
+        }
 
-        // [TestCaseSource(nameof(EndOfLineCases))]
-        // public void SkipEol_ReturnRestOfTheSource(string eol)
-        // {
-        //     var source = new FilteredSource($"{eol}foo");
-        //     using var reader = new Reader(source);
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_ReturnRestOfTheSource(string eol)
+        {
+            using var source = new FilteredSource($"{eol}foo");
 
-        //     Assert.That(reader.SkipEol(), Is.True);
-        //     Assert.That(source.ToString(), Is.EqualTo("foo"));
-        // }
+            Assert.That(source.SkipEol(), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo("foo"));
+        }
 
-        // [TestCaseSource(nameof(EndOfLineCases))]
-        // public void SkipEol_IsCrossPlatform(string eol)
-        // {
-        //     var source = new FilteredSource(eol);
-        //     using var reader = new Reader(source);
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_IsCrossPlatform(string eol)
+        {
+            using var source = new FilteredSource(eol);
 
-        //     Assert.That(reader.SkipEol(), Is.True);
-        //     Assert.That(source.Eof(), Is.True);
-        // }
+            Assert.That(source.SkipEol(), Is.True);
+            Assert.That(source.Eof(), Is.True);
+        }
 
-        // [TestCaseSource(nameof(EndOfLineCases))]
-        // public void SkipEol_ReturnFalse_WhenSourceDoesNotContainEol(string eol)
-        // {
-        //     var source = new FilteredSource($"foo{eol}");
-        //     using var reader = new Reader(source);
+        [TestCaseSource(nameof(EndOfLineCases))]
+        public void SkipEol_ReturnFalse_WhenSourceDoesNotContainEol(string eol)
+        {
+            using var source = new FilteredSource($"foo{eol}");
 
-        //     Assert.That(reader.SkipEol(), Is.False);
-        //     Assert.That(source.ToString(), Is.EqualTo($"foo{eol}"));
-        // }
+            Assert.That(source.SkipEol(), Is.False);
+            Assert.That(source.ToString(), Is.EqualTo($"foo{eol}"));
+        }
 
-        // static IEnumerable<string> EndOfLineCases()
-        // {
-        //     yield return "\r\n";
-        //     yield return "\n\r";
-        //     yield return "\n";
-        // }
+        static IEnumerable<string> EndOfLineCases()
+        {
+            yield return "\r\n";
+            yield return "\n\r";
+            yield return "\n";
+        }
     }
 }

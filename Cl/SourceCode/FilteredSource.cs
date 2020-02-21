@@ -13,7 +13,7 @@ namespace Cl.SourceCode
 
         public override bool SkipEol()
         {
-            if (_source.Eof()) return true;
+            if (_source.Eof()) return false;
             var code = _source.Read();
             if (OsxEol(code) || WinEol(code) || UnixEol(code))
                 return true;
