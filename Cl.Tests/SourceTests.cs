@@ -1,3 +1,4 @@
+using Cl.SourceCode;
 using NUnit.Framework;
 
 namespace Cl.Tests

@@ -1,6 +1,6 @@
 using System;
 
-namespace Cl
+namespace Cl.SourceCode
 {
     public interface ISource : IDisposable
     {

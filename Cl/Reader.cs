@@ -1,91 +1,45 @@
 using System;
+using Cl.SourceCode;
+using Cl.Types;
 
 namespace Cl
 {
     public class Reader : IDisposable
     {
-        private readonly ISource _source;
+        private readonly IFilteredSource _source;
 
-        public Reader(ISource source)
+        public Reader(IFilteredSource source)
         {
             _source = source;
         }
 
-        public bool IsDelimiter(char ch) =>
-            char.IsWhiteSpace(ch) || ch == '(' || ch == ')' || ch == '"' || ch == ';';
-
-        public char PeekDelimiter()
+        public IClObj Read()
         {
-            EnsureSourceIsNotDrained();
-            var ch = (char) _source.Peek();
-            if (!IsDelimiter(ch))
-                throw new InvalidOperationException("Character not followed by delimiter");
-            return ch;
+            // _source.SkipWhitespaces();
+            if (_source.Eof())
+                throw new InvalidOperationException("Read illegal state");
+            var code = _source.Peek();
+            var ch = (char) code;
+            if (ch == '#') return ReadBoolOrChar();
+            if (ch == '(') return ReadPair();
+            if (ch == '\\') return null;
+            if (char.IsDigit(ch)) return ReadFixnum();
+            return null;
         }
 
-        public bool Skip(string source)
+        public IClObj ReadFixnum()
         {
-            foreach (var ch in source)
-            {
-                EnsureSourceIsNotDrained();
-                var code = _source.Read();
-                if ((char) code != ch)
-                    throw new InvalidOperationException($"Unexpected character {ch}");
-            }
-            return true;
+            return null;
         }
 
-        public void SkipWhiteSpaces()
+        public IClObj ReadPair()
         {
-            if (_source.Eof()) return;
-            var ch = (char) _source.Read();
-            if (ch == ';')
-            {
-                SkipLine();
-                SkipWhiteSpaces();
-                return;
-            }
-            if (char.IsWhiteSpace(ch))
-            {
-                SkipWhiteSpaces();
-                return;
-            }
-            _source.Buffer(ch);
+            return null;
         }
 
-        public bool SkipLine()
+        public IClObj ReadBoolOrChar()
         {
-            if (_source.Eof()) return false;
-            var code = _source.Read();
-            if ((char) code != '\r' || (char) code != '\n')
-                return SkipLine();
-            _source.Buffer(code);
-            if (SkipEol()) return true;
-            return SkipLine();
-        }
-
-        public bool SkipEol()
-        {
-            if (_source.Eof()) return false;
-            var code = _source.Read();
-            if (OsxEol(code) || WinEol(code) || UnixEol(code))
-                return true;
-            _source.Buffer(code);
-            return false;
-        }
-
-        private bool UnixEol(int code) => (char) code == '\n';
-        private bool OsxEol(int code) => Eol(code, '\n', '\r');
-        private bool WinEol(int code) => Eol(code, '\r', '\n');
-
-        private bool Eol(int code, char first, char second)
-        {
-            if ((char) code != first) return false;
-            var next = _source.Read();
-            if (next != -1 && (char) next == second) return true;
-            if (next != -1)
-                _source.Buffer(next);
-            return false;
+            return null;
         }
 
         private void EnsureSourceIsNotDrained()
