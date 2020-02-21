@@ -9,6 +9,7 @@ namespace Cl.SourceCode
             _source = source;
         }
 
+        public override string ToString() => _source.ToString();
         public void Buffer(int code) => _source.Buffer(code);
         public void Dispose() => _source.Dispose();
         public bool Eof() => _source.Eof();
