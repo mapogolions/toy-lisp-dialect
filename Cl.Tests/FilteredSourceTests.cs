@@ -12,7 +12,7 @@ namespace Cl.Tests
         {
             using var source = new FilteredSource("foo");
 
-            Assert.That(() => source.SkipMatched("bar"), Throws.InvalidOperationException);
+            Assert.That(source.SkipMatched("bar"), Is.False);
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
@@ -39,7 +39,7 @@ namespace Cl.Tests
         {
             using var source = new FilteredSource(string.Empty);
 
-            Assert.That(() => source.SkipMatched("foo"), Throws.InvalidOperationException);
+            Assert.That(source.SkipMatched("foo"), Is.False);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Cl.Tests
             Assert.That(source.ToString(), Is.EqualTo("second\r\nthird\n\r"));
         }
 
-        [TestCaseSource(nameof(EndOfLines))]
+        [TestCaseSource(nameof(EndOfLineTestCases))]
         public void SkipLine_SkipAllSymbols_UntilEolAppears(string eol)
         {
             using var source = new FilteredSource($"foo{eol}bar");
@@ -137,7 +137,7 @@ namespace Cl.Tests
             Assert.That(source.SkipEol(), Is.False);
         }
 
-        [TestCaseSource(nameof(EndOfLines))]
+        [TestCaseSource(nameof(EndOfLineTestCases))]
         public void SkipEol_ReturnRestOfTheSource(string eol)
         {
             using var source = new FilteredSource($"{eol}foo");
@@ -146,7 +146,7 @@ namespace Cl.Tests
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
-        [TestCaseSource(nameof(EndOfLines))]
+        [TestCaseSource(nameof(EndOfLineTestCases))]
         public void SkipEol_IsCrossPlatform(string eol)
         {
             using var source = new FilteredSource(eol);
@@ -155,7 +155,7 @@ namespace Cl.Tests
             Assert.That(source.Eof(), Is.True);
         }
 
-        [TestCaseSource(nameof(EndOfLines))]
+        [TestCaseSource(nameof(EndOfLineTestCases))]
         public void SkipEol_ReturnFalse_WhenSourceDoesNotContainEol(string eol)
         {
             using var source = new FilteredSource($"foo{eol}");
@@ -164,7 +164,7 @@ namespace Cl.Tests
             Assert.That(source.ToString(), Is.EqualTo($"foo{eol}"));
         }
 
-        static IEnumerable<string> EndOfLines()
+        static IEnumerable<string> EndOfLineTestCases()
         {
             yield return "\r\n";
             yield return "\n\r";

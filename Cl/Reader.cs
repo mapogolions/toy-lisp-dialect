@@ -15,16 +15,14 @@ namespace Cl
 
         public IClObj Read()
         {
-            // _source.SkipWhitespaces();
+            _source.SkipWhitespaces();
+            if (_source.SkipMatched(";"))
+                _source.SkipLine();
             if (_source.Eof())
                 throw new InvalidOperationException("Read illegal state");
             var code = _source.Peek();
-            var ch = (char) code;
-            if (ch == '#') return ReadBoolOrChar();
-            if (ch == '(') return ReadPair();
-            if (ch == '\\') return null;
-            if (char.IsDigit(ch)) return ReadFixnum();
-            return null;
+
+            throw new InvalidOperationException("Read illegal state");
         }
 
         public IClObj ReadFixnum()
