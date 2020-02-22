@@ -1,10 +1,10 @@
 namespace Cl.SourceCode
 {
-    public abstract class PassThroughFilteredSource : IFilteredSource
+    public abstract class PassThroughSource : IFilteredSource
     {
         protected readonly ISource _source;
 
-        public PassThroughFilteredSource(ISource source)
+        public PassThroughSource(ISource source)
         {
             _source = source;
         }

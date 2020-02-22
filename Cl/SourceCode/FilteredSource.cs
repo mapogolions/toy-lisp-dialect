@@ -1,7 +1,7 @@
 using System;
 namespace Cl.SourceCode
 {
-    public class FilteredSource : PassThroughFilteredSource
+    public class FilteredSource : PassThroughSource
     {
         public FilteredSource(ISource source) : base(source)
         {
