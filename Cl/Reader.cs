@@ -19,8 +19,8 @@ namespace Cl
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";"))
                 Ignore(_source.SkipLine());
-            if (_source.Eof())
-                throw new InvalidOperationException("Read illegal state");
+
+            if (TryReadBool(out var atom)) return atom;
             throw new InvalidOperationException("Read illegal state");
         }
 
@@ -34,9 +34,22 @@ namespace Cl
             return null;
         }
 
-        public IClObj ReadBoolOrChar()
+        public bool TryReadBool(out ClBool obj)
         {
-            return null;
+            obj = null;
+            if (_source.Eof()) return false;
+            if (!_source.SkipMatched("#")) return false;
+            if (_source.SkipMatched("t"))
+            {
+                obj = new ClBool(true);
+                return true;
+            }
+            if (_source.SkipMatched("f"))
+            {
+                obj = new ClBool(false);
+                return true;
+            }
+            throw new InvalidOperationException("Unknown boolean literal");
         }
 
         public void Dispose()
