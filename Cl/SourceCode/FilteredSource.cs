@@ -36,8 +36,9 @@ namespace Cl.SourceCode
             bool loop(bool recur = false)
             {
                 if (_source.Eof()) return recur;
-                var ch = (char) _source.Read();
-                if (char.IsWhiteSpace(ch)) return loop(true);
+                var code = _source.Read();
+                if (char.IsWhiteSpace((char) code)) return loop(true);
+                _source.Buffer(code);
                 return recur;
             }
             return loop();

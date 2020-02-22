@@ -8,6 +8,33 @@ namespace Cl.Tests
     public class FilteredSourceTests
     {
         [Test]
+        public void SkipWhiteSpaces_SkipOnlyWhitespaces()
+        {
+            using var source = new FilteredSource("  \tsome ");
+
+            Assert.That(source.SkipWhitespaces(), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo("some "));
+        }
+
+        [Test]
+        public void SkipWhitespaces_SkipAllSymbols_WhenSourceContainsOnlyWhitspaces()
+        {
+            using var source = new FilteredSource("\t\n \f");
+
+            Assert.That(source.SkipWhitespaces(), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void SkipWhitespaces_ReturnFalse_WhenSourceStartsWithNonSpace()
+        {
+            using var source = new FilteredSource("b r");
+
+            Assert.That(source.SkipWhitespaces(), Is.False);
+            Assert.That(source.ToString(), Is.EqualTo("b r"));
+        }
+
+        [Test]
         public void SkipWhitespaces_ReturnFalse_WhenSourceIsEmpty()
         {
             using var source = new FilteredSource(string.Empty);
