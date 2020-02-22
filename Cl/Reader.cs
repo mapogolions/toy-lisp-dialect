@@ -1,7 +1,7 @@
 using System;
 using Cl.SourceCode;
 using Cl.Types;
-using static Cl.Extensions.ObjectExtensions;
+using static Cl.Extensions.FpUniverse;
 
 namespace Cl
 {

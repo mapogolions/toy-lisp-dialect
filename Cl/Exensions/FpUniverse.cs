@@ -1,6 +1,6 @@
 namespace Cl.Extensions
 {
-    public static class ObjectExtensions
+    public static class FpUniverse
     {
         public static void Ignore<T>(T _)
         {
