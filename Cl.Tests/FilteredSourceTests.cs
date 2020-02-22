@@ -8,6 +8,15 @@ namespace Cl.Tests
     public class FilteredSourceTests
     {
         [Test]
+        public void SkipMatched_ReturnOriginalSource_AfterPartiallyMatch()
+        {
+            using var source = new FilteredSource("partial");
+
+            Assert.That(source.SkipMatched("parts"), Is.False);
+            Assert.That(source.ToString(), Is.EqualTo("partial"));
+        }
+
+        [Test]
         public void SkipMatched_ThrowException_WhenSourceDoesNotMatchToPattern()
         {
             using var source = new FilteredSource("foo");
