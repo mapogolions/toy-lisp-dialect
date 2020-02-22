@@ -1,6 +1,7 @@
 using System;
 using Cl.SourceCode;
 using Cl.Types;
+using static Cl.Extensions.ObjectExtensions;
 
 namespace Cl
 {
@@ -15,13 +16,12 @@ namespace Cl
 
         public IClObj Read()
         {
-            _source.SkipWhitespaces();
+            Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";"))
-                _source.SkipLine();
+                Ignore(_source.SkipLine());
             if (_source.Eof())
                 throw new InvalidOperationException("Read illegal state");
             var code = _source.Peek();
-
             throw new InvalidOperationException("Read illegal state");
         }
 
