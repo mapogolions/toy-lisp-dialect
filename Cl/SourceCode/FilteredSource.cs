@@ -26,9 +26,7 @@ namespace Cl.SourceCode
             bool loop(bool recur = false)
             {
                 if (SkipEol()) return true;
-                if (_source.Eof()) return recur;
-                _source.Read();
-                return loop(true);
+                return _source.Read() == -1 ? recur : loop(true);
             }
             return loop();
         }
