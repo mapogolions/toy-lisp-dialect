@@ -40,12 +40,6 @@ namespace Cl
             return null;
         }
 
-        private void EnsureSourceIsNotDrained()
-        {
-            if (_source.Eof())
-                throw new InvalidOperationException("Source is drained");
-        }
-
         public void Dispose()
         {
             _source.Dispose();

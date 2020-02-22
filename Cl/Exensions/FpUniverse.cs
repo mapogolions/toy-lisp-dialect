@@ -4,7 +4,7 @@ namespace Cl.Extensions
     {
         public static void Ignore<T>(T _)
         {
-            // ignore
+            // pass
         }
     }
 }
