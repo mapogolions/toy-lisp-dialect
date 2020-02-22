@@ -21,7 +21,6 @@ namespace Cl
                 Ignore(_source.SkipLine());
             if (_source.Eof())
                 throw new InvalidOperationException("Read illegal state");
-            var code = _source.Peek();
             throw new InvalidOperationException("Read illegal state");
         }
 
