@@ -8,6 +8,49 @@ namespace Cl.Tests
     public class FilteredSourceTests
     {
         [Test]
+        public void SkipMatched_ThrowException_WhenSourceDoesNotMatchToPattern()
+        {
+            using var source = new FilteredSource("foo");
+
+            Assert.That(() => source.SkipMatched("bar"), Throws.InvalidOperationException);
+            Assert.That(source.ToString(), Is.EqualTo("foo"));
+        }
+
+        [Test]
+        public void SkipMatched_ReturnTrueWhenSourceStartsWithPattern()
+        {
+            using var source = new FilteredSource("foobar");
+
+            Assert.That(source.SkipMatched("foo"), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo("bar"));
+        }
+
+        [Test]
+        public void SkipMatched_ReturnTrueWhenSourceEqualToPattern()
+        {
+            using var source = new FilteredSource("foo");
+
+            Assert.That(source.SkipMatched("foo"), Is.True);
+            Assert.That(source.ToString(), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void SkipMatched_ThrowExceptionWhenSourceIsEmpty()
+        {
+            using var source = new FilteredSource(string.Empty);
+
+            Assert.That(() => source.SkipMatched("foo"), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void SkipMatched_ReturnFalseWhenSourceAndPatternAreEmpty()
+        {
+            using var source = new FilteredSource(string.Empty);
+
+            Assert.That(source.SkipMatched(string.Empty), Is.True);
+        }
+
+        [Test]
         public void SkipWhiteSpaces_SkipOnlyWhitespaces()
         {
             using var source = new FilteredSource("  \tsome ");

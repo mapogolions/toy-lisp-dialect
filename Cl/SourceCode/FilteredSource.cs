@@ -48,8 +48,14 @@ namespace Cl.SourceCode
         {
             foreach (var ch in pattern)
             {
-                if (_source.Eof() || ch != (char) _source.Read())
+                if (_source.Eof())
                     throw new InvalidOperationException($"Unexpected character {ch}");
+                var code = _source.Read();
+                if (ch != (char) code)
+                {
+                    _source.Buffer(code);
+                    throw new InvalidOperationException($"Unexpected character {ch}");
+                }
             }
             return true;
         }
