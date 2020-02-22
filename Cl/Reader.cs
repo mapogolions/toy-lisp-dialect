@@ -1,3 +1,4 @@
+using System.Text;
 using System;
 using Cl.Input;
 using Cl.Types;
@@ -20,8 +21,25 @@ namespace Cl
             if (_source.SkipMatched(";"))
                 Ignore(_source.SkipLine());
 
-            if (TryReadBool(out var atom)) return atom;
+            if (TryReadBool(out var boolAtom)) return boolAtom;
+            if (TryReadString(out var strAtom)) return strAtom;
             throw new InvalidOperationException("Read illegal state");
+        }
+
+        public bool TryReadString(out ClString atom)
+        {
+            atom = null;
+            if (!_source.SkipMatched("\"")) return false;
+            string loop(string acc)
+            {
+                if (_source.Eof())
+                    throw new InvalidOperationException("Unknown string literal");
+                var ch = (char) _source.Read();
+                if (ch == '"') return acc;
+                return loop($"{acc}{ch}");
+            }
+            atom = new ClString(loop(string.Empty));
+            return true;
         }
 
         public IClObj ReadFixnum()
@@ -34,19 +52,18 @@ namespace Cl
             return null;
         }
 
-        public bool TryReadBool(out ClBool obj)
+        public bool TryReadBool(out ClBool atom)
         {
-            obj = null;
-            if (_source.Eof()) return false;
+            atom = null;
             if (!_source.SkipMatched("#")) return false;
             if (_source.SkipMatched("t"))
             {
-                obj = new ClBool(true);
+                atom = new ClBool(true);
                 return true;
             }
             if (_source.SkipMatched("f"))
             {
-                obj = new ClBool(false);
+                atom = new ClBool(false);
                 return true;
             }
             throw new InvalidOperationException("Unknown boolean literal");

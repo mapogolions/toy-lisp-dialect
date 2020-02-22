@@ -9,6 +9,45 @@ namespace Cl.Tests
     public class ReaderTests
     {
         [Test]
+        public void TryReadString_SkipOnlyPartOfSource()
+        {
+            var source = new FilteredSource("\"foo\"bar");
+            using var reader = new Reader(source);
+
+            reader.TryReadString(out var _);
+
+            Assert.That(source.ToString(), Is.EqualTo("bar"));
+        }
+
+        // TODO: add some different cases
+        [Test]
+        public void TryReadString_ReturnString()
+        {
+            using var reader = new Reader(new FilteredSource("\"foo\""));
+
+            Assert.That(reader.TryReadString(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClString)));
+            Assert.That(atom.Value, Is.EqualTo("foo"));
+        }
+
+        [Test]
+        public void TryReadString_ThrowException_WhenSourceDoesNotContainPairDoubleQuotes()
+        {
+            using var reader = new Reader(new FilteredSource("\"some"));
+
+            Assert.That(() => reader.TryReadString(out var _), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void TryReadString_ReturnFalse_WhenSourceDoesNotStartWithDoubleQuotes()
+        {
+            using var reader = new Reader(new FilteredSource("_"));
+
+            Assert.That(reader.TryReadString(out var atom), Is.False);
+            Assert.That(atom, Is.Null);
+        }
+
+        [Test]
         public void TryReadBool_SkipOnlyPartOfSource()
         {
             var source = new FilteredSource("#ttf");
