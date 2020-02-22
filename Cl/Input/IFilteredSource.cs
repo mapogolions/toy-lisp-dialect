@@ -1,4 +1,4 @@
-namespace Cl.SourceCode
+namespace Cl.Input
 {
     public interface IFilteredSource : ISource
     {

@@ -1,5 +1,4 @@
-using System;
-namespace Cl.SourceCode
+namespace Cl.Input
 {
     public class FilteredSource : PassThroughSource
     {

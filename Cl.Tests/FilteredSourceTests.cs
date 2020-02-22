@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Cl.SourceCode;
+using Cl.Input;
 using NUnit.Framework;
 
 namespace Cl.Tests
