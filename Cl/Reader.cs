@@ -29,8 +29,18 @@ namespace Cl
         public bool TryReadFixnum(out ClFixnum atom)
         {
             atom = null;
-            var sign = _source.SkipMatched("-") ? -1 : 1;
-
+            var sign = _source.SkipMatched("-") ? '-' : '+';
+            string loop(string acc)
+            {
+                if (_source.Eof()) return acc;
+                if (!char.IsDigit((char) _source.Peek())) return acc;
+                return loop($"{acc}{(char) _source.Read()}");
+            }
+            if (int.TryParse(loop($"{sign}"), out var num))
+            {
+                atom = new ClFixnum(num);
+                return true;
+            }
             return false;
         }
 

@@ -9,6 +9,37 @@ namespace Cl.Tests
     public class ReaderTests
     {
         [Test]
+        public void TryReadFixnum_SkipOnlyPartOfSource()
+        {
+            var source = new FilteredSource("-120some");
+            using var reader = new Reader(source);
+
+            reader.TryReadFixnum(out var _);
+
+            Assert.That(source.ToString(), Is.EqualTo("some"));
+        }
+
+        [Test]
+        public void TryReadFixnum_ReturnNegativeNum()
+        {
+            using var reader = new Reader(new FilteredSource("-120..."));
+
+            Assert.That(reader.TryReadFixnum(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClFixnum)));
+            Assert.That(atom.Value, Is.EqualTo(-120));
+        }
+
+        [Test]
+        public void TryReadFixnum_ReturnPositiveNum()
+        {
+            using var reader = new Reader(new FilteredSource("12"));
+
+            Assert.That(reader.TryReadFixnum(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClFixnum)));
+            Assert.That(atom.Value, Is.EqualTo(12));
+        }
+
+        [Test]
         public void TryReadString_SkipOnlyPartOfSource()
         {
             var source = new FilteredSource("\"foo\"bar");
