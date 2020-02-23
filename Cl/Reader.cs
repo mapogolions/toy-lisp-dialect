@@ -20,13 +20,13 @@ namespace Cl
             if (_source.SkipMatched(";"))
                 Ignore(_source.SkipLine());
 
-            if (ReadBool(out var boolean)) return boolean;
-            if (ReadString(out var str)) return str;
-            if (ReadFixnum(out var fixnum)) return fixnum;
+            if (Boolean(out var boolean)) return boolean;
+            if (String(out var str)) return str;
+            if (Fixnum(out var fixnum)) return fixnum;
             throw new InvalidOperationException("Read illegal state");
         }
 
-        public bool ReadPair(out ClPair cell)
+        public bool Pair(out ClPair cell)
         {
             cell = null;
             if (!_source.SkipMatched("(")) return false;
@@ -40,7 +40,7 @@ namespace Cl
             return false;
         }
 
-        public bool ReadFixnum(out ClFixnum atom)
+        public bool Fixnum(out ClFixnum atom)
         {
             atom = null;
             var sign = _source.SkipMatched("-") ? '-' : '+';
@@ -58,7 +58,7 @@ namespace Cl
             return false;
         }
 
-        public bool ReadString(out ClString atom)
+        public bool String(out ClString atom)
         {
             atom = null;
             if (!_source.SkipMatched("\"")) return false;
@@ -74,7 +74,7 @@ namespace Cl
             return true;
         }
 
-        public bool ReadBool(out ClBool atom)
+        public bool Boolean(out ClBool atom)
         {
             atom = null;
             if (!_source.SkipMatched("#")) return false;

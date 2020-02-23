@@ -9,12 +9,39 @@ namespace Cl.Tests
     public class ReaderTests
     {
         [Test]
+        public void ReadPair_ReturnPair()
+        {
+            using var reader = new Reader(new FilteredSource("()"));
+
+            Assert.That(reader.Pair(out var cell), Is.True);
+            Assert.That(cell, Is.EqualTo(Nil.Given));
+        }
+
+        [Test]
+        public void ReadPair_ReturnFalse_WhenSourceContainSomethingElse()
+        {
+            using var reader = new Reader(new FilteredSource("something else"));
+
+            Assert.That(reader.Pair(out var cell), Is.False);
+            Assert.That(cell, Is.Null);
+        }
+
+        [Test]
+        public void ReadPair_ReturnFalse_WhenSourceIsEmpty()
+        {
+            using var reader = new Reader(new FilteredSource(string.Empty));
+
+            Assert.That(reader.Pair(out var cell), Is.False);
+            Assert.That(cell, Is.Null);
+        }
+
+        [Test]
         public void ReadFixnum_SkipOnlyPartOfSource()
         {
             var source = new FilteredSource("-120some");
             using var reader = new Reader(source);
 
-            reader.ReadFixnum(out var _);
+            reader.Fixnum(out var _);
 
             Assert.That(source.ToString(), Is.EqualTo("some"));
         }
@@ -24,7 +51,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("-120..."));
 
-            Assert.That(reader.ReadFixnum(out var atom), Is.True);
+            Assert.That(reader.Fixnum(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClFixnum)));
             Assert.That(atom.Value, Is.EqualTo(-120));
         }
@@ -34,7 +61,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("12"));
 
-            Assert.That(reader.ReadFixnum(out var atom), Is.True);
+            Assert.That(reader.Fixnum(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClFixnum)));
             Assert.That(atom.Value, Is.EqualTo(12));
         }
@@ -45,7 +72,7 @@ namespace Cl.Tests
             var source = new FilteredSource("\"foo\"bar");
             using var reader = new Reader(source);
 
-            reader.ReadString(out var _);
+            reader.String(out var _);
 
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
@@ -56,7 +83,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("\"foo\""));
 
-            Assert.That(reader.ReadString(out var atom), Is.True);
+            Assert.That(reader.String(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClString)));
             Assert.That(atom.Value, Is.EqualTo("foo"));
         }
@@ -66,7 +93,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("\"some"));
 
-            Assert.That(() => reader.ReadString(out var _), Throws.InvalidOperationException);
+            Assert.That(() => reader.String(out var _), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -74,7 +101,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("_"));
 
-            Assert.That(reader.ReadString(out var atom), Is.False);
+            Assert.That(reader.String(out var atom), Is.False);
             Assert.That(atom, Is.Null);
         }
 
@@ -84,7 +111,7 @@ namespace Cl.Tests
             var source = new FilteredSource("#ttf");
             using var reader = new Reader(source);
 
-            reader.ReadBool(out var _);
+            reader.Boolean(out var _);
 
             Assert.That(source.ToString(), Is.EqualTo("tf"));
         }
@@ -94,7 +121,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("#fi"));
 
-            Assert.That(reader.ReadBool(out var atom), Is.True);
+            Assert.That(reader.Boolean(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClBool)));
             Assert.That(atom.Value, Is.False);
         }
@@ -104,7 +131,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("#ti"));
 
-            Assert.That(reader.ReadBool(out var atom), Is.True);
+            Assert.That(reader.Boolean(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClBool)));
             Assert.That(atom.Value, Is.True);
         }
@@ -114,7 +141,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("#i"));
 
-            Assert.That(() => reader.ReadBool(out var _), Throws.InvalidOperationException);
+            Assert.That(() => reader.Boolean(out var _), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -122,7 +149,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("t"));
 
-            Assert.That(reader.ReadBool(out var atom), Is.False);
+            Assert.That(reader.Boolean(out var atom), Is.False);
             Assert.That(atom, Is.Null);
         }
 
