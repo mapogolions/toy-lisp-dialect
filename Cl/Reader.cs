@@ -26,6 +26,14 @@ namespace Cl
             throw new InvalidOperationException("Read illegal state");
         }
 
+        public bool TryReadFixnum(out ClFixnum atom)
+        {
+            atom = null;
+            var sign = _source.SkipMatched("-") ? -1 : 1;
+
+            return false;
+        }
+
         public bool TryReadString(out ClString atom)
         {
             atom = null;
@@ -40,16 +48,6 @@ namespace Cl
             }
             atom = new ClString(loop(string.Empty));
             return true;
-        }
-
-        public IClObj ReadFixnum()
-        {
-            return null;
-        }
-
-        public IClObj ReadPair()
-        {
-            return null;
         }
 
         public bool TryReadBool(out ClBool atom)
@@ -68,6 +66,9 @@ namespace Cl
             }
             throw new InvalidOperationException("Unknown boolean literal");
         }
+
+        public bool IsDelimiter(char ch) =>
+            char.IsWhiteSpace(ch) || ch == '(' || ch == ')' || ch == '"' || ch == ';';
 
         public void Dispose()
         {
