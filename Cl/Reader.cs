@@ -1,4 +1,3 @@
-using System.Text;
 using System;
 using Cl.Input;
 using Cl.Types;
@@ -21,12 +20,27 @@ namespace Cl
             if (_source.SkipMatched(";"))
                 Ignore(_source.SkipLine());
 
-            if (TryReadBool(out var boolAtom)) return boolAtom;
-            if (TryReadString(out var strAtom)) return strAtom;
+            if (ReadBool(out var boolean)) return boolean;
+            if (ReadString(out var str)) return str;
+            if (ReadFixnum(out var fixnum)) return fixnum;
             throw new InvalidOperationException("Read illegal state");
         }
 
-        public bool TryReadFixnum(out ClFixnum atom)
+        public bool ReadPair(out ClPair cell)
+        {
+            cell = null;
+            if (!_source.SkipMatched("(")) return false;
+            Ignore(_source.SkipWhitespaces());
+            if (_source.SkipMatched(")"))
+            {
+                cell = Nil.Given;
+                return true;
+            }
+            // mutually recursive
+            return false;
+        }
+
+        public bool ReadFixnum(out ClFixnum atom)
         {
             atom = null;
             var sign = _source.SkipMatched("-") ? '-' : '+';
@@ -44,7 +58,7 @@ namespace Cl
             return false;
         }
 
-        public bool TryReadString(out ClString atom)
+        public bool ReadString(out ClString atom)
         {
             atom = null;
             if (!_source.SkipMatched("\"")) return false;
@@ -60,7 +74,7 @@ namespace Cl
             return true;
         }
 
-        public bool TryReadBool(out ClBool atom)
+        public bool ReadBool(out ClBool atom)
         {
             atom = null;
             if (!_source.SkipMatched("#")) return false;
@@ -76,9 +90,6 @@ namespace Cl
             }
             throw new InvalidOperationException("Unknown boolean literal");
         }
-
-        public bool IsDelimiter(char ch) =>
-            char.IsWhiteSpace(ch) || ch == '(' || ch == ')' || ch == '"' || ch == ';';
 
         public void Dispose()
         {
