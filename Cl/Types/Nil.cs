@@ -1,12 +1,12 @@
 namespace Cl.Types
 {
-    public sealed class Nil : IClObj
+    public sealed class Nil : ClPair
     {
         private static Nil _instance;
 
         private Nil() { }
 
-        public Nil Given
+        public static Nil Given
         {
             get
             {
