@@ -24,6 +24,7 @@ namespace Cl
             if (Character(out var ch)) return ch;
             if (String(out var str)) return str;
             if (Fixnum(out var fixnum)) return fixnum;
+            if (Pair(out var cell)) return cell;
             throw new InvalidOperationException("Read illegal state");
         }
 
@@ -96,6 +97,11 @@ namespace Cl
             atom = null;
             if (!_source.SkipMatched("#")) return false;
             if (!_source.SkipMatched("\\")) return false;
+            if (!_source.Eof())
+            {
+                atom = new ClChar((char) _source.Read());
+                return true;
+            }
             throw new InvalidOperationException("Unknown boolean literal");
         }
 
