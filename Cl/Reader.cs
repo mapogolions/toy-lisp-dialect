@@ -17,11 +17,9 @@ namespace Cl
         public IClObj Read()
         {
             Ignore(_source.SkipWhitespaces());
-            if (_source.SkipMatched(";"))
-                Ignore(_source.SkipLine());
-
-            if (TryReadBool(out var boolean)) return boolean;
+            if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
             if (Character(out var ch)) return ch;
+            if (Boolean(out var boolean)) return boolean;
             if (String(out var str)) return str;
             if (Fixnum(out var fixnum)) return fixnum;
             if (Pair(out var cell)) return cell;
@@ -75,7 +73,8 @@ namespace Cl
             atom = new ClString(loop(string.Empty));
             return true;
         }
-        public bool TryReadBool(out ClBool atom)
+
+        public bool Boolean(out ClBool atom)
         {
             atom = null;
             if (!_source.SkipMatched("#")) return false;
@@ -89,7 +88,7 @@ namespace Cl
                 atom = new ClBool(false);
                 return true;
             }
-            return false;
+            throw new InvalidOperationException("Unknown boolean literal");
         }
 
         public bool Character(out ClChar atom)
@@ -102,7 +101,7 @@ namespace Cl
                 atom = new ClChar((char) _source.Read());
                 return true;
             }
-            throw new InvalidOperationException("Unknown boolean literal");
+            throw new InvalidOperationException("Unknown char literal");
         }
 
         public void Dispose()
