@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cl.Input;
 using Cl.Types;
+using static Cl.Extensions.FpUniverse;
 using NUnit.Framework;
 
 namespace Cl.Tests
@@ -41,7 +42,7 @@ namespace Cl.Tests
             var source = new FilteredSource("-120some");
             using var reader = new Reader(source);
 
-            reader.Fixnum(out var _);
+            Ignore(reader.Fixnum(out var _));
 
             Assert.That(source.ToString(), Is.EqualTo("some"));
         }
@@ -72,7 +73,7 @@ namespace Cl.Tests
             var source = new FilteredSource("\"foo\"bar");
             using var reader = new Reader(source);
 
-            reader.String(out var _);
+            Ignore(reader.String(out var _));
 
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
@@ -111,7 +112,7 @@ namespace Cl.Tests
             var source = new FilteredSource("#ttf");
             using var reader = new Reader(source);
 
-            reader.Boolean(out var _);
+            Ignore(reader.Boolean(out var _));
 
             Assert.That(source.ToString(), Is.EqualTo("tf"));
         }

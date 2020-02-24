@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Cl.Input;
+using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests
 {
@@ -10,6 +11,7 @@ namespace Cl.Tests
         public void Peek_Return_MinusOne_WhenSourceIsEmpty()
         {
             using var source = new Source(string.Empty);
+
             Assert.That(source.Peek(), Is.EqualTo(-1));
         }
 
@@ -17,8 +19,9 @@ namespace Cl.Tests
         public void Peek_FullInnerBuffer()
         {
             using var source = new Source("ab");
-            source.Peek();
-            source.Peek();
+
+            Ignore(source.Peek());
+            Ignore(source.Peek());
 
             Assert.That((char) source.Read(), Is.EqualTo('a'));
             Assert.That((char) source.Read(), Is.EqualTo('b'));
