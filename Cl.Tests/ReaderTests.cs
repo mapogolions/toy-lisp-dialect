@@ -107,50 +107,50 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void ReadBool_SkipOnlyPartOfSource()
+        public void TryReadBool_SkipOnlyPartOfSource()
         {
             var source = new FilteredSource("#ttf");
             using var reader = new Reader(source);
 
-            Ignore(reader.Boolean(out var _));
+            Ignore(reader.TryReadBool(out var _));
 
             Assert.That(source.ToString(), Is.EqualTo("tf"));
         }
 
         [Test]
-        public void ReadBool_ReturnTheFalse()
+        public void TryReadBool_ReturnTheFalse()
         {
             using var reader = new Reader(new FilteredSource("#fi"));
 
-            Assert.That(reader.Boolean(out var atom), Is.True);
+            Assert.That(reader.TryReadBool(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClBool)));
             Assert.That(atom.Value, Is.False);
         }
 
         [Test]
-        public void ReadBool_ReturnTheTrue()
+        public void TryReadBool_ReturnTheTrue()
         {
             using var reader = new Reader(new FilteredSource("#ti"));
 
-            Assert.That(reader.Boolean(out var atom), Is.True);
+            Assert.That(reader.TryReadBool(out var atom), Is.True);
             Assert.That(atom, Is.InstanceOf(typeof(ClBool)));
             Assert.That(atom.Value, Is.True);
         }
 
         [Test]
-        public void ReadBool_ThrowException_WhenSourceStartWithHashButNextSymbolIsNotBoolPredefinedValue()
+        public void TryReadBool_ReturnFalse_WhenSourceStartWithHashButNextSymbolIsNotBoolPredefinedValue()
         {
             using var reader = new Reader(new FilteredSource("#i"));
 
-            Assert.That(() => reader.Boolean(out var _), Throws.InvalidOperationException);
+            Assert.That(reader.TryReadBool(out var _), Is.False);
         }
 
         [Test]
-        public void ReadBool_ReturnFalse_WhenSourceDoesNotStartWithHash()
+        public void TryReadBool_ReturnFalse_WhenSourceDoesNotStartWithHash()
         {
             using var reader = new Reader(new FilteredSource("t"));
 
-            Assert.That(reader.Boolean(out var atom), Is.False);
+            Assert.That(reader.TryReadBool(out var atom), Is.False);
             Assert.That(atom, Is.Null);
         }
 

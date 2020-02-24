@@ -20,7 +20,8 @@ namespace Cl
             if (_source.SkipMatched(";"))
                 Ignore(_source.SkipLine());
 
-            if (Boolean(out var boolean)) return boolean;
+            if (TryReadBool(out var boolean)) return boolean;
+            if (Character(out var ch)) return ch;
             if (String(out var str)) return str;
             if (Fixnum(out var fixnum)) return fixnum;
             throw new InvalidOperationException("Read illegal state");
@@ -73,8 +74,7 @@ namespace Cl
             atom = new ClString(loop(string.Empty));
             return true;
         }
-
-        public bool Boolean(out ClBool atom)
+        public bool TryReadBool(out ClBool atom)
         {
             atom = null;
             if (!_source.SkipMatched("#")) return false;
@@ -88,6 +88,14 @@ namespace Cl
                 atom = new ClBool(false);
                 return true;
             }
+            return false;
+        }
+
+        public bool Character(out ClChar atom)
+        {
+            atom = null;
+            if (!_source.SkipMatched("#")) return false;
+            if (!_source.SkipMatched("\\")) return false;
             throw new InvalidOperationException("Unknown boolean literal");
         }
 
