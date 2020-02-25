@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cl.Extensions
 {
-    public static class EnumerableExtensions
+    public static class IEnumerableOps
     {
         public static void ForEach<T>(this IEnumerable<T> self, Action<T> apply)
         {
