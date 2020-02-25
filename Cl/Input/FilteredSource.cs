@@ -1,3 +1,6 @@
+using System.Linq;
+using Cl.Extensions;
+
 namespace Cl.Input
 {
     public class FilteredSource : PassThroughSource
@@ -45,15 +48,16 @@ namespace Cl.Input
 
         public override bool SkipMatched(string pattern)
         {
+            var codes = Enumerable.Empty<int>();
             foreach (var ch in pattern)
             {
-                if (_source.Eof()) return false;
-                var code = _source.Read();
-                if (ch != (char) code)
+                var code = _source.Peek();
+                if (code == -1 || ch != (char) code)
                 {
-                    _source.Buffer(code);
+                    codes.ForEach(it => _source.Buffer(it));
                     return false;
                 }
+                codes.Prepend(_source.Read());
             }
             return true;
         }

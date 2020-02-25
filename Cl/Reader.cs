@@ -96,7 +96,8 @@ namespace Cl
             atom = null;
             if (!_source.SkipMatched("#")) return false;
             if (!_source.SkipMatched("\\")) return false;
-            if (!_source.Eof())
+            var code = _source.Peek();
+            if (code != -1)
             {
                 atom = new ClChar((char) _source.Read());
                 return true;

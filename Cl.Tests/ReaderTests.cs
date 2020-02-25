@@ -9,6 +9,59 @@ namespace Cl.Tests
     [TestFixture]
     public class ReaderTests
     {
+        // public void ReadBool_SkipOnlyPartOfSource()
+        // {
+        //     var source = new FilteredSource("#ttf");
+        //     using var reader = new Reader(source);
+
+        //     Ignore(reader.Boolean(out var _));
+
+        //     Assert.That(source.ToString(), Is.EqualTo("tf"));
+        // }
+
+        // [Test]
+        // public void ReadBool_ThrowException_WhenAfterBackspashGoesWhitespace()
+        // {
+        //     using var reader = new Reader(new FilteredSource("#\\\t"));
+
+        //     Assert.That(() => reader.Character(out var _), Throws.InvalidOperationException);
+        // }
+
+        // [Test]
+        // public void ReadChar_Return_n_Character()
+        // {
+        //     using var reader = new Reader(new FilteredSource("#\\n"));
+
+        //     Assert.That(reader.Character(out var atom), Is.True);
+        //     Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
+        //     Assert.That(atom.Value, Is.EqualTo('n'));
+        // }
+
+        // [Test]
+        // public void ReadChar_ThrowException_WhenSourceIsEqualToHashAndBackslash()
+        // {
+        //     using var reader = new Reader(new FilteredSource("#\\"));
+
+        //     Assert.That(() => reader.Character(out var _), Throws.InvalidOperationException);
+        // }
+
+        // [Test]
+        // public void ReadChar_ReturnFalse_WhenSourceStartsWithHashButNextSymbolIsNotBoolPredefinedValue()
+        // {
+        //     using var reader = new Reader(new FilteredSource("#i"));
+
+        //     Assert.That(reader.Character(out var _), Is.False);
+        // }
+
+        // [Test]
+        // public void ReadChar_ReturnFalse_WhenSourceDoesNotStartWithHash()
+        // {
+        //     using var reader = new Reader(new FilteredSource("t"));
+
+        //     Assert.That(reader.Character(out var atom), Is.False);
+        //     Assert.That(atom, Is.Null);
+        // }
+
         [Test]
         public void ReadPair_ReturnPair()
         {
