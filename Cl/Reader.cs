@@ -111,6 +111,11 @@ namespace Cl
                 atom = new ClChar(' ');
                 return true;
             }
+            if (!_source.Eof())
+            {
+                atom = new ClChar((char) _source.Read());
+                return true;
+            }
             throw new InvalidOperationException("Unknown char literal");
         }
 

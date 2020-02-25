@@ -9,33 +9,26 @@ namespace Cl.Tests
     [TestFixture]
     public class ReaderTests
     {
-        // public void ReadBool_SkipOnlyPartOfSource()
-        // {
-        //     var source = new FilteredSource("#ttf");
-        //     using var reader = new Reader(source);
+        [Test]
+        public void ReadChar_SkipOnlyPartOfSource()
+        {
+            var source = new FilteredSource("#\\foo");
+            using var reader = new Reader(source);
 
-        //     Ignore(reader.Boolean(out var _));
+            Ignore(reader.Character(out var _));
 
-        //     Assert.That(source.ToString(), Is.EqualTo("tf"));
-        // }
+            Assert.That(source.ToString(), Is.EqualTo("oo"));
+        }
 
-        // [Test]
-        // public void ReadBool_ThrowException_WhenAfterBackspashGoesWhitespace()
-        // {
-        //     using var reader = new Reader(new FilteredSource("#\\\t"));
+        [Test]
+        public void ReadChar_Return_n_Character()
+        {
+            using var reader = new Reader(new FilteredSource("#\\n"));
 
-        //     Assert.That(() => reader.Character(out var _), Throws.InvalidOperationException);
-        // }
-
-        // [Test]
-        // public void ReadChar_Return_n_Character()
-        // {
-        //     using var reader = new Reader(new FilteredSource("#\n"));
-
-        //     Assert.That(reader.Character(out var atom), Is.True);
-        //     Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
-        //     Assert.That(atom.Value, Is.EqualTo('n'));
-        // }
+            Assert.That(reader.Character(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
+            Assert.That(atom.Value, Is.EqualTo('n'));
+        }
 
         [Test]
         public void ReadChar_Return_Space()
