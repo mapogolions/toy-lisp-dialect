@@ -17,7 +17,7 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void SkipMatched_ThrowException_WhenSourceDoesNotMatchToPattern()
+        public void SkipMatched_ThrowException_WhenSourceDoesNotMatchPattern()
         {
             using var source = new FilteredSource("foo");
 

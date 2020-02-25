@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cl.Extensions;
 
 namespace Cl.Input
@@ -14,15 +13,7 @@ namespace Cl.Input
         {
         }
 
-        public override bool SkipEol()
-        {
-            if (_source.Eof()) return false;
-            var code = _source.Read();
-            if (OsxEol(code) || WinEol(code) || UnixEol(code))
-                return true;
-            _source.Buffer(code);
-            return false;
-        }
+        public override bool SkipEol() => SkipMatched("\r\n") || SkipMatched("\n\r") || SkipMatched("\n");
 
         public override bool SkipLine()
         {
@@ -61,20 +52,6 @@ namespace Cl.Input
                 codes.AddFirst(_source.Read());
             }
             return true;
-        }
-
-        private bool UnixEol(int code) => (char) code == '\n';
-        private bool OsxEol(int code) => Eol(code, '\n', '\r');
-        private bool WinEol(int code) => Eol(code, '\r', '\n');
-
-        private bool Eol(int code, char first, char second)
-        {
-            if ((char) code != first) return false;
-            var next = _source.Read();
-            if (next != -1 && (char) next == second) return true;
-            if (next != -1)
-                _source.Buffer(next);
-            return false;
         }
     }
 }
