@@ -30,37 +30,67 @@ namespace Cl.Tests
         // [Test]
         // public void ReadChar_Return_n_Character()
         // {
-        //     using var reader = new Reader(new FilteredSource("#\\n"));
+        //     using var reader = new Reader(new FilteredSource("#\n"));
 
         //     Assert.That(reader.Character(out var atom), Is.True);
         //     Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
         //     Assert.That(atom.Value, Is.EqualTo('n'));
         // }
 
-        // [Test]
-        // public void ReadChar_ThrowException_WhenSourceIsEqualToHashAndBackslash()
-        // {
-        //     using var reader = new Reader(new FilteredSource("#\\"));
+        [Test]
+        public void ReadChar_Return_Space()
+        {
+            using var reader = new Reader(new FilteredSource("#\\space"));
 
-        //     Assert.That(() => reader.Character(out var _), Throws.InvalidOperationException);
-        // }
+            Assert.That(reader.Character(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
+            Assert.That(atom.Value, Is.EqualTo(' '));
+        }
 
-        // [Test]
-        // public void ReadChar_ReturnFalse_WhenSourceStartsWithHashButNextSymbolIsNotBoolPredefinedValue()
-        // {
-        //     using var reader = new Reader(new FilteredSource("#i"));
+        [Test]
+        public void ReadChar_Return_Tab()
+        {
+            using var reader = new Reader(new FilteredSource("#\\tab"));
 
-        //     Assert.That(reader.Character(out var _), Is.False);
-        // }
+            Assert.That(reader.Character(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
+            Assert.That(atom.Value, Is.EqualTo('\t'));
+        }
 
-        // [Test]
-        // public void ReadChar_ReturnFalse_WhenSourceDoesNotStartWithHash()
-        // {
-        //     using var reader = new Reader(new FilteredSource("t"));
+        [Test]
+        public void ReadChar_Return_Newline()
+        {
+            using var reader = new Reader(new FilteredSource("#\\newline"));
 
-        //     Assert.That(reader.Character(out var atom), Is.False);
-        //     Assert.That(atom, Is.Null);
-        // }
+            Assert.That(reader.Character(out var atom), Is.True);
+            Assert.That(atom, Is.InstanceOf(typeof(ClChar)));
+            Assert.That(atom.Value, Is.EqualTo('\n'));
+        }
+
+        [Test]
+        public void ReadChar_ThrowException_WhenSourceIsEqualToHashAndBackslash()
+        {
+            using var reader = new Reader(new FilteredSource("#\\"));
+
+            Assert.That(() => reader.Character(out var _), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadChar_ReturnFalse_WhenSourceStartsWithHashButNextSymbolIsNotBackslash()
+        {
+            using var reader = new Reader(new FilteredSource("#i"));
+
+            Assert.That(reader.Character(out var _), Is.False);
+        }
+
+        [Test]
+        public void ReadChar_ReturnFalse_WhenSourceDoesNotStartWithHash()
+        {
+            using var reader = new Reader(new FilteredSource("t"));
+
+            Assert.That(reader.Character(out var atom), Is.False);
+            Assert.That(atom, Is.Null);
+        }
 
         [Test]
         public void ReadPair_ReturnPair()

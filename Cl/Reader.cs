@@ -96,6 +96,21 @@ namespace Cl
             atom = null;
             if (!_source.SkipMatched("#")) return false;
             if (!_source.SkipMatched("\\")) return false;
+            if (_source.SkipMatched("newline"))
+            {
+                atom = new ClChar('\n');
+                return true;
+            }
+            if (_source.SkipMatched("tab"))
+            {
+                atom = new ClChar('\t');
+                return true;
+            }
+            if (_source.SkipMatched("space"))
+            {
+                atom = new ClChar(' ');
+                return true;
+            }
             throw new InvalidOperationException("Unknown char literal");
         }
 
