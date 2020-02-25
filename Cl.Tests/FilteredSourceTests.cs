@@ -8,12 +8,12 @@ namespace Cl.Tests
     public class FilteredSourceTests
     {
         [Test]
-        public void SkipMatched_ReturnChunkOfOriginalSource_AfterPartialMatch()
+        public void SkipMatched_ReturnOriginalSource_AfterPartialMatch()
         {
             using var source = new FilteredSource("partial");
 
             Assert.That(source.SkipMatched("parts"), Is.False);
-            Assert.That(source.ToString(), Is.EqualTo("ial"));
+            Assert.That(source.ToString(), Is.EqualTo("partial"));
         }
 
         [Test]

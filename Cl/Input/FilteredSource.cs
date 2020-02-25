@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Cl.Extensions;
 
@@ -48,7 +49,7 @@ namespace Cl.Input
 
         public override bool SkipMatched(string pattern)
         {
-            var codes = Enumerable.Empty<int>();
+            var codes = new LinkedList<int>();
             foreach (var ch in pattern)
             {
                 var code = _source.Peek();
@@ -57,7 +58,7 @@ namespace Cl.Input
                     codes.ForEach(it => _source.Buffer(it));
                     return false;
                 }
-                codes.Prepend(_source.Read());
+                codes.AddFirst(_source.Read());
             }
             return true;
         }
