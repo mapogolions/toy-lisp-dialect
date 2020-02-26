@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using Cl.Input;
 using Cl.Types;
@@ -9,6 +10,13 @@ namespace Cl
     {
         private readonly IFilteredSource _source;
 
+        public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
+        {
+            ["newline"] = '\n',
+            ["tab"] = '\t',
+            ["space"] = ' '
+        };
+
         public Reader(IFilteredSource source)
         {
             _source = source;
@@ -18,17 +26,17 @@ namespace Cl
         {
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
-            if (Character(out var ch)) return ch;
-            if (Boolean(out var boolean)) return boolean;
-            if (String(out var str)) return str;
-            if (Fixnum(out var fixnum)) return fixnum;
-            if (Pair(out var cell)) return cell;
+            if (ReadChar(out var ch)) return ch;
+            if (ReadBool(out var boolean)) return boolean;
+            if (ReadString(out var str)) return str;
+            if (ReadFixnum(out var fixnum)) return fixnum;
+            if (ReadPair(out var cell)) return cell;
             throw new InvalidOperationException("Read illegal state");
         }
 
-        public bool Pair(out ClPair cell)
+        public bool ReadPair(out ClPair cell)
         {
-            cell = null;
+            cell = default;
             if (!_source.SkipMatched("(")) return false;
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(")"))
@@ -40,9 +48,9 @@ namespace Cl
             return false;
         }
 
-        public bool Fixnum(out ClFixnum atom)
+        public bool ReadFixnum(out ClFixnum atom)
         {
-            atom = null;
+            atom = default;
             var sign = _source.SkipMatched("-") ? '-' : '+';
             string loop(string acc)
             {
@@ -58,14 +66,13 @@ namespace Cl
             return false;
         }
 
-        public bool String(out ClString atom)
+        public bool ReadString(out ClString atom)
         {
-            atom = null;
+            atom = default;
             if (!_source.SkipMatched("\"")) return false;
             string loop(string acc)
             {
-                if (_source.Eof())
-                    throw new InvalidOperationException("Unknown string literal");
+                if (_source.Eof()) throw new InvalidOperationException("Unknown string literal");
                 var ch = (char) _source.Read();
                 if (ch == '"') return acc;
                 return loop($"{acc}{ch}");
@@ -74,9 +81,9 @@ namespace Cl
             return true;
         }
 
-        public bool Boolean(out ClBool atom)
+        public bool ReadBool(out ClBool atom)
         {
-            atom = null;
+            atom = default;
             if (!_source.SkipMatched("#")) return false;
             if (_source.SkipMatched("t"))
             {
@@ -91,32 +98,20 @@ namespace Cl
             throw new InvalidOperationException("Unknown boolean literal");
         }
 
-        public bool Character(out ClChar atom)
+        public bool ReadChar(out ClChar atom)
         {
-            atom = null;
+            atom = default;
             if (!_source.SkipMatched("#")) return false;
             if (!_source.SkipMatched("\\")) return false;
-            if (_source.SkipMatched("newline"))
+            foreach (var (word, ch) in SpecialChars)
             {
-                atom = new ClChar('\n');
+                if (!_source.SkipMatched(word)) continue;
+                atom = new ClChar(ch);
                 return true;
             }
-            if (_source.SkipMatched("tab"))
-            {
-                atom = new ClChar('\t');
-                return true;
-            }
-            if (_source.SkipMatched("space"))
-            {
-                atom = new ClChar(' ');
-                return true;
-            }
-            if (!_source.Eof())
-            {
-                atom = new ClChar((char) _source.Read());
-                return true;
-            }
-            throw new InvalidOperationException("Unknown char literal");
+            if (_source.Eof()) throw new InvalidOperationException("Unknown char literal");
+            atom = new ClChar((char) _source.Read());
+            return true;
         }
 
         public void Dispose()
