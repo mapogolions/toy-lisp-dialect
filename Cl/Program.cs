@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            new Repl().Start(sign: "#");
+            new Repl().Start();
         }
     }
 }

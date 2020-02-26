@@ -7,8 +7,7 @@ namespace Cl.Extensions
     {
         public static void ForEach<T>(this IEnumerable<T> self, Action<T> apply)
         {
-            foreach (var item in self)
-                apply(item);
+            foreach (var item in self) apply(item);
         }
     }
 }
