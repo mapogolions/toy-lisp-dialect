@@ -25,29 +25,27 @@ namespace Cl.Input
 
         public int Read()
         {
-            if (_buffer.TryPop(out var charCode)) return (char) charCode;
+            if (_buffer.TryPop(out var code)) return (char) code;
             return _stream.ReadByte();
         }
 
-        public void Buffer(int charCode) => _buffer.Push(charCode);
+        public void Buffer(int code) => _buffer.Push(code);
 
         public int Peek()
         {
-            var charCode = Read();
-            if (charCode == -1) return -1;
-            _buffer.Push(charCode);
-            return charCode;
+            var code = Read();
+            if (code == -1) return -1;
+            _buffer.Push(code);
+            return code;
         }
 
         public bool Eof() => Peek() == -1;
 
         public override string ToString()
         {
-            var builder = new StringBuilder();
-            var ch = -1;
-            while ((ch = Read()) != -1)
-                builder.Append((char) ch);
-            return builder.ToString();
+            var ctor = new StringBuilder();
+            while (!Eof()) ctor.Append((char) Read());
+            return ctor.ToString();
         }
     }
 }
