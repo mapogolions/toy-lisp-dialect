@@ -3,6 +3,7 @@ using System;
 using Cl.Input;
 using Cl.Types;
 using static Cl.Extensions.FpUniverse;
+using Cl.Constants;
 
 namespace Cl
 {
@@ -31,7 +32,7 @@ namespace Cl
             if (ReadString(out var str)) return str;
             if (ReadFixnum(out var fixnum)) return fixnum;
             if (ReadPair(out var cell)) return cell;
-            throw new InvalidOperationException("Read illegal state");
+            throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
         public bool ReadPair(out ClPair cell)
@@ -72,7 +73,8 @@ namespace Cl
             if (!_source.SkipMatched("\"")) return false;
             string loop(string acc)
             {
-                if (_source.Eof()) throw new InvalidOperationException("Unknown string literal");
+                if (_source.Eof())
+                    throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClString)));
                 var ch = (char) _source.Read();
                 if (ch == '"') return acc;
                 return loop($"{acc}{ch}");
@@ -95,7 +97,7 @@ namespace Cl
                 atom = new ClBool(false);
                 return true;
             }
-            throw new InvalidOperationException("Unknown boolean literal");
+            throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClBool)));
         }
 
         public bool ReadChar(out ClChar atom)
@@ -109,7 +111,7 @@ namespace Cl
                 atom = new ClChar(ch);
                 return true;
             }
-            if (_source.Eof()) throw new InvalidOperationException("Unknown char literal");
+            if (_source.Eof()) throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClChar)));
             atom = new ClChar((char) _source.Read());
             return true;
         }
