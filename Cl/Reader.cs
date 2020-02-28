@@ -30,7 +30,8 @@ namespace Cl
             if (ReadChar(out var ch)) return ch;
             if (ReadBool(out var boolean)) return boolean;
             if (ReadString(out var str)) return str;
-            if (ReadFixnum(out var fixnum)) return fixnum;
+            if (ReadFloatingPoint(out var natural)) return natural;
+            if (ReadFixnum(out var integer)) return integer;
             if (ReadPair(out var cell)) return cell;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
@@ -49,22 +50,30 @@ namespace Cl
             return false;
         }
 
+        public bool ReadFloatingPoint(out ClFloatingPoint atom)
+        {
+            atom = null;
+            if (!ReadFixnum(out var significand)) return false;
+            if (!_source.SkipMatched(".")) return false;
+            if (!ReadFixnum(out var mantissa))
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
+            var number = double.Parse($"{significand.Value}.{mantissa}");
+            atom = new ClFloatingPoint(number);
+            return false;
+        }
+
         public bool ReadFixnum(out ClFixnum atom)
         {
             atom = default;
-            var sign = _source.SkipMatched("-") ? '-' : '+';
             string loop(string acc)
             {
                 if (_source.Eof()) return acc;
                 if (!char.IsDigit((char) _source.Peek())) return acc;
                 return loop($"{acc}{(char) _source.Read()}");
             }
-            if (int.TryParse(loop($"{sign}"), out var num))
-            {
-                atom = new ClFixnum(num);
-                return true;
-            }
-            return false;
+            if (!int.TryParse(loop(string.Empty), out var num)) return false;
+            atom = new ClFixnum(num);
+            return true;
         }
 
         public bool ReadString(out ClString atom)

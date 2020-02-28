@@ -111,7 +111,7 @@ namespace Cl.Tests
         [Test]
         public void ReadFixnum_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("-120some");
+            var source = new FilteredSource("120some");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadFixnum(out var _));
@@ -120,12 +120,11 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void ReadFixnum_ReturnNegativeNum()
+        public void ReadFixnum_CanNotBeAbleReadNegativeNum()
         {
             using var reader = new Reader(new FilteredSource("-120..."));
 
-            Assert.That(reader.ReadFixnum(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo(-120));
+            Assert.That(reader.ReadFixnum(out var _), Is.False);
         }
 
         [Test]
