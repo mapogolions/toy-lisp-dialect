@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using Cl.Input;
 using NUnit.Framework;
 
@@ -112,10 +112,9 @@ namespace Cl.Tests
             Assert.That(source.ToString(), Is.EqualTo("second\r\nthird\n\r"));
         }
 
-        [TestCaseSource(nameof(EndOfLineTestCases))]
-        public void SkipLine_SkipAllSymbols_UntilEolAppears(string eol)
+        public void SkipLine_SkipAllSymbols_UntilEolAppears()
         {
-            using var source = new FilteredSource($"foo{eol}bar");
+            using var source = new FilteredSource($"foo{Environment.NewLine}bar");
 
             Assert.That(source.SkipLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("bar"));
@@ -146,38 +145,28 @@ namespace Cl.Tests
             Assert.That(source.SkipEol(), Is.False);
         }
 
-        [TestCaseSource(nameof(EndOfLineTestCases))]
-        public void SkipEol_ReturnRestOfTheSource(string eol)
+        public void SkipEol_ReturnRestOfTheSource()
         {
-            using var source = new FilteredSource($"{eol}foo");
+            using var source = new FilteredSource($"{Environment.NewLine}foo");
 
             Assert.That(source.SkipEol(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
-        [TestCaseSource(nameof(EndOfLineTestCases))]
-        public void SkipEol_IsCrossPlatform(string eol)
+        public void SkipEol_IsCrossPlatform()
         {
-            using var source = new FilteredSource(eol);
+            using var source = new FilteredSource(Environment.NewLine);
 
             Assert.That(source.SkipEol(), Is.True);
             Assert.That(source.Eof(), Is.True);
         }
 
-        [TestCaseSource(nameof(EndOfLineTestCases))]
-        public void SkipEol_ReturnFalse_WhenSourceDoesNotContainEol(string eol)
+        public void SkipEol_ReturnFalse_WhenSourceDoesNotContainEol()
         {
-            using var source = new FilteredSource($"foo{eol}");
+            using var source = new FilteredSource($"foo{Environment.NewLine}");
 
             Assert.That(source.SkipEol(), Is.False);
-            Assert.That(source.ToString(), Is.EqualTo($"foo{eol}"));
-        }
-
-        static IEnumerable<string> EndOfLineTestCases()
-        {
-            yield return "\r\n";
-            yield return "\n\r";
-            yield return "\n";
+            Assert.That(source.ToString(), Is.EqualTo($"foo{Environment.NewLine}"));
         }
     }
 }

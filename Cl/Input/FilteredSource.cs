@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 
@@ -12,8 +13,7 @@ namespace Cl.Input
         public FilteredSource(string source) : this(new Source(source))
         {
         }
-
-        public override bool SkipEol() => SkipMatched("\r\n") || SkipMatched("\n\r") || SkipMatched("\n");
+        public override bool SkipEol() => SkipMatched(Environment.NewLine);
 
         public override bool SkipLine()
         {
