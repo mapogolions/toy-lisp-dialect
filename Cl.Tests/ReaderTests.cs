@@ -111,12 +111,12 @@ namespace Cl.Tests
         [Test]
         public void ReadFixnum_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("120some");
+            var source = new FilteredSource("120rest");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadFixnum(out var _));
 
-            Assert.That(source.ToString(), Is.EqualTo("some"));
+            Assert.That(source.ToString(), Is.EqualTo("rest"));
         }
 
         [Test]
@@ -125,6 +125,15 @@ namespace Cl.Tests
             using var reader = new Reader(new FilteredSource("-120..."));
 
             Assert.That(reader.ReadFixnum(out var _), Is.False);
+        }
+
+        [Test]
+        public void ReadFixnum_ReturnInteger_WhenDotAppears()
+        {
+            using var reader = new Reader(new FilteredSource("1."));
+
+            Assert.That(reader.ReadFixnum(out var atom), Is.True);
+            Assert.That(atom.Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -242,6 +251,14 @@ namespace Cl.Tests
             yield return ";first line\n;second line";
             yield return ";first;second;third";
             yield return ";first\n;second\r\n;third\n\r";
+        }
+
+        [Test]
+        public void Read_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
+        {
+            using var reader = new Reader(new FilteredSource("11."));
+
+            Assert.That(() => reader.Read(), Throws.InvalidOperationException);
         }
 
         [Test]
