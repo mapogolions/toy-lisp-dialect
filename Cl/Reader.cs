@@ -59,7 +59,7 @@ namespace Cl
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
             var number = double.Parse($"{significand}.{floating}");
             atom = new ClFloatingPoint(number);
-            return false;
+            return true;
         }
 
         public bool ReadFixnum(out ClFixnum atom)
