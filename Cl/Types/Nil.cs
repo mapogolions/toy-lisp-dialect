@@ -4,7 +4,7 @@ namespace Cl.Types
     {
         private static Nil _instance;
 
-        private Nil() { }
+        private Nil() : base(null, null) { }
 
         public static Nil Given
         {

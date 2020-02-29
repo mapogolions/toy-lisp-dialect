@@ -2,7 +2,13 @@ namespace Cl.Types
 {
     public class ClPair : IClObj
     {
-        public IClObj Car { get; set; }
-        public IClObj Cdr { get; set; }
+        public ClPair(IClObj car, IClObj cdr)
+        {
+            Car = car;
+            Cdr = cdr;
+        }
+
+        public IClObj Car { get; }
+        public IClObj Cdr { get; }
     }
 }
