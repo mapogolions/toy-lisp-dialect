@@ -52,7 +52,7 @@ namespace Cl
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             cell = new ClPair(car, cdr);
-            return false;
+            return true;
         }
 
         public bool ReadFloatingPoint(out ClFloatingPoint atom)
