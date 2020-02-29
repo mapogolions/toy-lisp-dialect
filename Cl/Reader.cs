@@ -53,11 +53,11 @@ namespace Cl
         public bool ReadFloatingPoint(out ClFloatingPoint atom)
         {
             atom = null;
-            if (!ReadFixnum(out var significand)) return false;
+            if (!TryReadNumbersInRow(out var significand)) return false;
             if (!_source.SkipMatched(".")) return false;
-            if (!ReadFixnum(out var mantissa))
+            if (!TryReadNumbersInRow(out var floating))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
-            var number = double.Parse($"{significand.Value}.{mantissa}");
+            var number = double.Parse($"{significand}.{floating}");
             atom = new ClFloatingPoint(number);
             return false;
         }
@@ -65,15 +65,22 @@ namespace Cl
         public bool ReadFixnum(out ClFixnum atom)
         {
             atom = default;
-            string loop(string acc)
+            if (!TryReadNumbersInRow(out var nums)) return false;
+            if (!int.TryParse(nums, out var integer)) return false;
+            atom = new ClFixnum(integer);
+            return true;
+        }
+
+        public bool TryReadNumbersInRow(out string nums)
+        {
+            string loop(string acc = "")
             {
                 if (_source.Eof()) return acc;
                 if (!char.IsDigit((char) _source.Peek())) return acc;
                 return loop($"{acc}{(char) _source.Read()}");
             }
-            if (!int.TryParse(loop(string.Empty), out var num)) return false;
-            atom = new ClFixnum(num);
-            return true;
+            nums = loop();
+            return !string.IsNullOrEmpty(nums);
         }
 
         public bool ReadString(out ClString atom)
