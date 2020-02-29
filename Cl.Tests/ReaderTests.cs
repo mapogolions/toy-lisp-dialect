@@ -3,6 +3,7 @@ using Cl.Input;
 using Cl.Types;
 using static Cl.Extensions.FpUniverse;
 using NUnit.Framework;
+using System;
 
 namespace Cl.Tests
 {
@@ -200,7 +201,6 @@ namespace Cl.Tests
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
 
-        // TODO: add some different cases
         [Test]
         public void ReadString_ReturnString()
         {
@@ -292,9 +292,9 @@ namespace Cl.Tests
         static IEnumerable<string> CommentTestCases()
         {
             yield return ";single line comment";
-            yield return ";first line\n;second line";
-            yield return ";first;second;third";
-            yield return ";first\n;second\r\n;third\n\r";
+            yield return $";first line{Environment.NewLine};second line";
+            yield return ";chunk-1;chunk-2;chunk-3";
+            yield return $";first{Environment.NewLine};second{Environment.NewLine};third{Environment.NewLine}";
         }
 
         [Test]
