@@ -105,12 +105,12 @@ namespace Cl
             if (!_source.SkipMatched("#")) return false;
             if (_source.SkipMatched("t"))
             {
-                atom = new ClBool(true);
+                atom = ClBool.True;
                 return true;
             }
             if (_source.SkipMatched("f"))
             {
-                atom = new ClBool(false);
+                atom = ClBool.False;
                 return true;
             }
             throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClBool)));
