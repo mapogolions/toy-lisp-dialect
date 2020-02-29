@@ -46,7 +46,12 @@ namespace Cl
                 cell = Nil.Given;
                 return true;
             }
-            // mutually recursive
+            var car = Read();
+            var cdr = Read();
+            Ignore(_source.SkipWhitespaces());
+            if (!_source.SkipMatched(")"))
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
+            cell = new ClPair(car, cdr);
             return false;
         }
 
