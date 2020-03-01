@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cl.Constants;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -8,25 +9,30 @@ namespace Cl.Tests.ReaderTests
     [TestFixture]
     public class ClPairReaderTests
     {
-        [TestCaseSource(nameof(PairWithoutClosedBracket))]
-        public void ReadPair_ThrowException_WhenSouceContainsUnbalancedBrackets(string source)
+        [Test]
+        public void ReadPair_ThrowException_WhenOnlyOneElementInsideBrackets()
         {
-            using var reader = new Reader(new FilteredSource(source));
+            using var reader = new Reader(new FilteredSource("(1)"));
 
-            Assert.That(() => reader.ReadPair(out var _), Throws.InnerException);
-        }
-        static IEnumerable<string> PairWithoutClosedBracket()
-        {
-            yield return "(";
-            yield return "(1";
-            yield return "(1 23";
+            Assert.That(() => reader.ReadPair(out var _),
+                Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
         }
 
+        [Test]
+        public void ReadPair_ThrowException_WhenSourceContainsOnlyOpenBracket()
+        {
+            using var reader = new Reader(new FilteredSource("("));
+
+            Assert.That(() => reader.ReadPair(out var _),
+                Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
+        }
+
+        [Test]
         public void ReadPair_ReturnFalse_WhenSourceStartsWithInvalidSymbol_ButContainsList()
         {
             using var reader = new Reader(new FilteredSource("  ()"));
 
-            Assert.That(() => reader.ReadPair(out var _), Throws.InvalidOperationException);
+            Assert.That(reader.ReadPair(out var _), Is.False);
         }
 
         [TestCaseSource(nameof(EmptyListCases))]

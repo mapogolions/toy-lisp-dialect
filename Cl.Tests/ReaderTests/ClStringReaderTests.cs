@@ -1,4 +1,6 @@
+using Cl.Constants;
 using Cl.Input;
+using Cl.Types;
 using NUnit.Framework;
 using static Cl.Extensions.FpUniverse;
 
@@ -32,7 +34,8 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("\"some"));
 
-            Assert.That(() => reader.ReadString(out var _), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadString(out var _),
+                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClString))));
         }
 
         [Test]
