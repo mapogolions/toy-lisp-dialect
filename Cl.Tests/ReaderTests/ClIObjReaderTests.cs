@@ -2,12 +2,23 @@ using System.Collections.Generic;
 using Cl.Input;
 using NUnit.Framework;
 using System;
+using Cl.Types;
 
 namespace Cl.Tests
 {
     [TestFixture]
     public class ClIObjReaderTests
     {
+        [Test]
+        public void Read_ReturnInteger()
+        {
+            using var reader = new Reader(new FilteredSource("12rest"));
+
+            var obj = reader.Read();
+
+            Assert.That(obj, Is.InstanceOf(typeof(ClFixnum)));
+        }
+
         [TestCaseSource(nameof(CommentTestCases))]
         public void Read_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
         {
