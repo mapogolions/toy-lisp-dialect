@@ -106,10 +106,10 @@ namespace Cl.Tests
         [Test]
         public void SkipLine_RegognizeCarriageReturn()
         {
-            using var source = new FilteredSource("fi\rst\nsecond\r\nthird\n\r");
+            using var source = new FilteredSource($"fi\rst{Environment.NewLine}second");
 
             Assert.That(source.SkipLine(), Is.True);
-            Assert.That(source.ToString(), Is.EqualTo("second\r\nthird\n\r"));
+            Assert.That(source.ToString(), Is.EqualTo("second"));
         }
 
         public void SkipLine_SkipAllSymbols_UntilEolAppears()

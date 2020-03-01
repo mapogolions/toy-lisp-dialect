@@ -4,6 +4,7 @@ using Cl.Input;
 using Cl.Types;
 using static Cl.Extensions.FpUniverse;
 using Cl.Constants;
+using System.Globalization;
 
 namespace Cl
 {
@@ -62,7 +63,7 @@ namespace Cl
             if (!_source.SkipMatched(".")) return false;
             if (!TryReadNumbersInRow(out var floating))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
-            var number = double.Parse($"{significand}.{floating}");
+            var number = double.Parse($"{significand}.{floating}", NumberStyles.Float, CultureInfo.InvariantCulture);
             atom = new ClFloatingPoint(number);
             return true;
         }
