@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using Cl.Input;
 using Cl.Types;
+using Cl.Extensions;
 using static Cl.Extensions.FpUniverse;
 using Cl.Constants;
 using System.Globalization;
@@ -60,7 +61,11 @@ namespace Cl
         {
             atom = null;
             if (!TryReadNumbersInRow(out var significand)) return false;
-            if (!_source.SkipMatched(".")) return false;
+            if (!_source.SkipMatched("."))
+            {
+                significand.ForEach(ch => _source.Buffer(ch));
+                return false;
+            }
             if (!TryReadNumbersInRow(out var floating))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
             var number = double.Parse($"{significand}.{floating}", NumberStyles.Float, CultureInfo.InvariantCulture);
