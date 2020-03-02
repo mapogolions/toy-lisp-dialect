@@ -16,7 +16,7 @@ namespace Cl.Tests
 
             var atom = reader.Read() as ClBool;
 
-            Assert.That(atom.Value, Is.EqualTo(true));
+            Assert.That(atom?.Value, Is.EqualTo(true));
         }
 
         [Test]
@@ -24,9 +24,9 @@ namespace Cl.Tests
         {
             using var reader = new Reader(new FilteredSource("12rest"));
 
-            var obj = reader.Read();
+            var atom = reader.Read() as ClFixnum;
 
-            Assert.That(obj, Is.InstanceOf(typeof(ClFixnum)));
+            Assert.That(atom?.Value, Is.EqualTo(12));
         }
 
         [TestCaseSource(nameof(CommentTestCases))]

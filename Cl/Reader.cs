@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using System;
 using Cl.Input;
@@ -63,7 +64,7 @@ namespace Cl
             if (!TryReadNumbersInRow(out var significand)) return false;
             if (!_source.SkipMatched("."))
             {
-                significand.ForEach(ch => _source.Buffer(ch));
+                significand.Reverse().ForEach(ch => _source.Buffer(ch));
                 return false;
             }
             if (!TryReadNumbersInRow(out var floating))
