@@ -10,6 +10,16 @@ namespace Cl.Tests
     public class ClIObjReaderTests
     {
         [Test]
+        public void Read_ReturnBool()
+        {
+            using var reader = new Reader(new FilteredSource("#t"));
+
+            var atom = reader.Read() as ClBool;
+
+            Assert.That(atom.Value, Is.EqualTo(true));
+        }
+
+        [Test]
         public void Read_ReturnInteger()
         {
             using var reader = new Reader(new FilteredSource("12rest"));

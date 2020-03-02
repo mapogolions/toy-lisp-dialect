@@ -130,8 +130,7 @@ namespace Cl
         public bool ReadChar(out ClChar atom)
         {
             atom = default;
-            if (!_source.SkipMatched("#")) return false;
-            if (!_source.SkipMatched("\\")) return false;
+            if (!_source.SkipMatched("#\\")) return false;
             foreach (var (word, ch) in SpecialChars)
             {
                 if (!_source.SkipMatched(word)) continue;
