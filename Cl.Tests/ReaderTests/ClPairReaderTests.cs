@@ -10,6 +10,43 @@ namespace Cl.Tests.ReaderTests
     public class ClPairReaderTests
     {
         [Test]
+        public void ReadPair_ThrowException_WhenAfterReadElementSomething()
+        {
+            using var reader = new Reader(new FilteredSource("(#f #\\foo)"));
+
+            Assert.That(() => reader.ReadPair(out var _),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+        }
+
+        [Test]
+        public void ReadPair_ReturnBoolAndChar()
+        {
+            using var reader = new Reader(new FilteredSource("(#f #\\f)"));
+
+            var result = reader.ReadPair(out var cell);
+            var car = cell.Car as ClBool;
+            var cdr = cell.Cdr as ClChar;
+
+            Assert.That(result, Is.True);
+            Assert.That(car?.Value, Is.False);
+            Assert.That(cdr?.Value, Is.EqualTo('f'));
+        }
+
+        [Test]
+        public void ReadPair_ReturnPairOfNumbers()
+        {
+            using var reader = new Reader(new FilteredSource("(1.2 2)"));
+
+            var result = reader.ReadPair(out var cell);
+            var car = cell.Car as ClFloatingPoint;
+            var cdr = cell.Cdr as ClFixnum;
+
+            Assert.That(result, Is.True);
+            Assert.That(car?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
+            Assert.That(cdr?.Value, Is.EqualTo(2));
+        }
+
+        [Test]
         public void ReadPair_ThrowException_WhenOnlyOneElementInsideBrackets()
         {
             using var reader = new Reader(new FilteredSource("(1)"));

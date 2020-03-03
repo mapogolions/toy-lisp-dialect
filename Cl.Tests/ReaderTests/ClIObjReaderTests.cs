@@ -10,6 +10,26 @@ namespace Cl.Tests
     public class ClIObjReaderTests
     {
         [Test]
+        public void Read_ReturnChar()
+        {
+            using var reader = new Reader(new FilteredSource("#\\N"));
+
+            var atom = reader.Read() as ClChar;
+
+            Assert.That(atom?.Value, Is.EqualTo('N'));
+        }
+
+        [Test]
+        public void Read_ReturnString()
+        {
+            using var reader = new Reader(new FilteredSource("\"foo\""));
+
+            var atom = reader.Read() as ClString;
+
+            Assert.That(atom?.Value, Is.EqualTo("foo"));
+        }
+
+        [Test]
         public void Read_ReturnBool()
         {
             using var reader = new Reader(new FilteredSource("#t"));

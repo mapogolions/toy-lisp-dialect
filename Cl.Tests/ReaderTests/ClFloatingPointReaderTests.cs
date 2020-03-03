@@ -38,7 +38,7 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadFloatingPoint_ThrowException_WhenAfterDotInvaidSymbol()
+        public void ReadFloatingPoint_ThrowException_WhenAfterDotInvalidSymbol()
         {
             using var reader = new Reader(new FilteredSource("0. "));
 
