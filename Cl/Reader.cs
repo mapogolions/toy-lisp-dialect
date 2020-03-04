@@ -50,8 +50,9 @@ namespace Cl
                 return true;
             }
             var car = Read();
+            if (!_source.SkipMatched(" "))
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             var cdr = Read();
-            Ignore(_source.SkipWhitespaces());
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             cell = new ClPair(car, cdr);

@@ -10,7 +10,16 @@ namespace Cl.Tests.ReaderTests
     public class ClPairReaderTests
     {
         [Test]
-        public void ReadPair_ThrowException_WhenAfterReadElementSomething()
+        public void ReadPair_ThrowException_WhenSpaceIsMissed()
+        {
+            using var reader = new Reader(new FilteredSource("(#t1)"));
+
+            Assert.That(() => reader.ReadPair(out var _),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+        }
+
+        [Test]
+        public void ReadPair_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader(new FilteredSource("(#f #\\foo)"));
 
@@ -52,7 +61,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(1)"));
 
             Assert.That(() => reader.ReadPair(out var _),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
+                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
         }
 
         [Test]
