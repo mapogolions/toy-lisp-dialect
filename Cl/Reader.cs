@@ -13,17 +13,16 @@ namespace Cl
     public class Reader : IDisposable
     {
         private readonly IFilteredSource _source;
+        private readonly IDictionary<string, IClObj> _symbols;
 
-        public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
-        {
-            ["newline"] = '\n',
-            ["tab"] = '\t',
-            ["space"] = ' '
-        };
-
-        public Reader(IFilteredSource source)
+        public Reader(IFilteredSource source, IDictionary<string, IClObj> symbols)
         {
             _source = source;
+            _symbols = symbols;
+        }
+
+        public Reader(IFilteredSource source) : this(source, new Dictionary<string, IClObj>())
+        {
         }
 
         public IClObj Read()
@@ -142,6 +141,13 @@ namespace Cl
             atom = new ClChar((char) _source.Read());
             return true;
         }
+
+        public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
+            {
+                ["newline"] = '\n',
+                ["tab"] = '\t',
+                ["space"] = ' '
+            };
 
         public void Dispose()
         {
