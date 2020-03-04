@@ -27,7 +27,7 @@ namespace Cl.Abs
 
         public ClSymbol CreateIfNotExists(string name)
         {
-            if (_items.TryGetValue("name", out var symbol)) return symbol;
+            if (_items.TryGetValue(name, out var symbol)) return symbol;
             var atom = new ClSymbol(name);
             _items.Add(name, atom);
             return atom;
