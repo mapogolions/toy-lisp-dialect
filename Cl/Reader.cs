@@ -50,7 +50,7 @@ namespace Cl
                 return true;
             }
             var car = Read();
-            if (!_source.SkipMatched(" "))
+            if (!_source.SkipWhitespaces())
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             var cdr = Read();
             if (!_source.SkipMatched(")"))

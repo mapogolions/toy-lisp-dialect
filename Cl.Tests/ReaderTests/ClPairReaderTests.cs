@@ -10,6 +10,20 @@ namespace Cl.Tests.ReaderTests
     public class ClPairReaderTests
     {
         [Test]
+        public void ReadPair_SkipAllWhitespacesBetweenCarAndCdr()
+        {
+            using var reader = new Reader(new FilteredSource("(1.34\t  #\\a)"));
+
+            var result = reader.ReadPair(out var cell);
+            var car = cell.Car as ClFloatingPoint;
+            var cdr = cell.Cdr as ClChar;
+
+            Assert.That(result, Is.True);
+            Assert.That(car?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
+            Assert.That(cdr?.Value, Is.EqualTo('a'));
+        }
+
+        [Test]
         public void ReadPair_ThrowException_WhenSpaceIsMissed()
         {
             using var reader = new Reader(new FilteredSource("(#t1)"));
