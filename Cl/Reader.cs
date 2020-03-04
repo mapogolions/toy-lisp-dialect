@@ -7,21 +7,22 @@ using Cl.Extensions;
 using static Cl.Extensions.FpUniverse;
 using Cl.Constants;
 using System.Globalization;
+using Cl.Abs;
 
 namespace Cl
 {
     public class Reader : IDisposable
     {
         private readonly IFilteredSource _source;
-        private readonly IDictionary<string, IClObj> _symbols;
+        private readonly ISymbolsTable _symbolsTable;
 
-        public Reader(IFilteredSource source, IDictionary<string, IClObj> symbols)
+        public Reader(IFilteredSource source, ISymbolsTable symbolsTable)
         {
             _source = source;
-            _symbols = symbols;
+            _symbolsTable = symbolsTable;
         }
 
-        public Reader(IFilteredSource source) : this(source, new Dictionary<string, IClObj>())
+        public Reader(IFilteredSource source) : this(source, new DefaultSymbolsTable())
         {
         }
 
