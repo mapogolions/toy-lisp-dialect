@@ -33,7 +33,7 @@ namespace Cl
             if (ReadChar(out var ch)) return ch;
             if (ReadBool(out var boolean)) return boolean;
             if (ReadString(out var str)) return str;
-            if (ReadFloatingPoint(out var natural)) return natural;
+            if (ReadFloat(out var natural)) return natural;
             if (ReadFixnum(out var integer)) return integer;
             if (ReadPair(out var cell)) return cell;
             throw new InvalidOperationException(Errors.ReadIllegalState);
@@ -59,7 +59,7 @@ namespace Cl
             return true;
         }
 
-        public bool ReadFloatingPoint(out ClFloatingPoint atom)
+        public bool ReadFloat(out ClFloat atom)
         {
             atom = null;
             if (!TryReadNumbersInRow(out var significand)) return false;
@@ -69,9 +69,9 @@ namespace Cl
                 return false;
             }
             if (!TryReadNumbersInRow(out var floating))
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloatingPoint)));
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloat)));
             var number = double.Parse($"{significand}.{floating}", NumberStyles.Float, CultureInfo.InvariantCulture);
-            atom = new ClFloatingPoint(number);
+            atom = new ClFloat(number);
             return true;
         }
 

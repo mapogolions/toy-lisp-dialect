@@ -15,7 +15,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(1.34\t  #\\a)"));
 
             var result = reader.ReadPair(out var cell);
-            var car = cell.Car as ClFloatingPoint;
+            var car = cell.Car as ClFloat;
             var cdr = cell.Cdr as ClChar;
 
             Assert.That(result, Is.True);
@@ -61,7 +61,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(1.2 2)"));
 
             var result = reader.ReadPair(out var cell);
-            var car = cell.Car as ClFloatingPoint;
+            var car = cell.Car as ClFloat;
             var cdr = cell.Cdr as ClFixnum;
 
             Assert.That(result, Is.True);
