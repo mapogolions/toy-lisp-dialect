@@ -30,12 +30,12 @@ namespace Cl
         {
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
-            if (TryReadLiteral(ReadChar, out var obj)) return obj;
-            if (TryReadLiteral(ReadBool, out obj)) return obj;
-            if (TryReadLiteral(ReadString, out obj)) return obj;
-            if (TryReadLiteral(ReadFloat, out obj)) return obj;
-            if (TryReadLiteral(ReadFixnum, out obj)) return obj;
-            if (TryReadLiteral(ReadPair, out obj)) return obj;
+            if (ReadLiteral(ReadChar, out var obj)) return obj;
+            if (ReadLiteral(ReadBool, out obj)) return obj;
+            if (ReadLiteral(ReadString, out obj)) return obj;
+            if (ReadLiteral(ReadFloat, out obj)) return obj;
+            if (ReadLiteral(ReadFixnum, out obj)) return obj;
+            if (ReadLiteral(ReadPair, out obj)) return obj;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
@@ -53,7 +53,7 @@ namespace Cl
             return new ClPair(car, cdr);
         }
 
-        public bool TryReadLiteral(Func<IClObj> literalReader, out IClObj obj)
+        public bool ReadLiteral(Func<IClObj> literalReader, out IClObj obj)
         {
             obj = literalReader.Invoke();
             return obj != null;
