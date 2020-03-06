@@ -39,6 +39,12 @@ namespace Cl
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
+        public bool ReadLiteral(Func<IClObj> fn, out IClObj obj)
+        {
+            obj = fn();
+            return obj != null;
+        }
+
         public ClPair ReadPair()
         {
             if (!_source.SkipMatched("(")) return default;
@@ -51,12 +57,6 @@ namespace Cl
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             return new ClPair(car, cdr);
-        }
-
-        public bool ReadLiteral(Func<IClObj> literalReader, out IClObj obj)
-        {
-            obj = literalReader.Invoke();
-            return obj != null;
         }
 
         public ClFloat ReadFloat()
