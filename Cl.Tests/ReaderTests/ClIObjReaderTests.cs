@@ -10,6 +10,32 @@ namespace Cl.Tests
     public class ClIObjReaderTests
     {
         [Test]
+        public void Read_ReturnPair_WhenCommentsAround()
+        {
+            var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
+            var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
+            using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
+
+            var cell = reader.Read() as ClPair;
+            var car = cell?.Car as ClBool;
+            var cdr = cell?.Cdr as ClString;
+
+            Assert.That(car?.Value, Is.False);
+            Assert.That(cdr?.Value, Is.EqualTo("foo"));
+        }
+
+        [Test]
+        public void Read_ReturnInteger_WhenCommentsAround()
+        {
+            var input = $";before{Environment.NewLine}112;after";
+            using var reader = new Reader(new FilteredSource(input));
+
+            var obj = reader.Read() as ClFixnum;
+
+            Assert.That(obj?.Value, Is.EqualTo(112));
+        }
+
+        [Test]
         public void Read_ReturnChar()
         {
             using var reader = new Reader(new FilteredSource("#\\N"));
@@ -42,7 +68,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnInteger()
         {
-            using var reader = new Reader(new FilteredSource("12rest"));
+            using var reader = new Reader(new FilteredSource("12"));
 
             var atom = reader.Read() as ClFixnum;
 

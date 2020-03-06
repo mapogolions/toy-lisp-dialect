@@ -28,8 +28,15 @@ namespace Cl
 
         public IClObj Read()
         {
-            Ignore(_source.SkipWhitespaces());
-            if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
+            var obj = ReadMutualRec();
+            _source.SkipUntilLiteral();
+            if (_source.Eof()) return obj;
+            throw new InvalidOperationException(Errors.ReadIllegalState);
+        }
+
+        private IClObj ReadMutualRec()
+        {
+            _source.SkipUntilLiteral();
             if (ReadLiteral(ReadChar, out var obj)) return obj;
             if (ReadLiteral(ReadBool, out obj)) return obj;
             if (ReadLiteral(ReadString, out obj)) return obj;
@@ -48,12 +55,13 @@ namespace Cl
         public ClPair ReadPair()
         {
             if (!_source.SkipMatched("(")) return default;
-            Ignore(_source.SkipWhitespaces());
+            Ignore(_source.SkipUntilLiteral());
             if (_source.SkipMatched(")")) return Nil.Given;
-            var car = Read();
-            if (!_source.SkipWhitespaces())
+            var car = ReadMutualRec();
+            if (!_source.SkipUntilLiteral())
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
-            var cdr = Read();
+            var cdr = ReadMutualRec();
+            Ignore(_source.SkipUntilLiteral());
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             return new ClPair(car, cdr);

@@ -22,6 +22,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(cdr?.Value, Is.EqualTo('a'));
         }
 
+
         [Test]
         public void ReadPair_ThrowException_WhenSpaceIsMissed()
         {
