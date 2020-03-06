@@ -30,12 +30,12 @@ namespace Cl
         {
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
-            var readers = new List<Func<IClObj>> { ReadChar, ReadBool, ReadString, ReadFloat, ReadFixnum, ReadPair };
-            foreach (var reader in readers)
-            {
-                var obj = reader.Invoke();
-                if (obj != null) return obj;
-            }
+            if (TryReadLiteral(ReadChar, out var obj)) return obj;
+            if (TryReadLiteral(ReadBool, out obj)) return obj;
+            if (TryReadLiteral(ReadString, out obj)) return obj;
+            if (TryReadLiteral(ReadFloat, out obj)) return obj;
+            if (TryReadLiteral(ReadFixnum, out obj)) return obj;
+            if (TryReadLiteral(ReadPair, out obj)) return obj;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
@@ -51,6 +51,12 @@ namespace Cl
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             return new ClPair(car, cdr);
+        }
+
+        public bool TryReadLiteral(Func<IClObj> literalReader, out IClObj obj)
+        {
+            obj = literalReader.Invoke();
+            return obj != null;
         }
 
         public ClFloat ReadFloat()
