@@ -15,7 +15,7 @@ namespace Cl.Tests.ReaderTests
             var source = new FilteredSource("\"foo\"bar");
             using var reader = new Reader(source);
 
-            Ignore(reader.ReadString(out var _));
+            Ignore(reader.ReadString());
 
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
@@ -25,8 +25,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("\"foo\""));
 
-            Assert.That(reader.ReadString(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo("foo"));
+            Assert.That(reader.ReadString()?.Value, Is.EqualTo("foo"));
         }
 
         [Test]
@@ -34,7 +33,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("\"some"));
 
-            Assert.That(() => reader.ReadString(out var _),
+            Assert.That(() => reader.ReadString(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClString))));
         }
 
@@ -43,8 +42,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("_"));
 
-            Assert.That(reader.ReadString(out var atom), Is.False);
-            Assert.That(atom, Is.Null);
+            Assert.That(reader.ReadString(), Is.Null);
         }
     }
 }

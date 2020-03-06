@@ -15,7 +15,7 @@ namespace Cl.Tests.ReaderTests
             var source = new FilteredSource("120.0rest");
             using var reader = new Reader(source);
 
-            Ignore(reader.ReadFloat(out var _));
+            Ignore(reader.ReadFloat());
 
             Assert.That(source.ToString(), Is.EqualTo("rest"));
         }
@@ -25,7 +25,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("-120.0"));
 
-            Assert.That(reader.ReadFloat(out var _), Is.False);
+            Assert.That(reader.ReadFloat(), Is.Null);
         }
 
         [Test]
@@ -33,8 +33,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("0.45rest"));
 
-            Assert.That(reader.ReadFloat(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo(0.45).Within(double.Epsilon));
+            Assert.That(reader.ReadFloat()?.Value, Is.EqualTo(0.45).Within(double.Epsilon));
         }
 
         [Test]
@@ -42,16 +41,16 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("0. "));
 
-            Assert.That(() => reader.ReadFloat(out var _),
+            Assert.That(() => reader.ReadFloat(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClFloat))));
         }
 
         [Test]
-        public void ReadFloat_ReturnFalse_WhenSourceContainsInteger()
+        public void ReadFloat_ReturnNull_WhenSourceContainsInteger()
         {
             using var reader = new Reader(new FilteredSource("23"));
 
-            Assert.That(reader.ReadFloat(out var _), Is.False);
+            Assert.That(reader.ReadFloat(), Is.Null);
         }
     }
 }

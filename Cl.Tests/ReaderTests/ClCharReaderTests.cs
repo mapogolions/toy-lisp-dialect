@@ -15,7 +15,7 @@ namespace Cl.Tests.ReaderTests
             var source = new FilteredSource("#\\foo");
             using var reader = new Reader(source);
 
-            Ignore(reader.ReadChar(out var _));
+            Ignore(reader.ReadChar());
 
             Assert.That(source.ToString(), Is.EqualTo("oo"));
         }
@@ -25,8 +25,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("#\\new"));
 
-            Assert.That(reader.ReadChar(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo('n'));
+            Assert.That(reader.ReadChar()?.Value, Is.EqualTo('n'));
         }
 
         [Test]
@@ -34,8 +33,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("#\\space"));
 
-            Assert.That(reader.ReadChar(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo(' '));
+            Assert.That(reader.ReadChar()?.Value, Is.EqualTo(' '));
         }
 
         [Test]
@@ -43,8 +41,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("#\\tab"));
 
-            Assert.That(reader.ReadChar(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo('\t'));
+            Assert.That(reader.ReadChar()?.Value, Is.EqualTo('\t'));
         }
 
         [Test]
@@ -52,8 +49,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("#\\newline"));
 
-            Assert.That(reader.ReadChar(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo('\n'));
+            Assert.That(reader.ReadChar()?.Value, Is.EqualTo('\n'));
         }
 
         [Test]
@@ -61,16 +57,16 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("#\\"));
 
-            Assert.That(() => reader.ReadChar(out var _),
+            Assert.That(() => reader.ReadChar(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClChar))));
         }
 
         [Test]
-        public void ReadChar_ReturnFalse_WhenSourceStartsWithHashButNextSymbolIsNotBackslash()
+        public void ReadChar_ReturnNull_WhenSourceStartsWithHashButNextSymbolIsNotBackslash()
         {
             using var reader = new Reader(new FilteredSource("#i"));
 
-            Assert.That(reader.ReadChar(out var _), Is.False);
+            Assert.That(reader.ReadChar(), Is.Null);
         }
 
         [Test]
@@ -78,8 +74,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("t"));
 
-            Assert.That(reader.ReadChar(out var atom), Is.False);
-            Assert.That(atom, Is.Null);
+            Assert.That(reader.ReadChar(), Is.Null);
         }
     }
 }

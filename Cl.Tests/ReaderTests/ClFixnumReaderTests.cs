@@ -13,7 +13,7 @@ namespace Cl.Tests.ReaderTests
             var source = new FilteredSource("120rest");
             using var reader = new Reader(source);
 
-            Ignore(reader.ReadFixnum(out var _));
+            Ignore(reader.ReadFixnum());
 
             Assert.That(source.ToString(), Is.EqualTo("rest"));
         }
@@ -23,7 +23,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("-120..."));
 
-            Assert.That(reader.ReadFixnum(out var _), Is.False);
+            Assert.That(reader.ReadFixnum(), Is.Null);
         }
 
         [Test]
@@ -31,8 +31,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("1."));
 
-            Assert.That(reader.ReadFixnum(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo(1));
+            Assert.That(reader.ReadFixnum()?.Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -40,8 +39,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("12"));
 
-            Assert.That(reader.ReadFixnum(out var atom), Is.True);
-            Assert.That(atom.Value, Is.EqualTo(12));
+            Assert.That(reader.ReadFixnum()?.Value, Is.EqualTo(12));
         }
     }
 }

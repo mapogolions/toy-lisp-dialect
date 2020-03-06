@@ -14,11 +14,10 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(1.34\t  #\\a)"));
 
-            var result = reader.ReadPair(out var cell);
+            var cell = reader.ReadPair();
             var car = cell.Car as ClFloat;
             var cdr = cell.Cdr as ClChar;
 
-            Assert.That(result, Is.True);
             Assert.That(car?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
             Assert.That(cdr?.Value, Is.EqualTo('a'));
         }
@@ -28,7 +27,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(#t1)"));
 
-            Assert.That(() => reader.ReadPair(out var _),
+            Assert.That(() => reader.ReadPair(),
                 Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
         }
 
@@ -37,7 +36,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(#f #\\foo)"));
 
-            Assert.That(() => reader.ReadPair(out var _),
+            Assert.That(() => reader.ReadPair(),
                 Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
         }
 
@@ -46,11 +45,10 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(#f #\\f)"));
 
-            var result = reader.ReadPair(out var cell);
+            var cell = reader.ReadPair();
             var car = cell.Car as ClBool;
             var cdr = cell.Cdr as ClChar;
 
-            Assert.That(result, Is.True);
             Assert.That(car?.Value, Is.False);
             Assert.That(cdr?.Value, Is.EqualTo('f'));
         }
@@ -60,11 +58,10 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(1.2 2)"));
 
-            var result = reader.ReadPair(out var cell);
+            var cell = reader.ReadPair();
             var car = cell.Car as ClFloat;
             var cdr = cell.Cdr as ClFixnum;
 
-            Assert.That(result, Is.True);
             Assert.That(car?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
             Assert.That(cdr?.Value, Is.EqualTo(2));
         }
@@ -74,7 +71,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("(1)"));
 
-            Assert.That(() => reader.ReadPair(out var _),
+            Assert.That(() => reader.ReadPair(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
         }
 
@@ -83,16 +80,16 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("("));
 
-            Assert.That(() => reader.ReadPair(out var _),
+            Assert.That(() => reader.ReadPair(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
         }
 
         [Test]
-        public void ReadPair_ReturnFalse_WhenSourceStartsWithInvalidSymbol_ButContainsList()
+        public void ReadPair_ReturnNull_WhenSourceStartsWithInvalidSymbol_ButContainsList()
         {
             using var reader = new Reader(new FilteredSource("  ()"));
 
-            Assert.That(reader.ReadPair(out var _), Is.False);
+            Assert.That(reader.ReadPair(), Is.Null);
         }
 
         [TestCaseSource(nameof(EmptyListCases))]
@@ -100,8 +97,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource(source));
 
-            Assert.That(reader.ReadPair(out var cell), Is.True);
-            Assert.That(cell, Is.EqualTo(Nil.Given));
+            Assert.That(reader.ReadPair(), Is.EqualTo(Nil.Given));
         }
 
         static IEnumerable<string> EmptyListCases()
@@ -116,8 +112,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource("something else"));
 
-            Assert.That(reader.ReadPair(out var cell), Is.False);
-            Assert.That(cell, Is.Null);
+            Assert.That(reader.ReadPair(), Is.Null);
         }
 
         [Test]
@@ -125,8 +120,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(new FilteredSource(string.Empty));
 
-            Assert.That(reader.ReadPair(out var cell), Is.False);
-            Assert.That(cell, Is.Null);
+            Assert.That(reader.ReadPair(), Is.Null);
         }
     }
 }

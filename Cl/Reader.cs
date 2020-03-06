@@ -30,58 +30,48 @@ namespace Cl
         {
             Ignore(_source.SkipWhitespaces());
             if (_source.SkipMatched(";")) Ignore(_source.SkipLine());
-            if (ReadChar(out var ch)) return ch;
-            if (ReadBool(out var boolean)) return boolean;
-            if (ReadString(out var str)) return str;
-            if (ReadFloat(out var natural)) return natural;
-            if (ReadFixnum(out var integer)) return integer;
-            if (ReadPair(out var cell)) return cell;
+            var readers = new List<Func<IClObj>> { ReadChar, ReadBool, ReadString, ReadFloat, ReadFixnum, ReadPair };
+            foreach (var reader in readers)
+            {
+                var obj = reader.Invoke();
+                if (obj != null) return obj;
+            }
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
-        public bool ReadPair(out ClPair cell)
+        public ClPair ReadPair()
         {
-            cell = default;
-            if (!_source.SkipMatched("(")) return false;
+            if (!_source.SkipMatched("(")) return default;
             Ignore(_source.SkipWhitespaces());
-            if (_source.SkipMatched(")"))
-            {
-                cell = Nil.Given;
-                return true;
-            }
+            if (_source.SkipMatched(")")) return Nil.Given;
             var car = Read();
             if (!_source.SkipWhitespaces())
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             var cdr = Read();
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
-            cell = new ClPair(car, cdr);
-            return true;
+            return new ClPair(car, cdr);
         }
 
-        public bool ReadFloat(out ClFloat atom)
+        public ClFloat ReadFloat()
         {
-            atom = null;
-            if (!TryReadNumbersInRow(out var significand)) return false;
+            if (!TryReadNumbersInRow(out var significand)) return default;
             if (!_source.SkipMatched("."))
             {
                 significand.Reverse().ForEach(ch => _source.Buffer(ch));
-                return false;
+                return default;
             }
             if (!TryReadNumbersInRow(out var floating))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloat)));
             var number = double.Parse($"{significand}.{floating}", NumberStyles.Float, CultureInfo.InvariantCulture);
-            atom = new ClFloat(number);
-            return true;
+            return new ClFloat(number);
         }
 
-        public bool ReadFixnum(out ClFixnum atom)
+        public ClFixnum ReadFixnum()
         {
-            atom = default;
-            if (!TryReadNumbersInRow(out var nums)) return false;
-            if (!int.TryParse(nums, out var integer)) return false;
-            atom = new ClFixnum(integer);
-            return true;
+            if (!TryReadNumbersInRow(out var nums)) return default;
+            if (!int.TryParse(nums, out var integer)) return default;
+            return new ClFixnum(integer);
         }
 
         public bool TryReadNumbersInRow(out string nums)
@@ -96,10 +86,9 @@ namespace Cl
             return !string.IsNullOrEmpty(nums);
         }
 
-        public bool ReadString(out ClString atom)
+        public ClString ReadString()
         {
-            atom = default;
-            if (!_source.SkipMatched("\"")) return false;
+            if (!_source.SkipMatched("\"")) return default;
             string loop(string acc)
             {
                 if (_source.Eof())
@@ -108,40 +97,27 @@ namespace Cl
                 if (ch == '"') return acc;
                 return loop($"{acc}{ch}");
             }
-            atom = new ClString(loop(string.Empty));
-            return true;
+            return new ClString(loop(string.Empty));
         }
 
-        public bool ReadBool(out ClBool atom)
+        public ClBool ReadBool()
         {
-            atom = default;
-            if (!_source.SkipMatched("#")) return false;
-            if (_source.SkipMatched("t"))
-            {
-                atom = ClBool.True;
-                return true;
-            }
-            if (_source.SkipMatched("f"))
-            {
-                atom = ClBool.False;
-                return true;
-            }
+            if (!_source.SkipMatched("#")) return default;
+            if (_source.SkipMatched("t")) return ClBool.True;
+            if (_source.SkipMatched("f")) return ClBool.False;
             throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClBool)));
         }
 
-        public bool ReadChar(out ClChar atom)
+        public ClChar ReadChar()
         {
-            atom = default;
-            if (!_source.SkipMatched("#\\")) return false;
+            if (!_source.SkipMatched("#\\")) return default;
             foreach (var (word, ch) in SpecialChars)
             {
                 if (!_source.SkipMatched(word)) continue;
-                atom = new ClChar(ch);
-                return true;
+                return new ClChar(ch);
             }
             if (_source.Eof()) throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClChar)));
-            atom = new ClChar((char) _source.Read());
-            return true;
+            return new ClChar((char) _source.Read());
         }
 
         public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
