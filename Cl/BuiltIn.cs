@@ -21,8 +21,12 @@ namespace Cl
 
         public static IClObj Cadr(IClObj expr) => Car(Cdr(expr));
         public static IClObj Cddr(IClObj expr) => Cdr(Cdr(expr));
-        public static IClObj Caddr(IClObj expr) => Car(Cddr(Cddr(expr)));
+        public static IClObj Caddr(IClObj expr) => Car(Cddr(expr));
         public static IClObj Cdddr(IClObj expr) => Cdr(Cddr(expr));
         public static IClObj Cadddr(IClObj expr) => Car(Cdddr(expr));
+        public static Func<IClObj, IClObj> First = Car;
+        public static Func<IClObj, IClObj> Second = Cadr;
+        public static Func<IClObj, IClObj> Third = Caddr;
+        public static Func<IClObj, IClObj> Fourth = Cadddr;
     }
 }

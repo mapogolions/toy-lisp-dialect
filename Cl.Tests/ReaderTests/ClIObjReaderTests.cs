@@ -17,8 +17,8 @@ namespace Cl.Tests
             using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
 
             var cell = reader.Read() as ClPair;
-            var first = BuiltIn.Car(cell) as ClBool;
-            var second = BuiltIn.Cadr(cell) as ClString;
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClString;
 
             Assert.That(first?.Value, Is.True);
             Assert.That(second?.Value, Is.EqualTo("bar"));

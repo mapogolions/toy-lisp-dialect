@@ -10,13 +10,30 @@ namespace Cl.Tests.ReaderTests
     public class ClPairReaderTests
     {
         [Test]
+        public void ReadPair_CanReadMultipleValues()
+        {
+            using var reader = new Reader(new FilteredSource("(#f #t 6 #\\a)"));
+
+            var cell = reader.ReadPair();
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClBool;
+            var third = BuiltIn.Third(cell) as ClFixnum;
+            var fourth = BuiltIn.Fourth(cell) as ClChar;
+
+            Assert.That(first?.Value, Is.False);
+            Assert.That(second?.Value, Is.True);
+            Assert.That(third?.Value, Is.EqualTo(6));
+            Assert.That(fourth?.Value, Is.EqualTo('a'));
+        }
+
+        [Test]
         public void ReadPair_SkipAllWhitespacesBetweenCarAndCdr()
         {
             using var reader = new Reader(new FilteredSource("(1.34\t  #\\a)"));
             var cell = reader.ReadPair();
 
-            var first = BuiltIn.Car(cell) as ClFloat;
-            var second = BuiltIn.Cadr(cell) as ClChar;
+            var first = BuiltIn.First(cell) as ClFloat;
+            var second = BuiltIn.Second(cell) as ClChar;
 
             Assert.That(first?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
             Assert.That(second?.Value, Is.EqualTo('a'));
@@ -47,8 +64,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(#f #\\f)"));
 
             var cell = reader.ReadPair();
-            var first = BuiltIn.Car(cell) as ClBool;
-            var second = BuiltIn.Cadr(cell) as ClChar;
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClChar;
 
             Assert.That(first?.Value, Is.False);
             Assert.That(second?.Value, Is.EqualTo('f'));
@@ -60,8 +77,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(1.2 2)"));
 
             var cell = reader.ReadPair();
-            var first = BuiltIn.Car(cell) as ClFloat;
-            var second = BuiltIn.Cadr(cell) as ClFixnum;
+            var first = BuiltIn.First(cell) as ClFloat;
+            var second = BuiltIn.Second(cell) as ClFixnum;
 
             Assert.That(first?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
             Assert.That(second?.Value, Is.EqualTo(2));
