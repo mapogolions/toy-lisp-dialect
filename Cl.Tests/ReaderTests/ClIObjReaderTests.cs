@@ -10,7 +10,22 @@ namespace Cl.Tests
     public class ClIObjReaderTests
     {
         [Test]
-        public void Read_ReturnPair_WhenCommentsAround()
+        public void Read_Treat_WhitespacesBetweenCarAndCdrAsDelimiter()
+        {
+            var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#t"; // ClBool.True
+            var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
+            using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
+
+            var cell = reader.Read() as ClPair;
+            var car = cell?.Car as ClBool;
+            var cdr = cell?.Cdr as ClString;
+
+            Assert.That(car?.Value, Is.True);
+            Assert.That(cdr?.Value, Is.EqualTo("bar"));
+        }
+
+        [Test]
+        public void Read_Treat_CommentsBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
             var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
