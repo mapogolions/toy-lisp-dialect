@@ -5,13 +5,14 @@ namespace Cl.Extensions
 {
     public static class IFilteredSourceOps
     {
-        public static bool SkipUntilLiteral(this IFilteredSource self,  string startsWith = ";", bool skipAtLeastOne = false)
+        public static bool SkipWhitespacesAndComments(this IFilteredSource self,  string startsWith = ";",
+            bool atLeastOne = false)
         {
             if (self.SkipWhitespaces())
-                skipAtLeastOne = true;
-            if (!self.SkipMatched(startsWith)) return skipAtLeastOne;
+                atLeastOne = true;
+            if (!self.SkipMatched(startsWith)) return atLeastOne;
             Ignore(self.SkipLine());
-            return self.SkipUntilLiteral(startsWith, skipAtLeastOne: true);
+            return self.SkipWhitespacesAndComments(startsWith, atLeastOne: true);
         }
     }
 }

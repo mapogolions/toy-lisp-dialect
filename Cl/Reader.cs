@@ -28,15 +28,15 @@ namespace Cl
 
         public IClObj Read()
         {
-            var obj = ReadMutualRec();
-            _source.SkipUntilLiteral();
-            if (_source.Eof()) return obj;
+            var ast = ReadMutualRec();
+            _source.SkipWhitespacesAndComments();
+            if (_source.Eof()) return ast;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
         private IClObj ReadMutualRec()
         {
-            _source.SkipUntilLiteral();
+            _source.SkipWhitespacesAndComments();
             if (ReadLiteral(ReadChar, out var obj)) return obj;
             if (ReadLiteral(ReadBool, out obj)) return obj;
             if (ReadLiteral(ReadString, out obj)) return obj;
@@ -55,13 +55,13 @@ namespace Cl
         public ClPair ReadPair()
         {
             if (!_source.SkipMatched("(")) return default;
-            Ignore(_source.SkipUntilLiteral());
+            Ignore(_source.SkipWhitespacesAndComments());
             if (_source.SkipMatched(")")) return Nil.Given;
             var car = ReadMutualRec();
-            if (!_source.SkipUntilLiteral())
+            if (!_source.SkipWhitespacesAndComments())
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             var cdr = ReadMutualRec();
-            Ignore(_source.SkipUntilLiteral());
+            Ignore(_source.SkipWhitespacesAndComments());
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             return new ClPair(car, cdr);
@@ -75,9 +75,9 @@ namespace Cl
                 significand.Reverse().ForEach(ch => _source.Buffer(ch));
                 return default;
             }
-            if (!TryReadNumbersInRow(out var floating))
+            if (!TryReadNumbersInRow(out var mantissa))
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloat)));
-            var number = double.Parse($"{significand}.{floating}", NumberStyles.Float, CultureInfo.InvariantCulture);
+            var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float, CultureInfo.InvariantCulture);
             return new ClFloat(number);
         }
 
