@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using Cl.Constants;
 using Cl.Input;
-using Cl.Types;
 using NUnit.Framework;
 using static Cl.Extensions.FpUniverse;
 
@@ -32,6 +30,7 @@ namespace Cl.Tests.ReaderTests
         static object[] ValidSymbolsTestCases =
             {
                 new object[] { "foo bar", "foo" },
+                new object[] { "bar-foo", "bar"},
                 new object[] { "foo", "foo" },
                 new object[] { "f", "f" },
                 new object[] { "bar1", "bar1" },
@@ -51,6 +50,7 @@ namespace Cl.Tests.ReaderTests
             yield return string.Empty;
             yield return "1foo";
             yield return "-bar";
+            yield return "+foo";
             yield return "?bar";
         }
     }
