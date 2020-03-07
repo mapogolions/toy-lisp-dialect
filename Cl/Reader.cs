@@ -30,19 +30,33 @@ namespace Cl
         private IClObj ReadMutualRec()
         {
             _source.SkipWhitespacesAndComments();
-            if (ReadLiteral(ReadChar, out var obj)) return obj;
-            if (ReadLiteral(ReadBool, out obj)) return obj;
-            if (ReadLiteral(ReadString, out obj)) return obj;
-            if (ReadLiteral(ReadFloat, out obj)) return obj;
-            if (ReadLiteral(ReadFixnum, out obj)) return obj;
-            if (ReadLiteral(ReadPair, out obj)) return obj;
+            if (ReadLiteral(ReadChar, out var ast)) return ast;
+            if (ReadLiteral(ReadBool, out ast)) return ast;
+            if (ReadLiteral(ReadString, out ast)) return ast;
+            if (ReadLiteral(ReadFloat, out ast)) return ast;
+            if (ReadLiteral(ReadFixnum, out ast)) return ast;
+            if (ReadLiteral(ReadPair, out ast)) return ast;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
-        public bool ReadLiteral(Func<IClObj> fn, out IClObj obj)
+        public bool ReadLiteral(Func<IClObj> fn, out IClObj ast)
         {
-            obj = fn();
-            return obj != null;
+            ast = fn();
+            return ast != null;
+        }
+
+        public ClSymbol ReadSymbol()
+        {
+            if (_source.Eof()) return default;
+            var ch = (char) _source.Peek();
+            if (!char.IsLetter(ch)) return default;
+            string loop(string acc)
+            {
+                if (_source.Eof()) return acc;
+                if (!char.IsLetterOrDigit((char) _source.Peek())) return acc;
+                return loop($"{acc}{(char) _source.Read()}");
+            }
+            return new ClSymbol(loop($"{(char) _source.Read()}"));
         }
 
         public ClPair ReadPair()
@@ -126,7 +140,6 @@ namespace Cl
             if (_source.Eof()) throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClChar)));
             return new ClChar((char) _source.Read());
         }
-
         public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
             {
                 ["newline"] = '\n',
