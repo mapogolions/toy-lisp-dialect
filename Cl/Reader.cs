@@ -21,13 +21,13 @@ namespace Cl
 
         public IClObj Read()
         {
-            var ast = ReadMutualRec();
+            var ast = ReadMutuallyRec();
             _source.SkipWhitespacesAndComments();
             if (_source.Eof()) return ast;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
-        private IClObj ReadMutualRec()
+        private IClObj ReadMutuallyRec()
         {
             _source.SkipWhitespacesAndComments();
             if (ReadLiteral(ReadChar, out var ast)) return ast;
@@ -69,7 +69,7 @@ namespace Cl
         {
             Ignore(_source.SkipWhitespacesAndComments());
             if (_source.SkipMatched(")")) return Nil.Given;
-            var car = ReadMutualRec();
+            var car = ReadMutuallyRec();
             var hasDelimiter = _source.SkipWhitespacesAndComments();
             if (_source.SkipMatched(")")) return new ClPair(car, Nil.Given);
             if (!hasDelimiter)
@@ -98,7 +98,7 @@ namespace Cl
             return new ClFixnum(integer);
         }
 
-        public bool TryReadNumbersInRow(out string nums)
+        private bool TryReadNumbersInRow(out string nums)
         {
             string loop(string acc = "")
             {
