@@ -62,16 +62,19 @@ namespace Cl
         public ClPair ReadPair()
         {
             if (!_source.SkipMatched("(")) return default;
+            return ReadListOf();
+        }
+
+        private ClPair ReadListOf()
+        {
             Ignore(_source.SkipWhitespacesAndComments());
             if (_source.SkipMatched(")")) return Nil.Given;
             var car = ReadMutualRec();
-            if (!_source.SkipWhitespacesAndComments())
+            var hasDelimiter = _source.SkipWhitespacesAndComments();
+            if (_source.SkipMatched(")")) return new ClPair(car, Nil.Given);
+            if (!hasDelimiter)
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
-            var cdr = ReadMutualRec();
-            Ignore(_source.SkipWhitespacesAndComments());
-            if (!_source.SkipMatched(")"))
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
-            return new ClPair(car, cdr);
+            return new ClPair(car, ReadListOf());
         }
 
         public ClFloat ReadFloat()

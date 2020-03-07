@@ -1,15 +1,28 @@
-using System;
+using Cl.Abs;
 using Cl.Types;
 
 namespace Cl
 {
-    public static class Evaluator
+    public class Evaluator
     {
-        public static Func<IClObj, IClObj> Var = BuiltIn.Cadr;
-        public static Func<IClObj, IClObj> Val = BuiltIn.Caddr;
-        public static Func<IClObj, IClObj> Operator = BuiltIn.Car;
-        public static Func<IClObj, IClObj> Operandr = BuiltIn.Cdr;
-        public static Func<IClObj, IClObj> IfPredicate = BuiltIn.Cadr;
-        public static Func<IClObj, IClObj> IfConsequent = BuiltIn.Caddr;
+        private readonly IEnv _env;
+
+        public Evaluator(IEnv env)
+        {
+            _env = env;
+        }
+
+        public IClObj Eval(IClObj expr)
+        {
+            return expr;
+        }
+
+        public IClObj EvalAssigment(IClObj expr)
+        {
+            var symbol = BuiltIn.Cadr(expr);
+            var obj = Eval(BuiltIn.Caddr(expr));
+            _env.Assign(symbol, obj);
+            return Nil.Given;
+        }
     }
 }

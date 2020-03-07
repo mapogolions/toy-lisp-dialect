@@ -17,11 +17,11 @@ namespace Cl.Tests
             using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
 
             var cell = reader.Read() as ClPair;
-            var car = cell?.Car as ClBool;
-            var cdr = cell?.Cdr as ClString;
+            var first = BuiltIn.Car(cell) as ClBool;
+            var second = BuiltIn.Cadr(cell) as ClString;
 
-            Assert.That(car?.Value, Is.True);
-            Assert.That(cdr?.Value, Is.EqualTo("bar"));
+            Assert.That(first?.Value, Is.True);
+            Assert.That(second?.Value, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -32,11 +32,11 @@ namespace Cl.Tests
             using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
 
             var cell = reader.Read() as ClPair;
-            var car = cell?.Car as ClBool;
-            var cdr = cell?.Cdr as ClString;
+            var first = BuiltIn.Car(cell) as ClBool;
+            var second = BuiltIn.Cadr(cell) as ClString;
 
-            Assert.That(car?.Value, Is.False);
-            Assert.That(cdr?.Value, Is.EqualTo("foo"));
+            Assert.That(first?.Value, Is.False);
+            Assert.That(second?.Value, Is.EqualTo("foo"));
         }
 
         [Test]

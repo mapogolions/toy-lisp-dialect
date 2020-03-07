@@ -13,13 +13,13 @@ namespace Cl.Tests.ReaderTests
         public void ReadPair_SkipAllWhitespacesBetweenCarAndCdr()
         {
             using var reader = new Reader(new FilteredSource("(1.34\t  #\\a)"));
-
             var cell = reader.ReadPair();
-            var car = cell.Car as ClFloat;
-            var cdr = cell.Cdr as ClChar;
 
-            Assert.That(car?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
-            Assert.That(cdr?.Value, Is.EqualTo('a'));
+            var first = BuiltIn.Car(cell) as ClFloat;
+            var second = BuiltIn.Cadr(cell) as ClChar;
+
+            Assert.That(first?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
+            Assert.That(second?.Value, Is.EqualTo('a'));
         }
 
 
@@ -47,11 +47,11 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(#f #\\f)"));
 
             var cell = reader.ReadPair();
-            var car = cell.Car as ClBool;
-            var cdr = cell.Cdr as ClChar;
+            var first = BuiltIn.Car(cell) as ClBool;
+            var second = BuiltIn.Cadr(cell) as ClChar;
 
-            Assert.That(car?.Value, Is.False);
-            Assert.That(cdr?.Value, Is.EqualTo('f'));
+            Assert.That(first?.Value, Is.False);
+            Assert.That(second?.Value, Is.EqualTo('f'));
         }
 
         [Test]
@@ -60,20 +60,23 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(new FilteredSource("(1.2 2)"));
 
             var cell = reader.ReadPair();
-            var car = cell.Car as ClFloat;
-            var cdr = cell.Cdr as ClFixnum;
+            var first = BuiltIn.Car(cell) as ClFloat;
+            var second = BuiltIn.Cadr(cell) as ClFixnum;
 
-            Assert.That(car?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
-            Assert.That(cdr?.Value, Is.EqualTo(2));
+            Assert.That(first?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
+            Assert.That(second?.Value, Is.EqualTo(2));
         }
 
         [Test]
-        public void ReadPair_ThrowException_WhenOnlyOneElementInsideBrackets()
+        public void ReadPair_ReturnOneElementList()
         {
             using var reader = new Reader(new FilteredSource("(1)"));
 
-            Assert.That(() => reader.ReadPair(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+            var cell = reader.ReadPair();
+            var first = cell.Car as ClFixnum;
+
+            Assert.That(first?.Value, Is.EqualTo(1));
+            Assert.That(cell.Cdr, Is.EqualTo(Nil.Given));
         }
 
         [Test]
@@ -93,7 +96,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(reader.ReadPair(), Is.Null);
         }
 
-        [TestCaseSource(nameof(EmptyListCases))]
+        [TestCaseSource(nameof(EmptyListTestCases))]
         public void ReadPair_ReturnEmptyList(string source)
         {
             using var reader = new Reader(new FilteredSource(source));
@@ -101,7 +104,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(reader.ReadPair(), Is.EqualTo(Nil.Given));
         }
 
-        static IEnumerable<string> EmptyListCases()
+        static IEnumerable<string> EmptyListTestCases()
         {
             yield return "()";
             yield return "()  ";
