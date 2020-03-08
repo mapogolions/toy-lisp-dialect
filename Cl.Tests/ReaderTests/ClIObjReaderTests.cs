@@ -16,7 +16,7 @@ namespace Cl.Tests
             var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Read().TypeOf<ClPair>();
+            var cell = reader.Ast().TypeOf<ClPair>();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
 
@@ -31,7 +31,7 @@ namespace Cl.Tests
             var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Read().TypeOf<ClPair>();
+            var cell = reader.Ast().TypeOf<ClPair>();
             var first = BuiltIn.Car(cell).TypeOf<ClBool>();
             var second = BuiltIn.Cadr(cell).TypeOf<ClString>();
 
@@ -45,7 +45,7 @@ namespace Cl.Tests
             var input = $";before{Environment.NewLine}112;after";
             using var reader = new Reader(input);
 
-            var atom = reader.Read().TypeOf<ClFixnum>();
+            var atom = reader.Ast().TypeOf<ClFixnum>();
 
             Assert.That(atom?.Value, Is.EqualTo(112));
         }
@@ -55,7 +55,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("#\\N");
 
-            var atom = reader.Read().TypeOf<ClChar>();
+            var atom = reader.Ast().TypeOf<ClChar>();
 
             Assert.That(atom?.Value, Is.EqualTo('N'));
         }
@@ -65,7 +65,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("\"foo\"");
 
-            var atom = reader.Read().TypeOf<ClString>();
+            var atom = reader.Ast().TypeOf<ClString>();
 
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
@@ -75,7 +75,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("#t");
 
-            var atom = reader.Read().TypeOf<ClBool>();
+            var atom = reader.Ast().TypeOf<ClBool>();
 
             Assert.That(atom?.Value, Is.EqualTo(true));
         }
@@ -85,7 +85,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("12");
 
-            var atom = reader.Read().TypeOf<ClFixnum>();
+            var atom = reader.Ast().TypeOf<ClFixnum>();
 
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
@@ -95,7 +95,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(source);
 
-            Assert.That(() => reader.Read(), Throws.InvalidOperationException);
+            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
         }
 
         static IEnumerable<string> CommentTestCases()
@@ -111,7 +111,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("11.");
 
-            Assert.That(() => reader.Read(), Throws.InvalidOperationException);
+            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader("   \t");
 
-            Assert.That(() => reader.Read(), Throws.InvalidOperationException);
+            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace Cl.Tests
         {
             using var reader = new Reader(string.Empty);
 
-            Assert.That(() => reader.Read(), Throws.InvalidOperationException);
+            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
         }
     }
 }
