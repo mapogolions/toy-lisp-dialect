@@ -76,9 +76,21 @@ namespace Cl
             var car = ReadMutuallyRec();
             var hasDelimiter = _source.SkipWhitespacesAndComments();
             if (_source.SkipMatched(")")) return new ClPair(car, Nil.Given);
+            if (ReadDottedPair(car, out var cell)) return cell;
             if (!hasDelimiter)
                 throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
             return new ClPair(car, ReadListOf());
+        }
+
+        private bool ReadDottedPair(IClObj car, out ClPair cell)
+        {
+            cell = default;
+            if (!_source.SkipMatched(".")) return false;
+            cell = new ClPair(car, ReadMutuallyRec());
+            Ignore(_source.SkipWhitespacesAndComments());
+            if (!_source.SkipMatched(")"))
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
+            return true;
         }
 
         public ClFloat ReadFloat()
