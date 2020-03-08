@@ -1,6 +1,6 @@
 using Cl.Types;
 
-namespace Cl.Constants
+namespace Cl.Extensions
 {
     public static class IClObjOps
     {
@@ -19,5 +19,6 @@ namespace Cl.Constants
         public static bool IsBegin(this IClObj expr) => expr.IsTaggedList(ClSymbol.Begin);
         public static bool IsLambda(this IClObj expr) => expr.IsTaggedList(ClSymbol.Lambda);
         public static bool IsEmptyList(this IClObj expr) => expr == Nil.Given;
+        public static T TypeOf<T>(this IClObj expr) => expr is T obj ? obj : default;
     }
 }
