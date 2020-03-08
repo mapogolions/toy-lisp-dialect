@@ -40,6 +40,7 @@ namespace Cl
             if (ReadLiteral(ReadFloat, out ast)) return ast;
             if (ReadLiteral(ReadFixnum, out ast)) return ast;
             if (ReadLiteral(ReadPair, out ast)) return ast;
+            if (ReadLiteral(ReadSymbol, out ast)) return ast;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
 
