@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cl.Input;
 using NUnit.Framework;
 using System;
 using Cl.Types;
@@ -15,7 +14,7 @@ namespace Cl.Tests
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#t"; // ClBool.True
             var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
-            using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
+            using var reader = new Reader($"{startsWith}{endsWith}");
 
             var cell = reader.Read().TypeOf<ClPair>();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
@@ -30,7 +29,7 @@ namespace Cl.Tests
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
             var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
-            using var reader = new Reader(new FilteredSource($"{startsWith}{endsWith}"));
+            using var reader = new Reader($"{startsWith}{endsWith}");
 
             var cell = reader.Read().TypeOf<ClPair>();
             var first = BuiltIn.Car(cell).TypeOf<ClBool>();
@@ -44,7 +43,7 @@ namespace Cl.Tests
         public void Read_ReturnInteger_WhenCommentsAround()
         {
             var input = $";before{Environment.NewLine}112;after";
-            using var reader = new Reader(new FilteredSource(input));
+            using var reader = new Reader(input);
 
             var atom = reader.Read().TypeOf<ClFixnum>();
 
@@ -54,7 +53,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnChar()
         {
-            using var reader = new Reader(new FilteredSource("#\\N"));
+            using var reader = new Reader("#\\N");
 
             var atom = reader.Read().TypeOf<ClChar>();
 
@@ -64,7 +63,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnString()
         {
-            using var reader = new Reader(new FilteredSource("\"foo\""));
+            using var reader = new Reader("\"foo\"");
 
             var atom = reader.Read().TypeOf<ClString>();
 
@@ -74,7 +73,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnBool()
         {
-            using var reader = new Reader(new FilteredSource("#t"));
+            using var reader = new Reader("#t");
 
             var atom = reader.Read().TypeOf<ClBool>();
 
@@ -84,7 +83,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ReturnInteger()
         {
-            using var reader = new Reader(new FilteredSource("12"));
+            using var reader = new Reader("12");
 
             var atom = reader.Read().TypeOf<ClFixnum>();
 
@@ -94,7 +93,7 @@ namespace Cl.Tests
         [TestCaseSource(nameof(CommentTestCases))]
         public void Read_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
         {
-            using var reader = new Reader(new FilteredSource(source));
+            using var reader = new Reader(source);
 
             Assert.That(() => reader.Read(), Throws.InvalidOperationException);
         }
@@ -110,7 +109,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
         {
-            using var reader = new Reader(new FilteredSource("11."));
+            using var reader = new Reader("11.");
 
             Assert.That(() => reader.Read(), Throws.InvalidOperationException);
         }
@@ -118,7 +117,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ThrowException_WhenSourceContainsOnlySpaces()
         {
-            using var reader = new Reader(new FilteredSource("   \t"));
+            using var reader = new Reader("   \t");
 
             Assert.That(() => reader.Read(), Throws.InvalidOperationException);
         }
@@ -126,7 +125,7 @@ namespace Cl.Tests
         [Test]
         public void Read_ThrowException_WhenSourceIsEmpty()
         {
-            using var reader = new Reader(new FilteredSource(string.Empty));
+            using var reader = new Reader(string.Empty);
 
             Assert.That(() => reader.Read(), Throws.InvalidOperationException);
         }

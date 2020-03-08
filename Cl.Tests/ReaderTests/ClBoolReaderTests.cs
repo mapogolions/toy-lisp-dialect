@@ -23,7 +23,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_ReturnTheFalse()
         {
-            using var reader = new Reader(new FilteredSource("#fi"));
+            using var reader = new Reader("#fi");
 
             Assert.That(reader.ReadBool()?.Value, Is.False);
         }
@@ -31,7 +31,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_ReturnTheTrue()
         {
-            using var reader = new Reader(new FilteredSource("#ti"));
+            using var reader = new Reader("#ti");
 
             Assert.That(reader.ReadBool()?.Value, Is.True);
         }
@@ -39,7 +39,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_ThrowException_WhenSourceIsEqualToHash()
         {
-            using var reader = new Reader(new FilteredSource("#"));
+            using var reader = new Reader("#");
 
             Assert.That(() => reader.ReadBool(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
@@ -48,7 +48,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_ThrowException_WhenSourceStartWithHashButNextSymbolIsNotBoolPredefinedValue()
         {
-            using var reader = new Reader(new FilteredSource("#i"));
+            using var reader = new Reader("#i");
 
             Assert.That(() => reader.ReadBool(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
@@ -57,7 +57,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_ReturnFalse_WhenSourceDoesNotStartWithHash()
         {
-            using var reader = new Reader(new FilteredSource("t"));
+            using var reader = new Reader("t");
 
             Assert.That(reader.ReadBool()?.Value, Is.Null);
         }

@@ -23,7 +23,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadFloat_CanNotBeAbleReadNegativeNum()
         {
-            using var reader = new Reader(new FilteredSource("-120.0"));
+            using var reader = new Reader("-120.0");
 
             Assert.That(reader.ReadFloat(), Is.Null);
         }
@@ -31,7 +31,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadFloat_ReturnNumber()
         {
-            using var reader = new Reader(new FilteredSource("0.45rest"));
+            using var reader = new Reader("0.45rest");
 
             Assert.That(reader.ReadFloat()?.Value, Is.EqualTo(0.45).Within(double.Epsilon));
         }
@@ -39,7 +39,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadFloat_ThrowException_WhenAfterDotInvalidSymbol()
         {
-            using var reader = new Reader(new FilteredSource("0. "));
+            using var reader = new Reader("0. ");
 
             Assert.That(() => reader.ReadFloat(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClFloat))));
@@ -48,7 +48,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadFloat_ReturnNull_WhenSourceContainsInteger()
         {
-            using var reader = new Reader(new FilteredSource("23"));
+            using var reader = new Reader("23");
 
             Assert.That(reader.ReadFloat(), Is.Null);
         }

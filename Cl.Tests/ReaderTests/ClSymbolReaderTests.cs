@@ -22,7 +22,7 @@ namespace Cl.Tests.ReaderTests
         [TestCaseSource(nameof(ValidSymbolsTestCases))]
         public void ReadSymbol_ReturnSymbol(string input, string expected)
         {
-            using var reader = new Reader(new FilteredSource(input));
+            using var reader = new Reader(input);
 
             Assert.That(reader.ReadSymbol()?.Value, Is.EqualTo(expected));
         }
@@ -40,7 +40,7 @@ namespace Cl.Tests.ReaderTests
         [TestCaseSource(nameof(InvalidSymbolsTestCases))]
         public void ReadString_ReturnNull_WhenSourceStartsWithInvalidSymbol(string input)
         {
-            using var reader = new Reader(new FilteredSource("\"some"));
+            using var reader = new Reader("\"some");
 
             Assert.That(() => reader.ReadSymbol(),Is.Null);
         }

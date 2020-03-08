@@ -19,6 +19,10 @@ namespace Cl
             _source = source;
         }
 
+        public Reader(string source) : this(new FilteredSource(source))
+        {
+        }
+
         public IClObj Read()
         {
             var ast = ReadMutuallyRec();

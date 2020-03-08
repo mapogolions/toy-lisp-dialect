@@ -23,7 +23,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_ReturnString()
         {
-            using var reader = new Reader(new FilteredSource("\"foo\""));
+            using var reader = new Reader("\"foo\"");
 
             Assert.That(reader.ReadString()?.Value, Is.EqualTo("foo"));
         }
@@ -31,7 +31,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_ThrowException_WhenSourceDoesNotContainPairDoubleQuotes()
         {
-            using var reader = new Reader(new FilteredSource("\"some"));
+            using var reader = new Reader("\"some");
 
             Assert.That(() => reader.ReadString(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClString))));
@@ -40,7 +40,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_ReturnFalse_WhenSourceDoesNotStartWithDoubleQuotes()
         {
-            using var reader = new Reader(new FilteredSource("_"));
+            using var reader = new Reader("_");
 
             Assert.That(reader.ReadString(), Is.Null);
         }
