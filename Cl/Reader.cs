@@ -65,7 +65,7 @@ namespace Cl
 
         public ClPair ReadPair()
         {
-            if(TryReadNil(out var cell)) return cell;
+            if(TryReadNilOrNull(out var cell)) return cell;
             var car = Read();
             var wasDelimiter = _source.SkipWhitespacesAndComments();
             if (!_source.SkipMatched(".")) return new ClPair(car, ReadList(wasDelimiter));
@@ -76,7 +76,7 @@ namespace Cl
             return new ClPair(car, cdr);
         }
 
-        private bool TryReadNil(out ClPair cell)
+        private bool TryReadNilOrNull(out ClPair cell)
         {
             cell = default;
             if (!_source.SkipMatched("(")) return true;
