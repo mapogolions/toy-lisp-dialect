@@ -37,7 +37,16 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadBool_ThrowException_WhenSourceIsEqualToHash()
+        public void ReadBool_ThrowException_WhenBooleanSignificantSymbolDoesNotFollowAfterHash()
+        {
+            using var reader = new Reader("#w");
+
+            Assert.That(() => reader.ReadBool(),
+                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
+        }
+
+        [Test]
+        public void ReadBool_ThrowException_WhenSourceContainsOnlyHash()
         {
             using var reader = new Reader("#");
 
@@ -46,18 +55,9 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadBool_ThrowException_WhenSourceStartWithHashButNextSymbolIsNotBoolPredefinedValue()
-        {
-            using var reader = new Reader("#i");
-
-            Assert.That(() => reader.ReadBool(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
-        }
-
-        [Test]
         public void ReadBool_ReturnFalse_WhenSourceDoesNotStartWithHash()
         {
-            using var reader = new Reader("t");
+            using var reader = new Reader(" #f");
 
             Assert.That(reader.ReadBool()?.Value, Is.Null);
         }

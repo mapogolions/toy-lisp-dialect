@@ -41,5 +41,13 @@ namespace Cl.Tests.ReaderTests
 
             Assert.That(reader.ReadFixnum()?.Value, Is.EqualTo(12));
         }
+
+        [Test]
+        public void ReadFixnum_ReturnNull_WhenSourceDoesNotStartWithDigit()
+        {
+            using var reader = new Reader(" 12");
+
+            Assert.That(reader.ReadFixnum()?.Value, Is.Null);
+        }
     }
 }

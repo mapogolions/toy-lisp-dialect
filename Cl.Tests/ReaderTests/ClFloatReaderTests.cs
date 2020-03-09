@@ -29,7 +29,7 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadFloat_ReturnNumber()
+        public void ReadFloat_ReturnFloatingPointNumber()
         {
             using var reader = new Reader("0.45rest");
 
@@ -51,6 +51,14 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("23");
 
             Assert.That(reader.ReadFloat(), Is.Null);
+        }
+
+         [Test]
+        public void ReadFloat_ReturnNull_WhenSourceDoesNotStartWithDigit()
+        {
+            using var reader = new Reader(" 1.12");
+
+            Assert.That(reader.ReadFloat()?.Value, Is.Null);
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadChar_ReturnNull_WhenSourceStartsWithHashButNextSymbolIsNotBackslash()
+        public void ReadChar_ReturnNull_WhenBackslashIsMissed()
         {
             using var reader = new Reader("#i");
 
@@ -70,9 +70,9 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadChar_ReturnFalse_WhenSourceDoesNotStartWithHash()
+        public void ReadChar_ReturnNull_WhenSourceDoesNotStartWithHash()
         {
-            using var reader = new Reader("t");
+            using var reader = new Reader(" #\\d");
 
             Assert.That(reader.ReadChar(), Is.Null);
         }

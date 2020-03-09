@@ -167,6 +167,7 @@ namespace Cl
             if (_source.Eof()) throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClChar)));
             return new ClChar((char) _source.Read());
         }
+
         public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
             {
                 ["newline"] = '\n',

@@ -20,16 +20,23 @@ namespace Cl.Tests.ReaderTests
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
 
-        [Test]
-        public void ReadString_ReturnString()
+        [TestCaseSource(nameof(ValidStringTestCases))]
+        public void ReadString_ReturnString(string input, string expected)
         {
-            using var reader = new Reader("\"foo\"");
+            using var reader = new Reader(input);
 
-            Assert.That(reader.ReadString()?.Value, Is.EqualTo("foo"));
+            Assert.That(reader.ReadString()?.Value, Is.EqualTo(expected));
         }
 
+        static object[] ValidStringTestCases =
+            {
+                new object[] { "\"foo\"", "foo" },
+                new object[] { "\"\"", string.Empty },
+                new object[] { "\"foo\"bar", "foo" }
+            };
+
         [Test]
-        public void ReadString_ThrowException_WhenSourceDoesNotContainPairDoubleQuotes()
+        public void ReadString_ThrowException_DoubleQuotesAreUnbalanced()
         {
             using var reader = new Reader("\"some");
 
@@ -38,9 +45,9 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadString_ReturnFalse_WhenSourceDoesNotStartWithDoubleQuotes()
+        public void ReadString_ReturnNull_WhenSourceDoesNotStartWithDoubleQuotes()
         {
-            using var reader = new Reader("_");
+            using var reader = new Reader(" \"foo\"");
 
             Assert.That(reader.ReadString(), Is.Null);
         }
