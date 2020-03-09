@@ -1,8 +1,8 @@
 namespace Cl.Types
 {
-    public class ClPair : IClObj
+    public class ClCell : IClObj
     {
-        public ClPair(IClObj car, IClObj cdr)
+        public ClCell(IClObj car, IClObj cdr)
         {
             Car = car;
             Cdr = cdr;

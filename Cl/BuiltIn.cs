@@ -8,14 +8,14 @@ namespace Cl
         public static IClObj Car(IClObj expr) =>
             expr switch
             {
-                ClPair cell => cell.Car,
+                ClCell cell => cell.Car,
                 _ => throw new InvalidOperationException("Argument is no a cell")
             };
 
         public static IClObj Cdr(IClObj expr) =>
             expr switch
             {
-                ClPair cell => cell.Cdr,
+                ClCell cell => cell.Cdr,
                 _ => throw new InvalidOperationException("Argument is not a cell")
             };
 

@@ -4,10 +4,10 @@ namespace Cl.Extensions
 {
     public static class IClObjOps
     {
-        public static bool IsSelfEvaluating(this IClObj expr) => !(expr is ClPair || expr is ClSymbol);
+        public static bool IsSelfEvaluating(this IClObj expr) => !(expr is ClCell || expr is ClSymbol);
         public static bool IsVariable(this IClObj expr) => expr.IsSymbol();
         public static bool IsSymbol(this IClObj expr) => expr is ClSymbol;
-        public static bool IsTaggedList(this IClObj expr, ClSymbol tag) => expr is ClPair cell && cell.Car == tag;
+        public static bool IsTaggedList(this IClObj expr, ClSymbol tag) => expr is ClCell cell && cell.Car == tag;
         public static bool IsQuoted(this IClObj expr) => expr.IsTaggedList(ClSymbol.Quote);
         public static bool IsAssignment(this IClObj expr) => expr.IsTaggedList(ClSymbol.Set);
         public static bool IsDefinition(this IClObj expr) => expr.IsTaggedList(ClSymbol.Define);

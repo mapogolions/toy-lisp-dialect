@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cl.Constants;
 using Cl.Extensions;
@@ -10,11 +11,11 @@ namespace Cl.Tests.ReaderTests
     public class ClPairReaderTests
     {
         [Test]
-        public void ReadPair_CanReadMultipleValues()
+        public void ReadCell_CanReadMultipleValues()
         {
             using var reader = new Reader("(#f #t 6 #\\a)");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClBool>();
             var third = BuiltIn.Third(cell).TypeOf<ClFixnum>();
@@ -27,10 +28,10 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadPair_SkipAllWhitespacesBetweenCarAndCdr()
+        public void ReadCell_SkipAllWhitespacesBetweenCarAndCdr()
         {
             using var reader = new Reader("(1.34\t  #\\a)");
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
 
             var first = BuiltIn.First(cell).TypeOf<ClFloat>();
             var second = BuiltIn.Second(cell).TypeOf<ClChar>();
@@ -41,29 +42,29 @@ namespace Cl.Tests.ReaderTests
 
 
         [Test]
-        public void ReadPair_ThrowException_WhenSpaceIsMissed()
+        public void ReadCell_ThrowException_WhenSpaceIsMissed()
         {
             using var reader = new Reader("(#t1)");
 
-            Assert.That(() => reader.ReadPair(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+            Assert.That(() => reader.ReadCell(),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
         }
 
         [Test]
-        public void ReadPair_ThrowException_WhenAfterReadCdrInvalidSymbol()
+        public void ReadCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f #\\foo)");
 
-            Assert.That(() => reader.ReadPair(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+            Assert.That(() => reader.ReadCell(),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
         }
 
         [Test]
-        public void ReadPair_ReturnBoolAndChar()
+        public void ReadCell_ReturnBoolAndChar()
         {
             using var reader = new Reader("(#f #\\f)");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClChar>();
 
@@ -72,11 +73,11 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadPair_ReturnPairOfNumbers()
+        public void ReadCell_ReturnPairOfNumbers()
         {
             using var reader = new Reader("(1.2 2)");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClFloat>();
             var second = BuiltIn.Second(cell).TypeOf<ClFixnum>();
 
@@ -85,11 +86,11 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadPair_ReturnOneElementList()
+        public void ReadCell_ReturnOneElementList()
         {
             using var reader = new Reader("(1)");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = cell.Car.TypeOf<ClFixnum>();
 
             Assert.That(first?.Value, Is.EqualTo(1));
@@ -97,28 +98,28 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadPair_ThrowException_WhenSourceContainsOnlyOpenBracket()
+        public void ReadCell_ThrowException_WhenSourceContainsOnlyOpenBracket()
         {
             using var reader = new Reader("(");
 
-            Assert.That(() => reader.ReadPair(),
+            Assert.That(() => reader.ReadCell(),
                 Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
         }
 
         [Test]
-        public void ReadPair_ReturnNull_WhenSourceStartsWithInvalidSymbol_ButContainsList()
+        public void ReadCell_ReturnNull_WhenSourceStartsWithInvalidSymbol_ButContainsList()
         {
             using var reader = new Reader("  ()");
 
-            Assert.That(reader.ReadPair(), Is.Null);
+            Assert.That(reader.ReadCell(), Is.Null);
         }
 
         [TestCaseSource(nameof(EmptyListTestCases))]
-        public void ReadPair_ReturnEmptyList(string source)
+        public void ReadCell_ReturnEmptyList(string source)
         {
             using var reader = new Reader(source);
 
-            Assert.That(reader.ReadPair(), Is.EqualTo(Nil.Given));
+            Assert.That(reader.ReadCell(), Is.EqualTo(Nil.Given));
         }
 
         static IEnumerable<string> EmptyListTestCases()
@@ -126,22 +127,23 @@ namespace Cl.Tests.ReaderTests
             yield return "()";
             yield return "()  ";
             yield return "(  )  ";
+            yield return $"(;comment{Environment.NewLine});comment";
         }
 
         [Test]
-        public void ReadPair_ReturnFalse_WhenSourceContainSomethingElse()
+        public void ReadCell_ReturnFalse_WhenSourceDoesNotStartWithBracket()
         {
-            using var reader = new Reader("something else");
+            using var reader = new Reader("should be bracket");
 
-            Assert.That(reader.ReadPair(), Is.Null);
+            Assert.That(reader.ReadCell(), Is.Null);
         }
 
         [Test]
-        public void ReadPair_ReturnFalse_WhenSourceIsEmpty()
+        public void ReadCell_ReturnFalse_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
 
-            Assert.That(reader.ReadPair(), Is.Null);
+            Assert.That(reader.ReadCell(), Is.Null);
         }
     }
 }

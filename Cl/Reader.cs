@@ -39,7 +39,7 @@ namespace Cl
             if (ReadLiteral(ReadString, out ast)) return ast;
             if (ReadLiteral(ReadFloat, out ast)) return ast;
             if (ReadLiteral(ReadFixnum, out ast)) return ast;
-            if (ReadLiteral(ReadPair, out ast)) return ast;
+            if (ReadLiteral(ReadCell, out ast)) return ast;
             if (ReadLiteral(ReadSymbol, out ast)) return ast;
             throw new InvalidOperationException(Errors.ReadIllegalState);
         }
@@ -64,20 +64,20 @@ namespace Cl
             return new ClSymbol(loop($"{(char) _source.Read()}"));
         }
 
-        public ClPair ReadPair()
+        public ClCell ReadCell()
         {
             if(TryReadNilOrNull(out var cell)) return cell;
             var car = Read();
             var wasDelimiter = _source.SkipWhitespacesAndComments();
-            if (!_source.SkipMatched(".")) return new ClPair(car, ReadList(wasDelimiter));
+            if (!_source.SkipMatched(".")) return new ClCell(car, ReadList(wasDelimiter));
             var cdr = Read();
             Ignore(_source.SkipWhitespacesAndComments());
             if (!_source.SkipMatched(")"))
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
-            return new ClPair(car, cdr);
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClCell)));
+            return new ClCell(car, cdr);
         }
 
-        private bool TryReadNilOrNull(out ClPair cell)
+        private bool TryReadNilOrNull(out ClCell cell)
         {
             cell = default;
             if (!_source.SkipMatched("(")) return true;
@@ -90,15 +90,15 @@ namespace Cl
             return false;
         }
 
-        private ClPair ReadList(bool wasDelimiter)
+        private ClCell ReadList(bool wasDelimiter)
         {
             if (_source.SkipMatched(")")) return Nil.Given;
             if (!wasDelimiter)
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClPair)));
+                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClCell)));
             var car = Read();
             wasDelimiter = _source.SkipWhitespacesAndComments();
-            if (_source.SkipMatched(")")) return new ClPair(car, Nil.Given);
-            return new ClPair(car, ReadList(wasDelimiter));
+            if (_source.SkipMatched(")")) return new ClCell(car, Nil.Given);
+            return new ClCell(car, ReadList(wasDelimiter));
         }
 
         public ClFloat ReadFloat()

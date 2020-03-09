@@ -16,7 +16,7 @@ namespace Cl.Tests
             var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Ast().TypeOf<ClPair>();
+            var cell = reader.Ast().TypeOf<ClCell>();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
 
@@ -31,7 +31,7 @@ namespace Cl.Tests
             var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Ast().TypeOf<ClPair>();
+            var cell = reader.Ast().TypeOf<ClCell>();
             var first = BuiltIn.Car(cell).TypeOf<ClBool>();
             var second = BuiltIn.Cadr(cell).TypeOf<ClString>();
 

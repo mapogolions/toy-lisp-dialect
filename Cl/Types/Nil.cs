@@ -1,6 +1,6 @@
 namespace Cl.Types
 {
-    public sealed class Nil : ClPair
+    public sealed class Nil : ClCell
     {
         private static Nil _instance;
 

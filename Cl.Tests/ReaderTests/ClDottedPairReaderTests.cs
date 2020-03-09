@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Cl.Constants;
 using Cl.Extensions;
 using Cl.Types;
@@ -10,11 +9,11 @@ namespace Cl.Tests.ReaderTests
     public class ClDottedPairReaderTests
     {
         [Test]
-        public void ReadDottedPair_TailCanBeFlattenList()
+        public void ReadDottedCell_TailCanBeFlattenList()
         {
             using var reader = new Reader("(1 . (\"foo\" #\\w ))");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClFixnum>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
             var third = BuiltIn.Third(cell).TypeOf<ClChar>();
@@ -26,11 +25,11 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadDottedPair_CanRepresentTraditionalImmutableLinkedList()
+        public void ReadDottedCell_CanRepresentTraditionalImmutableLinkedList()
         {
             using var reader = new Reader("(1 . (\"foo\" . (#\\w . ())))");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClFixnum>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
             var third = BuiltIn.Third(cell).TypeOf<ClChar>();
@@ -43,20 +42,20 @@ namespace Cl.Tests.ReaderTests
 
 
         [Test]
-        public void ReadDottedPair_ThrowException_WhenAfterReadCdrInvalidSymbol()
+        public void ReadDottedCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f . #\\foo)");
 
-            Assert.That(() => reader.ReadPair(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+            Assert.That(() => reader.ReadCell(),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
         }
 
         [Test]
-        public void ReadDottedPair_ReturnBoolAndChar()
+        public void ReadDottedCell_ReturnBoolAndChar()
         {
             using var reader = new Reader("(#f . #\\f)");
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var car = cell.Car.TypeOf<ClBool>();
             var cdr = cell.Cdr.TypeOf<ClChar>();
 
@@ -65,20 +64,20 @@ namespace Cl.Tests.ReaderTests
         }
 
         [Test]
-        public void ReadDottedPair_ThrowException_CanNotReadMultipleValues()
+        public void ReadDottedCell_ThrowException_CanNotReadMultipleValues()
         {
             using var reader = new Reader("(1.2 . 2 . #)");
 
-            Assert.That(() => reader.ReadPair(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClPair))));
+            Assert.That(() => reader.ReadCell(),
+                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
         }
 
         [TestCaseSource(nameof(DottedPairTestCases))]
-        public void ReadDottedPair_ReturnFloatIntegerCell(string input, double expectedCar, int expectedCdr)
+        public void ReadDottedCell_ReturnFloatIntegerCell(string input, double expectedCar, int expectedCdr)
         {
             using var reader = new Reader(input);
 
-            var cell = reader.ReadPair();
+            var cell = reader.ReadCell();
             var car = cell.Car.TypeOf<ClFloat>();
             var cdr = cell.Cdr.TypeOf<ClFixnum>();
 
