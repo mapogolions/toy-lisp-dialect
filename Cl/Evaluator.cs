@@ -17,6 +17,7 @@ namespace Cl
         public IClObj Eval(IClObj expr)
         {
             if (expr.IsSelfEvaluating()) return expr;
+            if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsAssignment()) return EvalAssigment(expr);
             throw new InvalidOperationException("Evaluation error");
         }
