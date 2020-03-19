@@ -25,6 +25,16 @@ namespace Cl
         public static IClObj Cdddr(IClObj expr) => Cdr(Cddr(expr));
         public static IClObj Cadddr(IClObj expr) => Car(Cdddr(expr));
 
+        public static ClCell ListOf(params IClObj[] items)
+        {
+            ClCell cell = Nil.Given;
+            for (var i = items.Length - 1; i >= 0; i--)
+            {
+                cell = new ClCell(items[i], cell);
+            }
+            return cell;
+        }
+
         public static Func<IClObj, IClObj> Head = Car;
         public static Func<IClObj, IClObj> Tail = Cdr;
 
