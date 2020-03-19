@@ -25,6 +25,8 @@ namespace Cl
         public IClObj EvalAssigment(IClObj expr)
         {
             // (set! a 10) -> (set! . (a . (10 . nil)))
+            // (set! a b) -> (set! . (a . (b . nil)))
+            // (set! a a) -> (set! . (a . (a . nil))) reassign
             var symbol = BuiltIn.Second(expr).Cast<ClSymbol>();
             var obj = Eval(BuiltIn.Third(expr));
             _env.Assign(symbol, obj);

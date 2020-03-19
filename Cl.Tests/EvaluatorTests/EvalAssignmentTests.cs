@@ -8,6 +8,36 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         [Test]
+        public void EvalAssignmen_SupportSelfReassining()
+        {
+            var env = new Env();
+            env.Bind(new ClSymbol("a"), new ClFixnum(1));
+            var evaluator = new Evaluator(env);
+
+            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), new ClSymbol("a"));
+            var actual = evaluator.EvalAssigment(expr);
+
+            Assert.That(actual, Is.EqualTo(Nil.Given));
+            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
+        }
+
+        [Test]
+        public void EvalAssignment_CanAssignOneVariableToAnother()
+        {
+            var env = new Env();
+            env.Bind(new ClSymbol("a"), new ClFixnum(10));
+            env.Bind(new ClSymbol("b"), new ClString("foo"));
+            var evaluator = new Evaluator(env);
+
+
+            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), new ClSymbol("b"));
+            var actual = evaluator.EvalAssigment(expr);
+
+            Assert.That(actual, Is.EqualTo(Nil.Given));
+            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClString("foo")));
+        }
+
+        [Test]
         public void EvalAssignment_ReturnNil_WhenAssignmentSuccess()
         {
             var env = new Env();
