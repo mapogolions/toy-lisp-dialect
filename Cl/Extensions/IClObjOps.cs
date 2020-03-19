@@ -20,5 +20,6 @@ namespace Cl.Extensions
         public static bool IsLambda(this IClObj expr) => expr.IsTaggedList(ClSymbol.Lambda);
         public static bool IsEmptyList(this IClObj expr) => expr == Nil.Given;
         public static T TypeOf<T>(this IClObj expr) => expr is T obj ? obj : default;
+        public static T Cast<T>(this IClObj expr) => (T) expr;
     }
 }
