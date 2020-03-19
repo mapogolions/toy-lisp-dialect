@@ -1,4 +1,5 @@
 using Cl.Abs;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl
@@ -14,13 +15,15 @@ namespace Cl
 
         public IClObj Eval(IClObj expr)
         {
+            if (expr.IsAssignment()) return EvalAssigment(expr);
             return expr;
         }
 
         public IClObj EvalAssigment(IClObj expr)
         {
-            var symbol = BuiltIn.Cadr(expr);
-            var obj = Eval(BuiltIn.Caddr(expr));
+            // (set! a 10) -> (set! . (a . (10 . nil)))
+            var symbol = BuiltIn.Second(expr).Cast<ClSymbol>();
+            var obj = Eval(BuiltIn.Third(expr));
             _env.Assign(symbol, obj);
             return Nil.Given;
         }

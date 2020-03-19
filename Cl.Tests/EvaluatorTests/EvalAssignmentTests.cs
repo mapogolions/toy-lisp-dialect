@@ -1,10 +1,6 @@
-using System.IO.IsolatedStorage;
-using System.Runtime.CompilerServices;
-using Cl.Constants;
-using Cl.Input;
+using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -12,9 +8,26 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         [Test]
-        public void EvalAssign_ReturnTrue()
+        public void EvalAssignment_ReturnNil_WhenAssignmentSuccess()
         {
-            Assert.That(true, Is.True);
+            var env = new Env();
+            env.Bind(new ClSymbol("a"), ClBool.True);
+            var evaluator = new Evaluator(env);
+
+            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), ClBool.False);
+            var actual = evaluator.EvalAssigment(expr);
+
+            Assert.That(actual, Is.EqualTo(Nil.Given));
+            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(ClBool.False));
+        }
+
+        [Test]
+        public void EvalAssignment_ThrowException_WhenEnvironmentDoesNotContainBinding()
+        {
+            var evaluator = new Evaluator(new Env());
+            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), ClBool.True);
+
+            Assert.That(() => evaluator.EvalAssigment(expr), Throws.InvalidOperationException);
         }
     }
 }
