@@ -1,3 +1,4 @@
+using System;
 using Cl.Abs;
 using Cl.Extensions;
 using Cl.Types;
@@ -15,8 +16,9 @@ namespace Cl
 
         public IClObj Eval(IClObj expr)
         {
+            if (expr.IsSelfEvaluating()) return expr;
             if (expr.IsAssignment()) return EvalAssigment(expr);
-            return expr;
+            throw new InvalidOperationException("Evaluation error");
         }
 
         public IClObj EvalAssigment(IClObj expr)
