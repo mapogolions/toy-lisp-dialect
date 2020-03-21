@@ -22,9 +22,20 @@ namespace Cl
             if (expr.IsDefinition()) return EvalDefinition(expr);
             if (expr.IsQuoted()) return BuiltIn.Second(expr);
             if (expr.IsIf()) return EvalIf(expr);
+            if (expr.IsLambda()) return EvalLambda(expr);
             throw new InvalidOperationException("Evaluation error");
         }
 
+        // TODO: add tests
+        public IClObj EvalLambda(IClObj expr)
+        {
+            // (lambda (a b c) :body-expr)
+            var args = BuiltIn.Cadr(expr);
+            var body = BuiltIn.Cddr(expr);
+            return new ClProc(args.Cast<ClCell>(), body);
+        }
+
+        // TODO: add tests
         // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
         // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
         public IClObj EvalIf(IClObj expr)
