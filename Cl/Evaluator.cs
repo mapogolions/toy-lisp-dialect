@@ -21,7 +21,7 @@ namespace Cl
             if (expr.IsAssignment()) return EvalAssigment(expr);
             if (expr.IsDefinition()) return EvalDefinition(expr);
             if (expr.IsQuoted()) return BuiltIn.Second(expr);
-            if (expr.IsIf()) return EvalIf(expr);
+            if (expr.IsIfThenElse()) return EvalIfThenElse(expr);
             if (expr.IsLambda()) return EvalLambda(expr);
             throw new InvalidOperationException("Evaluation error");
         }
@@ -38,7 +38,7 @@ namespace Cl
         // TODO: add tests
         // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
         // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
-        public IClObj EvalIf(IClObj expr)
+        public IClObj EvalIfThenElse(IClObj expr)
         {
             var result = Eval(BuiltIn.Second(expr));
             if (result != Nil.Given && result != ClBool.False)  return Eval(BuiltIn.Third(expr));

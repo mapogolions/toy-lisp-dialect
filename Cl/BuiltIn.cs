@@ -35,6 +35,8 @@ namespace Cl
             return cell;
         }
 
+        public static ClCell Quote(ClCell cell) => BuiltIn.ListOf(ClSymbol.Quote, cell);
+
         public static Func<IClObj, IClObj> Head = Car;
         public static Func<IClObj, IClObj> Tail = Cdr;
 
