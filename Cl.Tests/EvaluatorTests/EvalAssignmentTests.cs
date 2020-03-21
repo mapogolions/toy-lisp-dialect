@@ -9,10 +9,29 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         [Test]
+        public void EvalAssigment_Assignment_IsNotSoSmart_LikePython()
+        {
+            /*
+                Python REPL
+                a = 1
+                b = 1
+                a is b // True
+             */
+
+            var env = new Env();
+            var a = new ClSymbol("a");
+            var b = new ClSymbol("b");
+            env.Bind(a, new ClFixnum(10));
+            env.Bind(b, new ClFixnum(10));
+
+            Assert.That(Object.ReferenceEquals(env.Lookup(a), env.Lookup(b)), Is.False);
+        }
+
+        [Test]
         public void EvalAssignment_SharedReference()
         {
             /*
-                The same part of memory
+                Python REPL
                 a = 1
                 b = a
                 a is b // True
