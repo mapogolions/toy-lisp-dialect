@@ -21,7 +21,18 @@ namespace Cl
             if (expr.IsAssignment()) return EvalAssigment(expr);
             if (expr.IsDefinition()) return EvalDefinition(expr);
             if (expr.IsQuoted()) return BuiltIn.Second(expr);
+            if (expr.IsIf()) return EvalIf(expr);
             throw new InvalidOperationException("Evaluation error");
+        }
+
+        // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
+        // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
+        public IClObj EvalIf(IClObj expr)
+        {
+            var result = Eval(BuiltIn.Second(expr));
+            if (result != Nil.Given && result != ClBool.False)  return Eval(BuiltIn.Third(expr));
+            var elseBranch = BuiltIn.Cdddr(expr);
+            return elseBranch ==  Nil.Given ? Nil.Given : Eval(BuiltIn.First(elseBranch));
         }
 
         public IClObj EvalDefinition(IClObj expr)
