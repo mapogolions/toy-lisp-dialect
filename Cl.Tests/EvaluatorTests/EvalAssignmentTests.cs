@@ -2,6 +2,7 @@ using System;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
+using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -83,7 +84,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalAssignment_ReturnNil_WhenAssignmentSuccess()
+        public void EvalAssignment_ReturnNil_WhenOperationIsSuccessful()
         {
             var env = new Env();
             var a = new ClSymbol("a");
@@ -91,10 +92,8 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(env);
 
             var expr = BuiltIn.ListOf(ClSymbol.Set, a, ClBool.False);
-            var actual = evaluator.EvalAssigment(expr);
 
-            Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(a), Is.EqualTo(ClBool.False));
+            Assert.That(evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]

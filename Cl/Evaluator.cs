@@ -19,7 +19,20 @@ namespace Cl
             if (expr.IsSelfEvaluating()) return expr;
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsAssignment()) return EvalAssigment(expr);
+            if (expr.IsDefinition()) return EvalDefinition(expr);
             throw new InvalidOperationException("Evaluation error");
+        }
+
+        public IClObj EvalDefinition(IClObj expr)
+        {
+            // (define a 10) -> (define . (a . (10 . nil)))
+            // (define a b) -> (define . (a . (b . nil)))
+            // (define a a) -> (define . (a . (a . nil))) throw exception
+            // TODO: (define keyword 10) i.e. (define lambda 10) Need reject
+            var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
+            var obj = Eval(BuiltIn.Third(expr));
+            _env.Bind(identifier, obj);
+            return Nil.Given;
         }
 
         public IClObj EvalAssigment(IClObj expr)
@@ -27,9 +40,9 @@ namespace Cl
             // (set! a 10) -> (set! . (a . (10 . nil)))
             // (set! a b) -> (set! . (a . (b . nil)))
             // (set! a a) -> (set! . (a . (a . nil))) reassign
-            var symbol = BuiltIn.Second(expr).Cast<ClSymbol>();
+            var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
             var obj = Eval(BuiltIn.Third(expr));
-            _env.Assign(symbol, obj);
+            _env.Assign(identifier, obj);
             return Nil.Given;
         }
     }
