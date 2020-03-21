@@ -9,16 +9,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         [Test]
-        public void EvalAssignment_SharedReference_LikePython()
+        public void EvalAssignment_SharedReference()
         {
             /*
-                Like python (the same part of memory)
+                The same part of memory
                 a = 1
-                b = 1
+                b = a
                 a is b // True
-                c = 2
-                b = 2
-                c is b // True
              */
             var env = new Env();
             var a = new ClSymbol("a");
