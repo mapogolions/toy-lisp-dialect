@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
@@ -8,6 +9,16 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalTests
     {
+        [Test]
+        public void Eval_ReturnUnreducedExpression_WhenItIsQuoted()
+        {
+            var evaluator = new Evaluator(new Env());
+            var cell = new ClCell(new ClFixnum(1), new ClFixnum(2));
+            var expr = BuiltIn.ListOf(ClSymbol.Quote, cell);
+
+            Assert.That(Object.ReferenceEquals(evaluator.Eval(expr), cell), Is.True);
+        }
+
         [Test]
         public void Eval_Variable_ThrowUnboundException_WhenBindingIsMissed()
         {
@@ -43,7 +54,6 @@ namespace Cl.Tests.EvaluatorTests
             yield return new ClFixnum(10);
             yield return new ClFloat(10.2);
             yield return new ClChar('a');
-            // TODO: '(1 2 3) quoted case
         }
     }
 }

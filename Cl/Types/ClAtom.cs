@@ -8,10 +8,10 @@ namespace Cl.Types
 
         public T Value { get; }
 
-        public bool Equals(ClAtom<T> other)
+        public bool Equals(ClAtom<T> that)
         {
-            if (other is ClAtom<T>) return Value.Equals(other.Value);
-            return object.ReferenceEquals(this, other);
+            if (that is ClAtom<T>) return Value.Equals(that.Value);
+            return object.ReferenceEquals(this, that);
         }
 
         public override bool Equals(object that) => Equals(that as ClAtom<T>);

@@ -20,6 +20,7 @@ namespace Cl
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsAssignment()) return EvalAssigment(expr);
             if (expr.IsDefinition()) return EvalDefinition(expr);
+            if (expr.IsQuoted()) return BuiltIn.Second(expr);
             throw new InvalidOperationException("Evaluation error");
         }
 
