@@ -1,3 +1,4 @@
+using System;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
@@ -8,47 +9,76 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         [Test]
-        public void EvalAssignmen_SupportSelfReassining()
+        public void EvalAssignment_SharedReference_LikePython()
         {
+            /*
+                Like python (the same part of memory)
+                a = 1
+                b = 1
+                a is b // True
+                c = 2
+                b = 2
+                c is b // True
+             */
             var env = new Env();
-            env.Bind(new ClSymbol("a"), new ClFixnum(1));
+            var a = new ClSymbol("a");
+            var b = new ClSymbol("b");
+            env.Bind(a, ClBool.True);
+            env.Bind(b, new ClFixnum(10));
             var evaluator = new Evaluator(env);
 
-            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), new ClSymbol("a"));
+            var expr = BuiltIn.ListOf(ClSymbol.Set, a, b);
+            var actual = evaluator.EvalAssigment(expr);
+
+            Assert.That(Object.ReferenceEquals(env.Lookup(a), env.Lookup(b)), Is.True);
+        }
+
+        [Test]
+        public void EvalAssignment_Reassign()
+        {
+            var env = new Env();
+            var a = new ClSymbol("a");
+            env.Bind(a, new ClFixnum(1));
+            var evaluator = new Evaluator(env);
+
+            var expr = BuiltIn.ListOf(ClSymbol.Set, a, a);
             var actual = evaluator.EvalAssigment(expr);
 
             Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
+            Assert.That(env.Lookup(a), Is.EqualTo(new ClFixnum(1)));
         }
 
         [Test]
         public void EvalAssignment_CanAssignOneVariableToAnother()
         {
             var env = new Env();
-            env.Bind(new ClSymbol("a"), new ClFixnum(10));
-            env.Bind(new ClSymbol("b"), new ClString("foo"));
+            var a = new ClSymbol("a");
+            var b = new ClSymbol("b");
+            env.Bind(a, new ClFixnum(10));
+            env.Bind(b, new ClString("foo"));
             var evaluator = new Evaluator(env);
 
 
-            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), new ClSymbol("b"));
+            var expr = BuiltIn.ListOf(ClSymbol.Set, a, b);
             var actual = evaluator.EvalAssigment(expr);
 
             Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClString("foo")));
+            Assert.That(env.Lookup(a), Is.EqualTo(new ClString("foo")));
         }
 
         [Test]
         public void EvalAssignment_ReturnNil_WhenAssignmentSuccess()
         {
             var env = new Env();
-            env.Bind(new ClSymbol("a"), ClBool.True);
+            var a = new ClSymbol("a");
+            env.Bind(a, ClBool.True);
             var evaluator = new Evaluator(env);
 
-            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), ClBool.False);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, a, ClBool.False);
             var actual = evaluator.EvalAssigment(expr);
 
             Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(ClBool.False));
+            Assert.That(env.Lookup(a), Is.EqualTo(ClBool.False));
         }
 
         [Test]
