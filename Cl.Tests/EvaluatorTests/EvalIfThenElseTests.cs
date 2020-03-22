@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
@@ -7,7 +6,7 @@ using NUnit.Framework;
 namespace Cl.Tests.EvaluatorTests
 {
     [TestFixture]
-    public class EvalIfElseTests
+    public class EvalIfThenElseTests
     {
         [Test]
         [TestCaseSource(nameof(FalsyTestCases))]
