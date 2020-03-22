@@ -20,10 +20,24 @@ namespace Cl
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsAssignment()) return EvalAssigment(expr);
             if (expr.IsDefinition()) return EvalDefinition(expr);
-            if (expr.IsQuoted()) return BuiltIn.Second(expr);
+            if (expr.IsQuoted()) return BuiltIn.Cdr(expr);
             if (expr.IsIfThenElse()) return EvalIfThenElse(expr);
+            if (expr.IsAnd()) return EvalAnd(expr);
             if (expr.IsLambda()) return EvalLambda(expr);
             throw new InvalidOperationException("Evaluation error");
+        }
+
+        public IClObj EvalAnd(IClObj expr)
+        {
+            // (and :expr-1 :expr-2 ... :expr-n) -> (and . (:expr-1 . (:expr-2 . (... (expr-n . nil))))
+            var tail = BuiltIn.Tail(expr);
+            while (tail != Nil.Given)
+            {
+                var result = Eval(BuiltIn.Head(tail));
+                if (result == Nil.Given || result == ClBool.False) return ClBool.False;
+                tail = BuiltIn.Tail(tail);
+            }
+            return ClBool.True;
         }
 
         // TODO: add tests
@@ -35,7 +49,6 @@ namespace Cl
             return new ClProc(args.Cast<ClCell>(), body);
         }
 
-        // TODO: add tests
         // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
         // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
         public IClObj EvalIfThenElse(IClObj expr)

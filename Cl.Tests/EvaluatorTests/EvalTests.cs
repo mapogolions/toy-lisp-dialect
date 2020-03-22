@@ -14,7 +14,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var evaluator = new Evaluator(new Env());
             var cell = new ClCell(new ClFixnum(1), new ClFixnum(2));
-            var expr = BuiltIn.ListOf(ClSymbol.Quote, cell);
+            var expr = BuiltIn.Quote(cell);
 
             Assert.That(Object.ReferenceEquals(evaluator.Eval(expr), cell), Is.True);
         }
