@@ -41,8 +41,8 @@ namespace Cl.Tests.EvaluatorTests
             yield return new ClString(string.Empty);
             yield return ClBool.True;
             yield return new ClChar('\0');
-            yield return BuiltIn.Quote(BuiltIn.ListOf(ClBool.False)); // (false . nil)
-            yield return BuiltIn.Quote(BuiltIn.ListOf(Nil.Given)); // (nil . nil)
+            yield return BuiltIn.Quote(BuiltIn.ListOf(ClBool.False)); // (quote . (false . nil))
+            yield return BuiltIn.Quote(BuiltIn.ListOf(Nil.Given)); // (quote . (nil . nil))
         }
 
 
