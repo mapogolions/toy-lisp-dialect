@@ -24,8 +24,21 @@ namespace Cl
             if (expr.IsIfThenElse()) return EvalIfThenElse(expr);
             if (expr.IsAnd()) return EvalAnd(expr);
             if (expr.IsOr()) return EvalOr(expr);
+            if (expr.IsBegin()) return EvalBegin(expr);
             if (expr.IsLambda()) return EvalLambda(expr);
             throw new InvalidOperationException("Evaluation error");
+        }
+
+        public IClObj EvalBegin(IClObj expr)
+        {
+            var tail = BuiltIn.Tail(expr);
+            IClObj result = Nil.Given;
+            while (tail != Nil.Given)
+            {
+                result = Eval(BuiltIn.Head(tail));
+                tail = BuiltIn.Tail(tail);
+            }
+            return result;
         }
 
         public IClObj EvalOr(IClObj expr)
