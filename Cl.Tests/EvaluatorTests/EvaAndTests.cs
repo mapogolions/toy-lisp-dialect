@@ -12,7 +12,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvanAnd_ReturnTrue_WhenAllItemsIsTrue()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString(string.Empty));
+            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString(string.Empty)); // (and . (true . ("" . nil)))
 
             Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(ClBool.True));
         }
@@ -34,10 +34,10 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalAnd_ReturnTrue_WhenTailIsEmptyList()
+        public void EvalAnd_ReturnTrue_WhenParamsIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.And);
+            var expr = BuiltIn.ListOf(ClSymbol.And); // (and . nil)
 
             Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(ClBool.True));
         }
