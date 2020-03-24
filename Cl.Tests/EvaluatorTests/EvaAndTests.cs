@@ -9,7 +9,7 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAndTests
     {
         [Test]
-        public void EvanAnd_ReturnTrue_WhenAllItemsIsTrue()
+        public void EvanAnd_ReturnTrue_WhenEachItemIsTrue()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString(string.Empty)); // (and . (true . ("" . nil)))
@@ -34,7 +34,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalAnd_ReturnTrue_WhenParamsIsEmptyList()
+        public void EvalAnd_ReturnTrue_WhenTailIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.And); // (and . nil)

@@ -9,7 +9,7 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalOrTests
     {
         [Test]
-        public void EvalOr_ReturnFalse_WhenAllItemsIsFalse()
+        public void EvalOr_ReturnFalse_WhenEachItemIsFalse()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Or, Nil.Given, ClBool.False);
@@ -35,7 +35,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalOr_ReturnFalse_WhenParamsIsEmptyList()
+        public void EvalOr_ReturnFalse_WhenTailIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Or);
