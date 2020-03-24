@@ -20,11 +20,25 @@ namespace Cl
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsAssignment()) return EvalAssigment(expr);
             if (expr.IsDefinition()) return EvalDefinition(expr);
-            if (expr.IsQuoted()) return BuiltIn.Cdr(expr);
+            if (expr.IsQuoted()) return BuiltIn.Tail(expr);
             if (expr.IsIfThenElse()) return EvalIfThenElse(expr);
             if (expr.IsAnd()) return EvalAnd(expr);
+            if (expr.IsOr()) return EvalOr(expr);
             if (expr.IsLambda()) return EvalLambda(expr);
             throw new InvalidOperationException("Evaluation error");
+        }
+
+        public IClObj EvalOr(IClObj expr)
+        {
+            // (or :expr-1 :expr-2 ... :expr-n) -> (and . (:expr-1 . (:expr-2 . (... (expr-n . nil))))
+            var tail = BuiltIn.Tail(expr);
+            while (tail != Nil.Given)
+            {
+                var result = Eval(BuiltIn.Head(tail));
+                if (result != Nil.Given && result != ClBool.False) return ClBool.True;
+                tail = BuiltIn.Tail(tail);
+            }
+            return ClBool.False;
         }
 
         public IClObj EvalAnd(IClObj expr)
