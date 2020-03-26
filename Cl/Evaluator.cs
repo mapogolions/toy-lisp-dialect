@@ -26,7 +26,22 @@ namespace Cl
             if (expr.IsOr()) return EvalOr(expr);
             if (expr.IsBegin()) return EvalBegin(expr);
             if (expr.IsLambda()) return EvalLambda(expr);
+            if (expr.IsCond()) return Eval(TransformCond(expr));
             throw new InvalidOperationException("Evaluation error");
+        }
+        private IClObj TransformCond(IClObj expr)
+        {
+            var clauses = BuiltIn.Tail(expr);
+            if (clauses == Nil.Given) return ClBool.False;
+            var clause = BuiltIn.First(clauses).Cast<ClCell>();
+            if (clause.Car == ClSymbol.Else)
+            {
+                return BuiltIn.Tail(clauses) == Nil.Given
+                    ? new ClCell(ClSymbol.Begin, clause.Cdr)
+                    : throw new InvalidOperationException("Else clause is not last condition");
+            }
+            return BuiltIn.ListOf(ClSymbol.IfThenElse, clause.Cdr,
+                new ClCell(ClSymbol.Begin, clause.Cdr), TransformCond(BuiltIn.Tail(clauses)));
         }
 
         public IClObj EvalBegin(IClObj expr)

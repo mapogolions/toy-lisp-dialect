@@ -6,6 +6,7 @@ namespace Cl.Types
 
         public static ClSymbol And = new ClSymbol("and");
         public static ClSymbol IfThenElse = new ClSymbol("if");
+        public static ClSymbol Else = new ClSymbol("else");
         public static ClSymbol Or = new ClSymbol("or");
         public static ClSymbol Let = new ClSymbol("let");
         public static ClSymbol Cond = new ClSymbol("cond");
