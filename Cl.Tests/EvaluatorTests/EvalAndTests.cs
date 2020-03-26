@@ -9,7 +9,7 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAndTests
     {
         [Test]
-        public void EvanAnd_ReturnTrue_WhenEachItemIsTrue()
+        public void EvalAnd_ReturnTrue_WhenEachItemIsTrue()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString(string.Empty)); // (and . (true . ("" . nil)))
