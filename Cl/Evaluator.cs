@@ -41,6 +41,7 @@ namespace Cl
             return result;
         }
 
+        // TODO: test case - evaluation must be lazy
         public IClObj EvalOr(IClObj expr)
         {
             // (or :expr-1 :expr-2 ... :expr-n) -> (and . (:expr-1 . (:expr-2 . (... (expr-n . nil))))
@@ -54,6 +55,7 @@ namespace Cl
             return ClBool.False;
         }
 
+        // TODO: test case - evaluation must be lazy
         public IClObj EvalAnd(IClObj expr)
         {
             // (and :expr-1 :expr-2 ... :expr-n) -> (and . (:expr-1 . (:expr-2 . (... (expr-n . nil))))
@@ -76,6 +78,7 @@ namespace Cl
             return new ClProc(args.Cast<ClCell>(), body);
         }
 
+        // TODO: test case - evaluation must be lazy
         // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
         // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
         public IClObj EvalIfThenElse(IClObj expr)
