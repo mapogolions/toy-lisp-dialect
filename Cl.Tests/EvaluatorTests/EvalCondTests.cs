@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
@@ -8,16 +7,21 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalCondTest
     {
-        //[Test]
-        //public void EvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
-        //{
-        //    var evaluator = new Evaluator(new Env());
-        //    var clause1 = BuiltIn.ListOf(ClBool.False, new ClChar('a'));
-        //    var clause2 = BuiltIn.ListOf(Nil.Given, new ClChar('b'));
-        //    var expr = BuiltIn.ListOf(ClSymbol.Cond, clause1, clause2);
+        [Test]
+        public void EvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
+        {
+            /*
+                (cond
+                  (#f #\a)
+                  (nil #\b))
+             */
+            var evaluator = new Evaluator(new Env());
+            var clause1 = BuiltIn.ListOf(ClBool.False, new ClChar('a'));
+            var clause2 = BuiltIn.ListOf(Nil.Given, new ClChar('b'));
+            var expr = BuiltIn.ListOf(ClSymbol.Cond, clause1, clause2);
 
-        //    Assert.That(evaluator.Eval(expr), Is.EqualTo(Nil.Given));
-        //}
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.False));
+        }
 
         [Test]
         public void EvalCond_ReturnLastEvaluatedResult_WhenOnlyElseClauseIsProvided()
@@ -26,7 +30,7 @@ namespace Cl.Tests.EvaluatorTests
                 (cond
                   (else \#a \#b))
                 as
-                (cond . (else . (\#a . (\#b . nil))) . nil)
+                (cond . ((else . (\#a . (\#b . nil))) . nil))
              */
             var evaluator = new Evaluator(new Env());
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, new ClChar('a'), new ClChar('b'), new ClChar('c'));
