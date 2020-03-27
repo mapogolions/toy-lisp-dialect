@@ -18,15 +18,22 @@ namespace Cl.Tests.EvaluatorTests
 
         //    Assert.That(evaluator.Eval(expr), Is.EqualTo(Nil.Given));
         //}
-        //[Test]
-        //public void EvalCond_ReturnLastEvaluatedResult()
-        //{
-        //    var evaluator = new Evaluator(new Env());
-        //    var elseClause = BuiltIn.ListOf(ClSymbol.Else, BuiltIn.ListOf(new ClChar('a'), new ClChar('b')));
-        //    var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause);
 
-        //    Assert.That(evaluator.Eval(expr), Is.EqualTo(new ClChar('b')));
-        //}
+        [Test]
+        public void EvalCond_ReturnLastEvaluatedResult_WhenOnlyElseClauseIsProvided()
+        {
+            /*
+                (cond
+                  (else \#a \#b))
+                as
+                (cond . (else . (\#a . (\#b . nil))) . nil)
+             */
+            var evaluator = new Evaluator(new Env());
+            var elseClause = BuiltIn.ListOf(ClSymbol.Else, new ClChar('a'), new ClChar('b'), new ClChar('c'));
+            var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause);
+
+           Assert.That(evaluator.Eval(expr), Is.EqualTo(new ClChar('c')));
+        }
 
         [Test]
         public void EvalCond_ReturnResultOfElseClause_WhenItIsSingle()
@@ -46,7 +53,7 @@ namespace Cl.Tests.EvaluatorTests
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause, BuiltIn.ListOf(ClSymbol.Else, ClBool.True));
 
-            Assert.That(() => evaluator.Eval(expr), 
+            Assert.That(() => evaluator.Eval(expr),
                 Throws.InvalidOperationException.With.Message.EqualTo("Else clause is not last condition"));
         }
 
