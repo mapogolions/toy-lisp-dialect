@@ -29,6 +29,7 @@ namespace Cl
             if (expr.IsCond()) return Eval(TransformCond(expr));
             throw new InvalidOperationException("Evaluation error");
         }
+
         private IClObj TransformCond(IClObj expr)
         {
             var clauses = BuiltIn.Tail(expr);
@@ -37,7 +38,7 @@ namespace Cl
             if (clause.Car == ClSymbol.Else)
             {
                 return BuiltIn.Tail(clauses) == Nil.Given
-                    ? Eval(new ClCell(ClSymbol.Begin, clause.Cdr))
+                    ? new ClCell(ClSymbol.Begin, clause.Cdr)
                     : throw new InvalidOperationException("Else clause is not last condition");
             }
             return BuiltIn.ListOf(ClSymbol.IfThenElse, clause.Car, new ClCell(ClSymbol.Begin, clause.Cdr),
