@@ -21,7 +21,7 @@ namespace Cl.Tests.EvaluatorTests
             var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
 
             Ignore(evaluator.Eval(expr(define)));
-            Assert.True(scope.IsTopLevel);
+            Assert.True(scope.AtTopLevel);
             Assert.That(scope.Lookup(a), Is.EqualTo(value));
         }
 

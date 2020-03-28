@@ -21,7 +21,7 @@ namespace Cl.Abs
             _frame = frame;
         }
 
-        public bool IsTopLevel => _frame is null;
+        public bool AtTopLevel => _frame is null;
 
         public bool Bind(ClSymbol symbol, IClObj obj)
         {
