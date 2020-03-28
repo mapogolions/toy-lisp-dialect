@@ -25,12 +25,12 @@ namespace Cl.Tests.EvaluatorTests
             Assert.That(scope.Lookup(a), Is.EqualTo(value));
         }
 
-        static object[] DoesNotCreateNewScopeTestCases =
-            {
-                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.IfThenElse, it, ClBool.True, ClBool.False)),
-                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.And, it, ClBool.False)),
-                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.Or, it, ClBool.True)),
-            };
+        static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
+        {
+            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.IfThenElse, it, ClBool.True, ClBool.False));
+            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.And, it, ClBool.False));
+            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.Or, it, ClBool.True));
+        }
 
         [Test]
         public void Eval_ReturnTrue_WhenEachLogicExpressionIsTrue()
