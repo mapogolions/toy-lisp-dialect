@@ -9,6 +9,19 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAndTests
     {
         [Test]
+        public void EvalAnd_MustBeLazy()
+        {
+            var env = new Env();
+            var evaluator = new Evaluator(env);
+            var define = BuiltIn.ListOf(ClSymbol.Define, new ClSymbol("a"), new ClFixnum(2));
+            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, ClBool.False, define, ClBool.True);
+
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.False));
+            Assert.That(() => env.Lookup(new ClSymbol("a")),
+                Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
+        }
+
+        [Test]
         public void EvalAnd_ReturnTrue_WhenEachItemIsTrue()
         {
             var evaluator = new Evaluator(new Env());

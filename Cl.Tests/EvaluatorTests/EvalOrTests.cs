@@ -21,7 +21,6 @@ namespace Cl.Tests.EvaluatorTests
                 Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
         }
 
-
         [Test]
         public void EvalOr_ReturnFalse_WhenEachItemIsFalse()
         {
