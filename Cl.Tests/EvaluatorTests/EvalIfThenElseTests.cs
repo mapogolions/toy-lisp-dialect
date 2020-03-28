@@ -1,13 +1,45 @@
+using System;
 using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
+using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
     [TestFixture]
     public class EvalIfThenElseTests
     {
+        [Test]
+        public void EvalIfThenElse_EvalOnlyElseBranch_WhenConditionIsFalse()
+        {
+            var env = new Env();
+            var evaluator = new Evaluator(env);
+            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
+            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.False, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
+
+            Ignore(evaluator.Eval(expr));
+
+            Assert.That(env.Lookup(new ClSymbol("b")), Is.EqualTo(new ClFixnum(1)));
+            Assert.That(() => env.Lookup(new ClSymbol("a")),
+                Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
+        }
+
+        [Test]
+        public void EvalIfThenElse_EvalOnlyThenBranch_WhenConditionIsTrue()
+        {
+            var env = new Env();
+            var evaluator = new Evaluator(env);
+            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
+            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
+
+            Ignore(evaluator.Eval(expr));
+
+            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
+            Assert.That(() => env.Lookup(new ClSymbol("b")),
+                Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
+        }
+
         [Test]
         [TestCaseSource(nameof(FalsyTestCases))]
         public void EvalIfThenElse_EvalElseBranch_WhenConditionIsFalse(IClObj obj)
