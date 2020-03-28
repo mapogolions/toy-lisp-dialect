@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
+using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -10,11 +11,34 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalTests
     {
         [Test]
+        [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
+        public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
+        {
+            var scope = new Env();
+            var evaluator = new Evaluator(scope);
+            var a = new ClSymbol("a");
+            var value = new ClString("foo");
+            var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
+
+            Ignore(evaluator.Eval(expr(define)));
+            Assert.True(scope.IsTopLevel);
+            Assert.That(scope.Lookup(a), Is.EqualTo(value));
+        }
+
+        static object[] DoesNotCreateNewScopeTestCases =
+            {
+                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.IfThenElse, it, ClBool.True, ClBool.False)),
+                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.And, it, ClBool.False)),
+                new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.Or, it, ClBool.True)),
+            };
+
+        [Test]
         public void Eval_ReturnTrue_WhenEachLogicExpressionIsTrue()
         {
             var evaluator = new Evaluator(new Env());
             var ifThenElse = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, ClBool.True);
             var logicOr = BuiltIn.ListOf(ClSymbol.Or, ClBool.False, ClBool.True);
+
             var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.And, ifThenElse, logicOr, logicAnd);
 
