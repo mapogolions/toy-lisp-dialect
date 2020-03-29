@@ -18,7 +18,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
             Assert.That(() => env.Lookup(new ClSymbol("a")),
-                Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
+                Throws.InvalidOperationException.With.Message.EqualTo("Unbound variable"));
         }
 
         [Test]

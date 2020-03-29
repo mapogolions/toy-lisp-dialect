@@ -8,6 +8,20 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalCondTest
     {
         [Test]
+        public void EvalCond_MustBeLazy()
+        {
+            var env = new Env();
+            var evaluator = new Evaluator(env);
+            var define = BuiltIn.ListOf(ClSymbol.Define, new ClSymbol("a"), new ClFixnum(2));
+            var truthy = BuiltIn.ListOf(ClBool.True, new ClString("foo"));
+            var expr = BuiltIn.ListOf(ClSymbol.Cond, truthy, define);
+
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(new ClString("foo")));
+            Assert.That(() => env.Lookup(new ClSymbol("a")),
+                Throws.InvalidOperationException.With.Message.EqualTo("Unbound variable"));
+        }
+
+        [Test]
         public void EvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
         {
             /*
