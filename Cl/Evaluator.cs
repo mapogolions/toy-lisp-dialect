@@ -34,7 +34,9 @@ namespace Cl
         {
             var clauses = BuiltIn.Tail(expr);
             if (clauses == Nil.Given) return ClBool.False;
-            var clause = BuiltIn.First(clauses).Cast<ClCell>();
+            var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
+            if (clause is null)
+                throw new InvalidOperationException("Clause is not a cell");
             if (clause.Car == ClSymbol.Else)
             {
                 return BuiltIn.Tail(clauses) == Nil.Given
@@ -92,7 +94,6 @@ namespace Cl
             return new ClProc(args.Cast<ClCell>(), body);
         }
 
-        // TODO: test case - evaluation must be lazy
         // (if :expr :expr :expr) -> (if . (:expr . (:expr . (:expr . nil)))) else branch is provided
         // (if :expr :expr) -> (if . (:expr . (:expr . nil))) without else branch
         public IClObj EvalIfThenElse(IClObj expr)

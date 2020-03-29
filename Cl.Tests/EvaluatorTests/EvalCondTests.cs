@@ -8,6 +8,19 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalCondTest
     {
         [Test]
+        public void EvalCond_ThrowException_WhenAtLeastOneClauseIsNoCell()
+        {
+            var evaluator = new Evaluator(new Env());
+            var invalidExpr = BuiltIn.ListOf(ClSymbol.Cond,
+                BuiltIn.ListOf(ClBool.False, new ClFixnum(1)),
+                BuiltIn.ListOf(ClBool.True, new ClFixnum(2)),
+                new ClFixnum(3));
+
+            Assert.That(() => evaluator.Eval(invalidExpr),
+                Throws.InvalidOperationException.With.Message.EqualTo("Clause is not a cell"));
+        }
+
+        [Test]
         public void EvalCond_MustBeLazy()
         {
             var env = new Env();
