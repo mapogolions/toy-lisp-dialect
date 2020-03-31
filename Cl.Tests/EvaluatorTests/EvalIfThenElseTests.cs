@@ -18,7 +18,7 @@ namespace Cl.Tests.EvaluatorTests
             Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
             var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.False, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
 
-            Ignore(evaluator.Eval(expr));
+            Ignore(evaluator.TryEvalIfThenElse(expr, out var _));
 
             Assert.That(env.Lookup(new ClSymbol("b")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("a")),
@@ -33,7 +33,7 @@ namespace Cl.Tests.EvaluatorTests
             Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
             var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
 
-            Ignore(evaluator.Eval(expr));
+            Ignore(evaluator.TryEvalIfThenElse(expr, out var _));
 
             Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("b")),
@@ -42,12 +42,14 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(FalsyTestCases))]
-        public void EvalIfThenElse_EvalElseBranch_WhenConditionIsFalse(IClObj obj)
+        public void EvalIfThenElse_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, obj, ClBool.False, ClBool.True);
+            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, predicate, ClBool.False, ClBool.True);
 
-            Assert.That(evaluator.EvalIfThenElse(expr), Is.EqualTo(ClBool.True));
+            Ignore(evaluator.TryEvalIfThenElse(expr, out var obj));
+
+            Assert.That(obj, Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -58,12 +60,14 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(TruthyTestCases))]
-        public void EvalIfThenElse_EvalThenBranch_WhenConditionIsTrue(IClObj obj)
+        public void EvalIfThenElse_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, obj, ClBool.True, ClBool.False);
+            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, predicate, ClBool.True, ClBool.False);
 
-            Assert.That(evaluator.EvalIfThenElse(expr), Is.EqualTo(ClBool.True));
+            Ignore(evaluator.TryEvalIfThenElse(expr, out var obj));
+
+            Assert.That(obj, Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -77,14 +81,24 @@ namespace Cl.Tests.EvaluatorTests
             yield return BuiltIn.Quote(BuiltIn.ListOf(Nil.Given)); // (quote . (nil . nil))
         }
 
-
         [Test]
         public void EvalIfThenElse_ReturnNil_WhenConditionIsFalseAndElseBranchIsSkipped()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.False, new ClFixnum(1));
 
-            Assert.That(evaluator.EvalIfThenElse(expr), Is.EqualTo(Nil.Given));
+            Ignore(evaluator.TryEvalIfThenElse(expr, out var obj));
+
+            Assert.That(obj, Is.EqualTo(Nil.Given));
+        }
+
+        [Test]
+        public void TryTryEvalIfThenElse_DoesNotEvaluateExpression_WhenTagIsWrong()
+        {
+            var evaluator = new Evaluator(new Env());
+            var expr = BuiltIn.ListOf(ClSymbol.Cond);
+
+            Assert.That(evaluator.TryEvalIfThenElse(expr, out var _), Is.False);
         }
     }
 }

@@ -14,15 +14,16 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
         public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
         {
-            var scope = new Env();
-            var evaluator = new Evaluator(scope);
+            var env = new Env();
+            var evaluator = new Evaluator(env);
             var a = new ClSymbol("a");
             var value = new ClString("foo");
             var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
 
-            Ignore(evaluator.Eval(expr(define)));
-            Assert.True(scope.AtTopLevel);
-            Assert.That(scope.Lookup(a), Is.EqualTo(value));
+            Ignore(evaluator.Eval(expr.Invoke(define)));
+
+            Assert.True(env.AtTopLevel);
+            Assert.That(env.Lookup(a), Is.EqualTo(value));
         }
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
