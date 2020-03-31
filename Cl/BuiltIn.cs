@@ -1,4 +1,8 @@
+using System.Linq;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl
@@ -33,6 +37,24 @@ namespace Cl
                 cell = new ClCell(items[i], cell);
             }
             return cell;
+        }
+
+        public static ClBool IsTrue(IClObj obj) => (obj != Nil.Given && obj != ClBool.False) ? ClBool.True : ClBool.False;
+
+        public static IEnumerable<IClObj> Seq(IClObj obj)
+        {
+            var cell = obj.TypeOf<ClCell>();
+            if (cell is null) throw new InvalidOperationException();
+            if (cell == Nil.Given) yield break;
+            yield return cell.Car;
+            var tail = cell.Cdr;
+            while (tail is ClCell pair)
+            {
+                if (tail == Nil.Given) yield break;
+                yield return pair.Car;
+                tail = pair.Cdr;
+            }
+            yield return tail;
         }
 
         public static ClCell Quote(ClCell cell) => new ClCell(ClSymbol.Quote, cell);

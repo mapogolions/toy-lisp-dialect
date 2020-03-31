@@ -10,5 +10,7 @@ namespace Cl.Types
 
         public IClObj Car { get; }
         public IClObj Cdr { get; }
+
+        public override string ToString() => $"({Car} {Cdr})";
     }
 }

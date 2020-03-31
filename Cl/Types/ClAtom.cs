@@ -17,5 +17,7 @@ namespace Cl.Types
         public override bool Equals(object that) => Equals(that as ClAtom<T>);
 
         public override int GetHashCode() => Value.GetHashCode();
+
+        public override string ToString() => Value.ToString();
     }
 }
