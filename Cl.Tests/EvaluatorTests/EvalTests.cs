@@ -47,6 +47,20 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
+        public void Eval_ReturnUnreducedList_WhenItemOfListHasComplicatedForm()
+        {
+            var evaluator = new Evaluator(new Env());
+            var begin = BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, new ClString("foo"), new ClString("bar"));
+            var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClFixnum(1));
+            var expr = BuiltIn.Quote(BuiltIn.ListOf(begin, logicAnd));
+
+            var result = evaluator.Eval(expr);
+
+            Assert.That(BuiltIn.First(result), Is.EqualTo(begin));
+            Assert.That(BuiltIn.Second(result), Is.EqualTo(logicAnd));
+        }
+
+        [Test]
         public void Eval_ReturnUnreducedExpression_WhenItIsQuoted()
         {
             var evaluator = new Evaluator(new Env());
