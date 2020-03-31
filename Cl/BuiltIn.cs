@@ -9,7 +9,7 @@ namespace Cl
             expr switch
             {
                 ClCell cell => cell.Car,
-                _ => throw new InvalidOperationException("Argument is no a cell")
+                _ => throw new InvalidOperationException("Argument is not a cell")
             };
 
         public static IClObj Cdr(IClObj expr) =>
