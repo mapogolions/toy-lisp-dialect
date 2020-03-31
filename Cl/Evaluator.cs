@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cl.Abs;
 using Cl.Extensions;
 using Cl.Types;
@@ -66,16 +67,8 @@ namespace Cl
             obj = ClBool.False;
             if (!expr.IsOr()) return false;
             var tail = BuiltIn.Tail(expr);
-            while (tail != Nil.Given)
-            {
-                var result = Eval(BuiltIn.Head(tail));
-                if (result != Nil.Given && result != ClBool.False)
-                {
-                    obj = ClBool.True;
-                    break;
-                }
-                tail = BuiltIn.Tail(tail);
-            }
+            var hasTruthy = BuiltIn.Seq(tail).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
+            if (hasTruthy) obj = ClBool.True;
             return true;
         }
 
@@ -84,25 +77,15 @@ namespace Cl
             obj = ClBool.True;
             if (!expr.IsAnd()) return false;
             var tail = BuiltIn.Tail(expr);
-            while (tail != Nil.Given)
-            {
-                var result = Eval(BuiltIn.Head(tail));
-                if (result == Nil.Given || result == ClBool.False)
-                {
-                    obj = ClBool.False;
-                    break;
-                }
-                tail = BuiltIn.Tail(tail);
-            }
+            var hasFalsy = BuiltIn.Seq(tail).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
+            if (hasFalsy) obj = ClBool.False;
             return true;
         }
 
-        // TODO: add tests
         public bool TryEvalLambda(IClObj expr, out IClObj obj)
         {
             obj = Nil.Given;
             if (!expr.IsLambda()) return false;
-            // (lambda (a b c) :body-expr)
             var args = BuiltIn.Cadr(expr);
             var body = BuiltIn.Cddr(expr);
             obj = new ClProc(args.Cast<ClCell>(), body);

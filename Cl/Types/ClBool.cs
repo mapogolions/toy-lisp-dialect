@@ -6,5 +6,7 @@ namespace Cl.Types
 
         public static ClBool True = new ClBool(true);
         public static ClBool False = new ClBool(false);
+
+        public static ClBool Of(bool flag) => flag ? ClBool.True : ClBool.False;
     }
 }

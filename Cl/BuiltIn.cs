@@ -39,7 +39,9 @@ namespace Cl
             return cell;
         }
 
-        public static ClBool IsTrue(IClObj obj) => (obj != Nil.Given && obj != ClBool.False) ? ClBool.True : ClBool.False;
+        public static ClBool IsTrue(IClObj obj) => ClBool.Of(obj != Nil.Given && obj != ClBool.False);
+        public static ClBool IsFalse(IClObj obj) => Negate(IsTrue(obj));
+        public static ClBool Negate(ClBool flag) => ClBool.Of(!flag.Value);
 
         public static IEnumerable<IClObj> Seq(IClObj obj)
         {
