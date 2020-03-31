@@ -6,12 +6,13 @@ namespace Cl.Input
 {
     public class Source : ISource
     {
-        private readonly Stack<int> _buffer = new Stack<int>();
+        private readonly Stack<int> _buffer;
         private readonly Stream _stream;
 
         public Source(Stream stream)
         {
             _stream = stream;
+            _buffer = new Stack<int>();
         }
 
         public Source(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source)))
