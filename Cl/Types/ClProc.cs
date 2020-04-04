@@ -1,5 +1,3 @@
-using System;
-
 namespace Cl.Types
 {
     public class ClProc : IClObj

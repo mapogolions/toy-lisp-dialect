@@ -17,7 +17,6 @@ namespace Cl
 
         public IClObj Eval(IClObj expr)
         {
-            // Console.WriteLine("here" + expr.GetType().Name);
             if (expr.IsSelfEvaluating()) return expr;
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsQuoted()) return BuiltIn.Tail(expr);
