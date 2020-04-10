@@ -8,10 +8,12 @@ namespace Cl
 {
     public class Evaluator
     {
-        private readonly IEnv _env;
+        // NLGB rules -> nested -> local -> global -> built in
+        private IEnv _env;
 
         public Evaluator(IEnv env)
         {
+            // new Evaluator(new Env(builinScope)); // for test purpose
             _env = env;
         }
 
@@ -28,8 +30,28 @@ namespace Cl
             if (TryEvalOr(expr, out obj)) return obj;
             if (TryEvalBegin(expr, out obj)) return obj;
             if (TryEvalLambda(expr, out obj)) return obj;
+            // if (TryApplyFn(expr, out obj)) return obj;
             throw new InvalidOperationException("Evaluation error");
         }
+
+        // public bool TryApplyFn(IClObj expr, out IClObj obj)
+        // {
+        //     obj = Nil.Given;
+        //     var cell = expr.TypeOf<ClCell>();
+        //     if (cell is null) return false;
+        //     switch (cell.Car)
+        //     {
+        //         // Todo: params: () -> args: (x, y) - mismatch count arguments ERROR
+        //         // (x, x) -> second can override first lik clojure
+        //         case ClProc proc when proc.Varargs == Nil.Given && cell.Cdr != Nil.Given:
+        //             throw new InvalidOperationException("Signature mismatch");
+        //         case ClProc proc:
+        //             _env = _env.Populate(proc.Varargs, cell.Cdr);
+        //             break;
+        //         default:
+        //             return false;
+        //     }
+        // }
 
         public bool TryEvalBegin(IClObj expr, out IClObj obj)
         {
