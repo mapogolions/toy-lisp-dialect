@@ -64,20 +64,14 @@ namespace Cl
             return true;
         }
 
-        // (lambda :params :body)
-        // where :params - should be list // (lambda x x) - invalid, but (lambda (x) x) valid
-        // where :body - (lambda (x) x y) // invalid
-        /*
-            (lambda () ())
-         */
         public bool TryEvalLambda(IClObj expr, out IClObj obj)
         {
             obj = Nil.Given;
             if (!expr.IsLambda()) return false;
             if (BuiltIn.Cdddr(expr) != Nil.Given) throw new InvalidOperationException("Invalid body");
-            var operands = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
+            var parameters = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
             var body = BuiltIn.Third(expr);
-            obj = new ClProc(operands, body);
+            obj = new ClProc(parameters, body);
             return true;
         }
 
