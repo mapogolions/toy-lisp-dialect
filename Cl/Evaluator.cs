@@ -31,23 +31,6 @@ namespace Cl
             throw new InvalidOperationException("Evaluation error");
         }
 
-        private IClObj TransformCond(IClObj expr)
-        {
-            var clauses = BuiltIn.Tail(expr);
-            if (clauses == Nil.Given) return ClBool.False;
-            var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
-            if (clause is null)
-                throw new InvalidOperationException("Clause is not a cell");
-            if (clause.Car == ClSymbol.Else)
-            {
-                return BuiltIn.Tail(clauses) == Nil.Given
-                    ? new ClCell(ClSymbol.Begin, clause.Cdr)
-                    : throw new InvalidOperationException("Else clause is not last condition");
-            }
-            return BuiltIn.ListOf(ClSymbol.IfThenElse, clause.Car, new ClCell(ClSymbol.Begin, clause.Cdr),
-                TransformCond(BuiltIn.Tail(clauses)));
-        }
-
         public bool TryEvalBegin(IClObj expr, out IClObj obj)
         {
             obj = Nil.Given;
@@ -81,13 +64,20 @@ namespace Cl
             return true;
         }
 
+        // (lambda :params :body)
+        // where :params - should be list // (lambda x x) - invalid, but (lambda (x) x) valid
+        // where :body - (lambda (x) x y) // invalid
+        /*
+            (lambda () ())
+         */
         public bool TryEvalLambda(IClObj expr, out IClObj obj)
         {
             obj = Nil.Given;
             if (!expr.IsLambda()) return false;
-            var args = BuiltIn.Cadr(expr);
-            var body = BuiltIn.Cddr(expr);
-            obj = new ClProc(args.Cast<ClCell>(), body);
+            if (BuiltIn.Cdddr(expr) != Nil.Given) throw new InvalidOperationException("Invalid body");
+            var operands = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
+            var body = BuiltIn.Third(expr);
+            obj = new ClProc(operands, body);
             return true;
         }
 
@@ -131,6 +121,23 @@ namespace Cl
             var result = Eval(BuiltIn.Third(expr));
             _env.Assign(identifier, result);
             return true;
+        }
+
+        private IClObj TransformCond(IClObj expr)
+        {
+            var clauses = BuiltIn.Tail(expr);
+            if (clauses == Nil.Given) return ClBool.False;
+            var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
+            if (clause is null)
+                throw new InvalidOperationException("Clause is not a cell");
+            if (clause.Car == ClSymbol.Else)
+            {
+                return BuiltIn.Tail(clauses) == Nil.Given
+                    ? new ClCell(ClSymbol.Begin, clause.Cdr)
+                    : throw new InvalidOperationException("Else clause is not last condition");
+            }
+            return BuiltIn.ListOf(ClSymbol.IfThenElse, clause.Car, new ClCell(ClSymbol.Begin, clause.Cdr),
+                TransformCond(BuiltIn.Tail(clauses)));
         }
     }
 }

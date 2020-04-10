@@ -1,3 +1,4 @@
+using System;
 using Cl.Types;
 
 namespace Cl.Extensions
@@ -25,5 +26,6 @@ namespace Cl.Extensions
         public static bool IsEmptyList(this IClObj expr) => expr == Nil.Given;
         public static T TypeOf<T>(this IClObj expr) => expr is T obj ? obj : default;
         public static T Cast<T>(this IClObj expr) => (T) expr;
+        public static T Cast<T>(this IClObj expr, string message) => TypeOf<T>(expr) ?? throw new InvalidOperationException(message);
     }
 }
