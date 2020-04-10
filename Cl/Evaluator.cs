@@ -66,8 +66,8 @@ namespace Cl
             obj = ClBool.False;
             if (!expr.IsOr()) return false;
             var tail = BuiltIn.Tail(expr);
-            var hasTruthy = BuiltIn.Seq(tail).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
-            if (hasTruthy) obj = ClBool.True;
+            var atLeastOne = BuiltIn.Seq(tail).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
+            if (atLeastOne) obj = ClBool.True;
             return true;
         }
 
@@ -76,8 +76,8 @@ namespace Cl
             obj = ClBool.True;
             if (!expr.IsAnd()) return false;
             var tail = BuiltIn.Tail(expr);
-            var hasFalsy = BuiltIn.Seq(tail).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
-            if (hasFalsy) obj = ClBool.False;
+            var atLeastOne = BuiltIn.Seq(tail).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
+            if (atLeastOne) obj = ClBool.False;
             return true;
         }
 

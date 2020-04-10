@@ -5,8 +5,8 @@ namespace Cl.Extensions
 {
     public static class IFilteredSourceOps
     {
-        public static bool SkipWhitespacesAndComments(this IFilteredSource self,  string startsWith = ";",
-            bool atLeastOne = false)
+        public static bool SkipWhitespacesAndComments(this IFilteredSource self,
+            string startsWith = ";", bool atLeastOne = false)
         {
             if (self.SkipWhitespaces())
                 atLeastOne = true;
