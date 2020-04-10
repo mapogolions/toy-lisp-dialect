@@ -18,6 +18,31 @@ namespace Cl.Tests
         }
 
         [Test]
+        public void Extend_DoesNotAffectTheParentScope()
+        {
+            var outer = new Env();
+            outer.Bind(new ClSymbol("x"), new ClString("foo"));
+            var identifiers = BuiltIn.ListOf(new ClSymbol("x"));
+            var values = BuiltIn.ListOf(new ClString("bar"));
+
+            var inner = outer.Extend(identifiers, values);
+
+            Assert.That(inner.Lookup(new ClSymbol("x")), Is.EqualTo(new ClString("bar")));
+            Assert.That(outer.Lookup(new ClSymbol("x")), Is.EqualTo(new ClString("foo")));
+        }
+
+        [Test]
+        public void Extend_CreateChainOfScopes()
+        {
+            var outer = new Env();
+
+            var inner = outer.Extend(Nil.Given, Nil.Given);
+
+            Assert.That(outer.AtTheTopLevel, Is.True);
+            Assert.That(inner.AtTheTopLevel, Is.False);
+        }
+
+        [Test]
         public void Assign_ValueByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()
         {
             var env = new Env(new Env());

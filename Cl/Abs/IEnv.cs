@@ -1,6 +1,8 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using Cl.Types;
+using Cl.Extensions;
 
 namespace Cl.Abs
 {
@@ -9,19 +11,21 @@ namespace Cl.Abs
         bool Bind(ClSymbol symbol, IClObj obj);
         IClObj Lookup(ClSymbol symbol);
         bool Assign(ClSymbol symbol, IClObj obj);
+        IEnv Extend(ClCell keys, ClCell values);
+        bool AtTheTopLevel { get; }
     }
 
     public class Env : IEnv
     {
-        private readonly IEnv _frame;
+        private readonly IEnv _parent;
         private readonly IDictionary<ClSymbol, IClObj> _bindings = new Dictionary<ClSymbol, IClObj>();
 
-        public Env(IEnv frame = null)
+        public Env(IEnv parent = null)
         {
-            _frame = frame;
+            _parent = parent;
         }
 
-        public bool AtTopLevel => _frame is null;
+        public bool AtTheTopLevel => _parent is null;
 
         public bool Bind(ClSymbol symbol, IClObj obj)
         {
@@ -29,24 +33,32 @@ namespace Cl.Abs
             return true;
         }
 
-        public IClObj Lookup(ClSymbol symbol)
+        public IClObj Lookup(ClSymbol identifier)
         {
-            if (_bindings.TryGetValue(symbol, out var obj))
+            if (_bindings.TryGetValue(identifier, out var obj))
                 return obj;
-            var result = _frame?.Lookup(symbol);
+            var result = _parent?.Lookup(identifier);
             if (result is null)
                 throw new InvalidOperationException("Unbound variable");
             return result;
         }
 
-        public bool Assign(ClSymbol symbol, IClObj obj)
+        public bool Assign(ClSymbol identifier, IClObj obj)
         {
-            if (_bindings.ContainsKey(symbol))
-                return Bind(symbol, obj);
-            var result = _frame?.Assign(symbol, obj) ?? false;
+            if (_bindings.ContainsKey(identifier))
+                return Bind(identifier, obj);
+            var result = _parent?.Assign(identifier, obj) ?? false;
             if (result is false)
                 throw new InvalidOperationException("Unbound variable");
             return true;
+        }
+
+        public IEnv Extend(ClCell identifiers, ClCell values)
+        {
+            var env = new Env(this);
+            var pairs = BuiltIn.Seq(identifiers).Cast<ClSymbol>().Zip(BuiltIn.Seq(values));
+            pairs.ForEach(pair => env.Bind(pair.First, pair.Second));
+            return env;
         }
     }
 }
