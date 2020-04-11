@@ -39,15 +39,20 @@ namespace Cl
         //     obj = Nil.Given;
         //     var cell = expr.TypeOf<ClCell>();
         //     if (cell is null) return false;
-        //     switch (cell.Car)
+        //     /*
+        //         ((lambda (x) x) 10) -> ({ClProc} 10)
+        //         (identity 10) -> ({ClSymobl} 10)
+        //         ((if true (lambda () "yes") (lambda () "no")) 10) -> ({ClProc} 10)
+        //         ((lambda (x) 10)) -> return 10
+        //      */
+        //     var procedure = Eval(cell.Car);
+        //     var args = cell.Cdr;
+
+        //     switch (procedure)
         //     {
-        //         // Todo: params: () -> args: (x, y) - mismatch count arguments ERROR
-        //         // (x, x) -> second can override first lik clojure
-        //         case ClProc proc when proc.Varargs == Nil.Given && cell.Cdr != Nil.Given:
-        //             throw new InvalidOperationException("Signature mismatch");
         //         case ClProc proc:
-        //             _env = _env.Populate(proc.Varargs, cell.Cdr);
-        //             break;
+        //             _env = _env.Extend(proc.Varargs, cell.Cdr.Cast<ClCell>());
+        //             return true;
         //         default:
         //             return false;
         //     }
@@ -92,6 +97,8 @@ namespace Cl
             if (!expr.IsLambda()) return false;
             if (BuiltIn.Cdddr(expr) != Nil.Given) throw new InvalidOperationException("Invalid body");
             var parameters = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
+            var hasUnsupportBinding = BuiltIn.Seq(parameters).Any(it => it.TypeOf<ClSymbol>() is null);
+            if (hasUnsupportBinding) throw new InvalidOperationException("Unsupport binding");
             var body = BuiltIn.Third(expr);
             obj = new ClProc(parameters, body);
             return true;

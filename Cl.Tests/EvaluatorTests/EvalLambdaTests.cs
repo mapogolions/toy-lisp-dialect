@@ -10,6 +10,25 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalLambdaTests
     {
         [Test]
+        [TestCaseSource(nameof(InvalidParameterTestCases))]
+        public void TryEvalLambda_ThrowException_WhenAtLeastOneParameterIsNotSymbolPrimitive(IClObj parameter)
+        {
+            var evaluator = new Evaluator(new Env());
+            var parameters = BuiltIn.ListOf(parameter, ClBool.True);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, new ClSymbol("x"));
+
+            Assert.That(() => evaluator.Eval(expr),
+                Throws.InvalidOperationException.With.Message.EqualTo("Unsupport binding"));
+        }
+
+        static IEnumerable<IClObj> InvalidParameterTestCases()
+        {
+            yield return new ClFixnum(1);
+            yield return new ClString("foo");
+            yield return BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, new ClSymbol("x"), new ClSymbol("y"));
+        }
+
+        [Test]
         public void TryEvalLambda_BodyCanBeInvalidExpression()
         {
             var evaluator = new Evaluator(new Env());
