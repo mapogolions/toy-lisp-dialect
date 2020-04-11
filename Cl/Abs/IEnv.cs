@@ -29,7 +29,7 @@ namespace Cl.Abs
         {
             foreach (var pair in pairs)
             {
-                this.Bind(pair.Item1, pair.Item2);
+                Bind(pair.Item1, pair.Item2);
             }
         }
 
