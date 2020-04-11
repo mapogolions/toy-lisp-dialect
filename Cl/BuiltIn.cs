@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 using Cl.Types;
+using Cl.Abs;
 
 namespace Cl
 {
@@ -69,5 +70,22 @@ namespace Cl
         public static Func<IClObj, IClObj> Second = Cadr;
         public static Func<IClObj, IClObj> Third = Caddr;
         public static Func<IClObj, IClObj> Fourth = Cadddr;
+
+        public static IEnv Env = new Env(
+            (new ClSymbol("head"), new PrimitiveProcedure(Head)),
+            (new ClSymbol("tail"), new PrimitiveProcedure(Tail)),
+            (new ClSymbol("car"), new PrimitiveProcedure(Car)),
+            (new ClSymbol("cdr"), new PrimitiveProcedure(Cdr)),
+            (new ClSymbol("cadr"), new PrimitiveProcedure(Cadr)),
+            (new ClSymbol("cddr"), new PrimitiveProcedure(Cddr)),
+            (new ClSymbol("caddr"), new PrimitiveProcedure(Caddr)),
+            (new ClSymbol("cadddr"), new PrimitiveProcedure(Cadddr)),
+            (new ClSymbol("first"), new PrimitiveProcedure(First)),
+            (new ClSymbol("second"), new PrimitiveProcedure(Second)),
+            (new ClSymbol("third"), new PrimitiveProcedure(Third)),
+            (new ClSymbol("fourth"), new PrimitiveProcedure(Fourth)),
+            (new ClSymbol("true?"), new PrimitiveProcedure(IsTrue)),
+            (new ClSymbol("false?"), new PrimitiveProcedure(IsFalse))
+        );
     }
 }

@@ -25,6 +25,14 @@ namespace Cl.Abs
             _parent = parent;
         }
 
+        public Env(params (ClSymbol, PrimitiveProcedure)[] pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                this.Bind(pair.Item1, pair.Item2);
+            }
+        }
+
         public bool IsGlobal => _parent is null;
 
         public bool Bind(ClSymbol symbol, IClObj obj)

@@ -2,7 +2,7 @@ using System;
 
 namespace Cl.Types
 {
-    public class PrimitiveProcedure
+    public class PrimitiveProcedure : IClObj
     {
         private readonly Func<IClObj, IClObj> _fn;
         public PrimitiveProcedure(Func<IClObj, IClObj> fn)
