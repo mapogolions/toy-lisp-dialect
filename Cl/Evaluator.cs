@@ -31,7 +31,7 @@ namespace Cl
             if (TryEvalBegin(expr, out obj)) return obj;
             if (TryEvalLambda(expr, out obj)) return obj;
             if (TryEvalApplication(expr, out obj)) return obj;
-            throw new InvalidOperationException("Evaluation error");
+            throw new InvalidOperationException(Errors.Eval.EvaluationError);
         }
 
         public bool TryEvalApplication(IClObj expr, out IClObj obj)
@@ -45,7 +45,7 @@ namespace Cl
                 ((if true (lambda () "yes") (lambda () "no")) 10) -> ({ClProc} 10)
                 ((lambda (x) 10)) -> return 10
              */
-            var procedure = Eval(cell.Car).Cast<ClProc>("Unknown procedure type");
+            var procedure = Eval(cell.Car).Cast<ClProc>(Errors.Eval.UnknownProcedureType);
             var args = cell.Cdr.Cast<ClCell>();
             // eager evaluation strategy
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
@@ -93,10 +93,12 @@ namespace Cl
         {
             obj = Nil.Given;
             if (!expr.IsLambda()) return false;
-            if (BuiltIn.Cdddr(expr) != Nil.Given) throw new InvalidOperationException("Invalid body");
+            if (BuiltIn.Cdddr(expr) != Nil.Given)
+                throw new InvalidOperationException("Invalid body");
             var parameters = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
             var hasUnsupportBinding = BuiltIn.Seq(parameters).Any(it => it.TypeOf<ClSymbol>() is null);
-            if (hasUnsupportBinding) throw new InvalidOperationException("Unsupport binding");
+            if (hasUnsupportBinding)
+                throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
             obj = new ClProc(parameters, body);
             return true;
@@ -150,14 +152,16 @@ namespace Cl
             if (clauses == Nil.Given) return ClBool.False;
             var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
             if (clause is null)
-                throw new InvalidOperationException("Clause is not a cell");
+                throw new InvalidOperationException(Errors.BuiltIn.ClauseMustBeCell);
             if (clause.Car == ClSymbol.Else)
             {
                 return BuiltIn.Tail(clauses) == Nil.Given
                     ? new ClCell(ClSymbol.Begin, clause.Cdr)
-                    : throw new InvalidOperationException("Else clause is not last condition");
+                    : throw new InvalidOperationException(Errors.BuiltIn.ElseClauseMustBeLast);
             }
-            return BuiltIn.ListOf(ClSymbol.IfThenElse, clause.Car, new ClCell(ClSymbol.Begin, clause.Cdr),
+            return BuiltIn.ListOf(ClSymbol.IfThenElse,
+                clause.Car,
+                new ClCell(ClSymbol.Begin, clause.Cdr),
                 TransformCond(BuiltIn.Tail(clauses)));
         }
     }

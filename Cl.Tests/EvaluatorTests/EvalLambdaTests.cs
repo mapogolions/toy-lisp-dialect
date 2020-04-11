@@ -16,9 +16,10 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(new Env());
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, new ClSymbol("x"));
+            var errorMessage = Errors.BuiltIn.UnsupportBinding;
 
             Assert.That(() => evaluator.Eval(expr),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unsupport binding"));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<IClObj> InvalidParameterTestCases()

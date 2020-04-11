@@ -15,9 +15,10 @@ namespace Cl.Tests.EvaluatorTests
                 BuiltIn.ListOf(ClBool.False, new ClFixnum(1)),
                 BuiltIn.ListOf(ClBool.True, new ClFixnum(2)),
                 new ClFixnum(3));
+            var errorMessage = Errors.BuiltIn.ClauseMustBeCell;
 
             Assert.That(() => evaluator.Eval(invalidExpr),
-                Throws.InvalidOperationException.With.Message.EqualTo("Clause is not a cell"));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -83,9 +84,10 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(new Env());
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause, BuiltIn.ListOf(ClSymbol.Else, ClBool.True));
+            var errorMessage = Errors.BuiltIn.ElseClauseMustBeLast;
 
             Assert.That(() => evaluator.Eval(expr),
-                Throws.InvalidOperationException.With.Message.EqualTo("Else clause is not last condition"));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]

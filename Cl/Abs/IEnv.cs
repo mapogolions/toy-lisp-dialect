@@ -48,18 +48,17 @@ namespace Cl.Abs
             if (_bindings.ContainsKey(identifier))
                 return Bind(identifier, obj);
             var result = _parent?.Assign(identifier, obj) ?? false;
-            if (result is false)
-                throw new InvalidOperationException(Errors.UnboundVariable(identifier));
-            return true;
+            if (result) return true;
+            throw new InvalidOperationException(Errors.UnboundVariable(identifier));
         }
 
         public IEnv Extend(ClCell identifiers, ClCell values)
         {
             var env = new Env(this);
-            var pairs = BuiltIn.Seq(identifiers)
+            BuiltIn.Seq(identifiers)
                 .Cast<ClSymbol>()
-                .BalancedZip(BuiltIn.Seq(values));
-            pairs.ForEach(pair => env.Bind(pair.First, pair.Second));
+                .BalancedZip(BuiltIn.Seq(values))
+                .ForEach(pair => env.Bind(pair.First, pair.Second));
             return env;
         }
     }
