@@ -1,6 +1,7 @@
 using Cl.Types;
 using Cl.Abs;
 using NUnit.Framework;
+using Cl.Extensions;
 
 namespace Cl.Tests
 {
@@ -18,7 +19,19 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Exntend_ThrowExceptionWhenAtLeastOneArgumentIsNotProvided()
+        public void Env_InjectPredifinedEntities()
+        {
+            var env = new Env(BuiltIn.Env);
+
+            var actual = env.Lookup(new ClSymbol("head")).TypeOf<PrimitiveProcedure>();
+
+            Assert.That(actual, Is.Not.Null);
+            var first = actual.Apply(new ClCell(ClBool.True, ClBool.False));
+            Assert.That(first, Is.EqualTo(ClBool.False));
+        }
+
+        [Test]
+        public void Extend_ThrowExceptionWhenAtLeastOneArgumentIsNotProvided()
         {
             var env = new Env();
             var identifiers = BuiltIn.ListOf(new ClSymbol("x"), new ClSymbol("y"));
@@ -29,7 +42,7 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Exntend_ThrowExceptionWhenTooManyArgumentsArePassed()
+        public void Extend_ThrowExceptionWhenTooManyArgumentsArePassed()
         {
             var env = new Env();
             var identifiers = BuiltIn.ListOf(new ClSymbol("x"));
