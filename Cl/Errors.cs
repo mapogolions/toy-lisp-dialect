@@ -12,6 +12,8 @@ namespace Cl
 
         public static class Eval
         {
+            public const string InvalidLambdaBody = "Invalid function body format";
+            public const string InvalidLambdaParameters = "Invalid function parameters format";
             public const string EvaluationError = "Evaluation error";
             public const string UnknownProcedureType = "Unknown procedure type";
         }

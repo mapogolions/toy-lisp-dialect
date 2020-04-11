@@ -69,9 +69,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True, ClBool.False);
+            var errorMessage = Errors.Eval.InvalidLambdaBody;
 
             Assert.That(() => evaluator.Eval(expr),
-                Throws.InvalidOperationException.With.Message.EqualTo("Invalid body"));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -92,9 +93,10 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(new Env());
             var operands = new ClSymbol("x");
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, operands, operands);
+            var errorMessage = Errors.Eval.InvalidLambdaParameters;
 
             Assert.That(() => evaluator.Eval(expr),
-                Throws.InvalidOperationException.With.Message.EqualTo("Operands must be a cell"));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
     }
 }

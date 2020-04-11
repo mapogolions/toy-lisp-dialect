@@ -73,9 +73,9 @@ namespace Cl
         {
             obj = ClBool.False;
             if (!expr.IsOr()) return false;
-            var tail = BuiltIn.Tail(expr);
-            var atLeastOne = BuiltIn.Seq(tail).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
-            if (atLeastOne) obj = ClBool.True;
+            var conditions = BuiltIn.Tail(expr);
+            var atLeastOneTruth = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
+            if (atLeastOneTruth) obj = ClBool.True;
             return true;
         }
 
@@ -83,9 +83,9 @@ namespace Cl
         {
             obj = ClBool.True;
             if (!expr.IsAnd()) return false;
-            var tail = BuiltIn.Tail(expr);
-            var atLeastOne = BuiltIn.Seq(tail).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
-            if (atLeastOne) obj = ClBool.False;
+            var conditions = BuiltIn.Tail(expr);
+            var atLeastOneFalse = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
+            if (atLeastOneFalse) obj = ClBool.False;
             return true;
         }
 
@@ -94,8 +94,9 @@ namespace Cl
             obj = Nil.Given;
             if (!expr.IsLambda()) return false;
             if (BuiltIn.Cdddr(expr) != Nil.Given)
-                throw new InvalidOperationException("Invalid body");
-            var parameters = BuiltIn.Second(expr).Cast<ClCell>("Operands must be a cell");
+                throw new InvalidOperationException(Errors.Eval.InvalidLambdaBody);
+            var parameters = BuiltIn.Second(expr)
+                .Cast<ClCell>(Errors.Eval.InvalidLambdaParameters);
             var hasUnsupportBinding = BuiltIn.Seq(parameters).Any(it => it.TypeOf<ClSymbol>() is null);
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
@@ -108,8 +109,8 @@ namespace Cl
         {
             obj = Nil.Given;
             if (!expr.IsIfThenElse()) return false;
-            var result = Eval(BuiltIn.Second(expr));
-            if (result != Nil.Given && result != ClBool.False)
+            var condition = Eval(BuiltIn.Second(expr));
+            if (condition != Nil.Given && condition != ClBool.False)
             {
                 obj = Eval(BuiltIn.Third(expr));
                 return true;
@@ -135,9 +136,6 @@ namespace Cl
 
         public bool TryEvalAssigment(IClObj expr, out IClObj obj)
         {
-            // (set! a 10) -> (set! . (a . (10 . nil)))
-            // (set! a b) -> (set! . (a . (b . nil)))
-            // (set! a a) -> (set! . (a . (a . nil))) reassign
             obj = Nil.Given;
             if (!expr.IsAssignment()) return false;
             var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
