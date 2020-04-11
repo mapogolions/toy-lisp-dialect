@@ -8,10 +8,10 @@ namespace Cl.Abs
 {
     public interface IEnv
     {
-        bool Bind(ClSymbol symbol, IClObj obj);
-        IClObj Lookup(ClSymbol symbol);
-        bool Assign(ClSymbol symbol, IClObj obj);
-        IEnv Extend(ClCell keys, ClCell values);
+        bool Bind(ClSymbol identifier, IClObj obj);
+        IClObj Lookup(ClSymbol indentifier);
+        bool Assign(ClSymbol identifier, IClObj obj);
+        IEnv Extend(ClCell identifiers, ClCell values);
         bool AtTheTopLevel { get; }
     }
 
