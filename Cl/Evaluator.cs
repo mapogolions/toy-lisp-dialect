@@ -8,12 +8,12 @@ namespace Cl
 {
     public class Evaluator
     {
-        // NLGB rules -> nested -> local -> global -> built in
+        // NLGB:  nested -> local -> global -> builtin
         private IEnv _env;
 
         public Evaluator(IEnv env)
         {
-            // new Evaluator(new Env(builinScope)); // for test purpose
+            // new Evaluator(new Env(builinScope)) - inject builtin
             _env = env;
         }
 
