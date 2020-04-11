@@ -27,7 +27,7 @@ namespace Cl.Tests
 
             Assert.That(actual, Is.Not.Null);
             var first = actual.Apply(new ClCell(ClBool.True, ClBool.False));
-            Assert.That(first, Is.EqualTo(ClBool.False));
+            Assert.That(first, Is.EqualTo(ClBool.True));
         }
 
         [Test]
