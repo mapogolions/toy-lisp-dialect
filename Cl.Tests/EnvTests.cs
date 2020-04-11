@@ -18,6 +18,28 @@ namespace Cl.Tests
         }
 
         [Test]
+        public void Exntend_ThrowExceptionWhenAtLeastOneArgumentIsNotProvided()
+        {
+            var env = new Env();
+            var identifiers = BuiltIn.ListOf(new ClSymbol("x"), new ClSymbol("y"));
+            var values = BuiltIn.ListOf(new ClString("bar"));
+
+            Assert.That(() => env.Extend(identifiers, values),
+                Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
+        }
+
+        [Test]
+        public void Exntend_ThrowExceptionWhenTooManyArgumentsArePassed()
+        {
+            var env = new Env();
+            var identifiers = BuiltIn.ListOf(new ClSymbol("x"));
+            var values = BuiltIn.ListOf(new ClString("bar"), ClBool.True);
+
+            Assert.That(() => env.Extend(identifiers, values),
+                Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
+        }
+
+        [Test]
         public void Extend_DoesNotAffectTheParentScope()
         {
             var outer = new Env();

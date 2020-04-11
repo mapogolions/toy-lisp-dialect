@@ -56,7 +56,7 @@ namespace Cl.Abs
         public IEnv Extend(ClCell identifiers, ClCell values)
         {
             var env = new Env(this);
-            var pairs = BuiltIn.Seq(identifiers).Cast<ClSymbol>().Zip(BuiltIn.Seq(values));
+            var pairs = BuiltIn.Seq(identifiers).Cast<ClSymbol>().BalancedZip(BuiltIn.Seq(values));
             pairs.ForEach(pair => env.Bind(pair.First, pair.Second));
             return env;
         }
