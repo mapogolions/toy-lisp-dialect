@@ -39,7 +39,7 @@ namespace Cl
             obj = Nil.Given;
             var cell = expr.TypeOf<ClCell>();
             if (cell is null) return false;
-            var procedure = Eval(cell.Car).Cast<ClProc>(Errors.Eval.UnknownProcedureType);
+            var procedure = Eval(cell.Car).Cast<ClProcedure>(Errors.Eval.UnknownProcedureType);
             var args = cell.Cdr.Cast<ClCell>();
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
             var parent = _env;
@@ -94,7 +94,7 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            obj = new ClProc(parameters, body);
+            obj = new ClProcedure(parameters, body);
             return true;
         }
 
