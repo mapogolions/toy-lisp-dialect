@@ -39,7 +39,7 @@ namespace Cl.Abs
                 return obj;
             var result = _parent?.Lookup(identifier);
             if (result is null)
-                throw new InvalidOperationException("Unbound variable");
+                throw new InvalidOperationException(Errors.UnboundVariable(identifier));
             return result;
         }
 
@@ -49,14 +49,16 @@ namespace Cl.Abs
                 return Bind(identifier, obj);
             var result = _parent?.Assign(identifier, obj) ?? false;
             if (result is false)
-                throw new InvalidOperationException("Unbound variable");
+                throw new InvalidOperationException(Errors.UnboundVariable(identifier));
             return true;
         }
 
         public IEnv Extend(ClCell identifiers, ClCell values)
         {
             var env = new Env(this);
-            var pairs = BuiltIn.Seq(identifiers).Cast<ClSymbol>().BalancedZip(BuiltIn.Seq(values));
+            var pairs = BuiltIn.Seq(identifiers)
+                .Cast<ClSymbol>()
+                .BalancedZip(BuiltIn.Seq(values));
             pairs.ForEach(pair => env.Bind(pair.First, pair.Second));
             return env;
         }

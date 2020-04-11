@@ -22,7 +22,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(env.Lookup(new ClSymbol("b")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("a")),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unbound variable"));
+                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("b")),
-                Throws.InvalidOperationException.With.Message.EquivalentTo("Unbound variable"));
+                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]

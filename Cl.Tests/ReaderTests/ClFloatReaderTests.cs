@@ -1,4 +1,3 @@
-using Cl.Constants;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -40,9 +39,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadFloat_ThrowException_WhenAfterDotInvalidSymbol()
         {
             using var reader = new Reader("0. ");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClFloat));
 
             Assert.That(() => reader.ReadFloat(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClFloat))));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cl.Constants;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -45,18 +44,20 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ThrowException_WhenSpaceIsMissed()
         {
             using var reader = new Reader("(#t1)");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void ReadCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f #\\foo)");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -101,9 +102,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ThrowException_WhenSourceContainsOnlyOpenBracket()
         {
             using var reader = new Reader("(");
+            var errorMessage = Errors.Reader.ReadIllegalState;
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.ReadIllegalState));
+                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
 
         [Test]

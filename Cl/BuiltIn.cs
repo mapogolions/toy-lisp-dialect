@@ -12,14 +12,14 @@ namespace Cl
             expr switch
             {
                 ClCell cell => cell.Car,
-                _ => throw new InvalidOperationException("Argument is not a cell")
+                _ => throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell)
             };
 
         public static IClObj Cdr(IClObj expr) =>
             expr switch
             {
                 ClCell cell => cell.Cdr,
-                _ => throw new InvalidOperationException("Argument is not a cell")
+                _ => throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell)
             };
 
         public static IClObj Cadr(IClObj expr) => Car(Cdr(expr));

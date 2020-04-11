@@ -1,4 +1,3 @@
-using Cl.Constants;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -45,9 +44,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadDottedCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f . #\\foo)");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -67,9 +67,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadDottedCell_ThrowException_CanNotReadMultipleValues()
         {
             using var reader = new Reader("(1.2 . 2 . #)");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(Errors.UnknownLiteral(nameof(ClCell))));
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [TestCaseSource(nameof(DottedPairTestCases))]

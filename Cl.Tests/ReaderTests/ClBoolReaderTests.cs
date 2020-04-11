@@ -1,4 +1,3 @@
-using Cl.Constants;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -40,18 +39,20 @@ namespace Cl.Tests.ReaderTests
         public void ReadBool_ThrowException_WhenBooleanSignificantSymbolDoesNotFollowAfterHash()
         {
             using var reader = new Reader("#w");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClBool));
 
             Assert.That(() => reader.ReadBool(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
+                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void ReadBool_ThrowException_WhenSourceContainsOnlyHash()
         {
             using var reader = new Reader("#");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClBool));
 
             Assert.That(() => reader.ReadBool(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClBool))));
+                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
 
         [Test]

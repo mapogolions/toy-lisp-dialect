@@ -76,7 +76,7 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(new Env());
 
             Assert.That(() => evaluator.Eval(new ClSymbol("a")),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unbound variable"));
+                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]

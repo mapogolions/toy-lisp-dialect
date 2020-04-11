@@ -31,7 +31,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Define, new ClSymbol("a"), new ClSymbol("b"));
 
             Assert.That(() => evaluator.TryEvalDefinition(expr, out var _),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unbound variable"));
+                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]

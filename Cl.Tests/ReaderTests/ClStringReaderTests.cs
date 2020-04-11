@@ -1,4 +1,3 @@
-using Cl.Constants;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -39,9 +38,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadString_ThrowException_DoubleQuotesAreUnbalanced()
         {
             using var reader = new Reader("\"some");
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClString));
 
             Assert.That(() => reader.ReadString(),
-                Throws.InvalidOperationException.And.Message.EqualTo(Errors.UnknownLiteral(nameof(ClString))));
+                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
 
         [Test]

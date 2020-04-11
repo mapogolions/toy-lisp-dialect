@@ -5,7 +5,6 @@ using Cl.Input;
 using Cl.Types;
 using Cl.Extensions;
 using static Cl.Extensions.FpUniverse;
-using Cl.Constants;
 using System.Globalization;
 
 namespace Cl
@@ -28,7 +27,7 @@ namespace Cl
             var ast = Read();
             _source.SkipWhitespacesAndComments();
             if (_source.Eof()) return ast;
-            throw new InvalidOperationException(Errors.ReadIllegalState);
+            throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
         }
 
         private IClObj Read()
@@ -41,7 +40,7 @@ namespace Cl
             if (ReadLiteral(ReadFixnum, out ast)) return ast;
             if (ReadLiteral(ReadCell, out ast)) return ast;
             if (ReadLiteral(ReadSymbol, out ast)) return ast;
-            throw new InvalidOperationException(Errors.ReadIllegalState);
+            throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
         }
 
         public bool ReadLiteral(Func<IClObj> fn, out IClObj ast)
@@ -52,9 +51,9 @@ namespace Cl
 
         public ClSymbol ReadSymbol()
         {
-            if (_source.Eof()) return default;
+            if (_source.Eof()) return null;
             var ch = (char) _source.Peek();
-            if (!char.IsLetter(ch)) return default;
+            if (!char.IsLetter(ch)) return null;
             string loop(string acc)
             {
                 if (_source.Eof()) return acc;
@@ -73,7 +72,7 @@ namespace Cl
             var cdr = Read();
             Ignore(_source.SkipWhitespacesAndComments());
             if (!_source.SkipMatched(")"))
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClCell)));
+                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
             return new ClCell(car, cdr);
         }
 
@@ -94,7 +93,7 @@ namespace Cl
         {
             if (_source.SkipMatched(")")) return Nil.Given;
             if (!wasDelimiter)
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClCell)));
+                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
             var car = Read();
             wasDelimiter = _source.SkipWhitespacesAndComments();
             if (_source.SkipMatched(")")) return new ClCell(car, Nil.Given);
@@ -103,22 +102,23 @@ namespace Cl
 
         public ClFloat ReadFloat()
         {
-            if (!TryReadNumbersInRow(out var significand)) return default;
+            if (!TryReadNumbersInRow(out var significand)) return null;
             if (!_source.SkipMatched("."))
             {
                 significand.Reverse().ForEach(ch => _source.Buffer(ch));
-                return default;
+                return null;
             }
             if (!TryReadNumbersInRow(out var mantissa))
-                throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClFloat)));
-            var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float, CultureInfo.InvariantCulture);
+                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClFloat)));
+            var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float,
+                CultureInfo.InvariantCulture);
             return new ClFloat(number);
         }
 
         public ClFixnum ReadFixnum()
         {
-            if (!TryReadNumbersInRow(out var nums)) return default;
-            if (!int.TryParse(nums, out var integer)) return default;
+            if (!TryReadNumbersInRow(out var nums)) return null;
+            if (!int.TryParse(nums, out var integer)) return null;
             return new ClFixnum(integer);
         }
 
@@ -136,11 +136,11 @@ namespace Cl
 
         public ClString ReadString()
         {
-            if (!_source.SkipMatched("\"")) return default;
+            if (!_source.SkipMatched("\"")) return null;
             string loop(string acc)
             {
                 if (_source.Eof())
-                    throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClString)));
+                    throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClString)));
                 var ch = (char) _source.Read();
                 if (ch == '"') return acc;
                 return loop($"{acc}{ch}");
@@ -150,21 +150,22 @@ namespace Cl
 
         public ClBool ReadBool()
         {
-            if (!_source.SkipMatched("#")) return default;
+            if (!_source.SkipMatched("#")) return null;
             if (_source.SkipMatched("t")) return ClBool.True;
             if (_source.SkipMatched("f")) return ClBool.False;
-            throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClBool)));
+            throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClBool)));
         }
 
         public ClChar ReadChar()
         {
-            if (!_source.SkipMatched("#\\")) return default;
+            if (!_source.SkipMatched("#\\")) return null;
             foreach (var (word, ch) in SpecialChars)
             {
                 if (!_source.SkipMatched(word)) continue;
                 return new ClChar(ch);
             }
-            if (_source.Eof()) throw new InvalidOperationException(Errors.UnknownLiteral(nameof(ClChar)));
+            if (_source.Eof())
+                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClChar)));
             return new ClChar((char) _source.Read());
         }
 
