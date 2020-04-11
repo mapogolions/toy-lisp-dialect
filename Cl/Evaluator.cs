@@ -39,15 +39,8 @@ namespace Cl
             obj = Nil.Given;
             var cell = expr.TypeOf<ClCell>();
             if (cell is null) return false;
-            /*
-                ((lambda (x) x) 10) -> ({ClProc} 10)
-                (identity 10) -> ({ClSymobl} 10)
-                ((if true (lambda () "yes") (lambda () "no")) 10) -> ({ClProc} 10)
-                ((lambda (x) 10)) -> return 10
-             */
             var procedure = Eval(cell.Car).Cast<ClProc>(Errors.Eval.UnknownProcedureType);
             var args = cell.Cdr.Cast<ClCell>();
-            // eager evaluation strategy
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
             var parent = _env;
             _env = _env.Extend(procedure.Varargs, BuiltIn.ListOf(values));
