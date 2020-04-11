@@ -12,7 +12,7 @@ namespace Cl.Abs
         IClObj Lookup(ClSymbol indentifier);
         bool Assign(ClSymbol identifier, IClObj obj);
         IEnv Extend(ClCell identifiers, ClCell values);
-        bool AtTheTopLevel { get; }
+        bool IsGlobal { get; }
     }
 
     public class Env : IEnv
@@ -25,7 +25,7 @@ namespace Cl.Abs
             _parent = parent;
         }
 
-        public bool AtTheTopLevel => _parent is null;
+        public bool IsGlobal => _parent is null;
 
         public bool Bind(ClSymbol symbol, IClObj obj)
         {

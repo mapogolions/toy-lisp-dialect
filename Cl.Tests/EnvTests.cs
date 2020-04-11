@@ -60,8 +60,8 @@ namespace Cl.Tests
 
             var inner = outer.Extend(Nil.Given, Nil.Given);
 
-            Assert.That(outer.AtTheTopLevel, Is.True);
-            Assert.That(inner.AtTheTopLevel, Is.False);
+            Assert.That(outer.IsGlobal, Is.True);
+            Assert.That(inner.IsGlobal, Is.False);
         }
 
         [Test]

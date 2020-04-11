@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using Cl.Extensions;
@@ -36,6 +37,8 @@ namespace Cl
             }
             return cell;
         }
+
+        public static ClCell ListOf(IEnumerable<IClObj> items) => ListOf(items.ToArray());
 
         public static ClBool IsTrue(IClObj obj) => ClBool.Of(obj != Nil.Given && obj != ClBool.False);
         public static ClBool IsFalse(IClObj obj) => Negate(IsTrue(obj));

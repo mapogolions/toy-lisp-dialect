@@ -30,33 +30,31 @@ namespace Cl
             if (TryEvalOr(expr, out obj)) return obj;
             if (TryEvalBegin(expr, out obj)) return obj;
             if (TryEvalLambda(expr, out obj)) return obj;
-            // if (TryApplyFn(expr, out obj)) return obj;
+            if (TryEvalApplication(expr, out obj)) return obj;
             throw new InvalidOperationException("Evaluation error");
         }
 
-        // public bool TryApplyFn(IClObj expr, out IClObj obj)
-        // {
-        //     obj = Nil.Given;
-        //     var cell = expr.TypeOf<ClCell>();
-        //     if (cell is null) return false;
-        //     /*
-        //         ((lambda (x) x) 10) -> ({ClProc} 10)
-        //         (identity 10) -> ({ClSymobl} 10)
-        //         ((if true (lambda () "yes") (lambda () "no")) 10) -> ({ClProc} 10)
-        //         ((lambda (x) 10)) -> return 10
-        //      */
-        //     var procedure = Eval(cell.Car);
-        //     var args = cell.Cdr;
-
-        //     switch (procedure)
-        //     {
-        //         case ClProc proc:
-        //             _env = _env.Extend(proc.Varargs, cell.Cdr.Cast<ClCell>());
-        //             return true;
-        //         default:
-        //             return false;
-        //     }
-        // }
+        public bool TryEvalApplication(IClObj expr, out IClObj obj)
+        {
+            obj = Nil.Given;
+            var cell = expr.TypeOf<ClCell>();
+            if (cell is null) return false;
+            /*
+                ((lambda (x) x) 10) -> ({ClProc} 10)
+                (identity 10) -> ({ClSymobl} 10)
+                ((if true (lambda () "yes") (lambda () "no")) 10) -> ({ClProc} 10)
+                ((lambda (x) 10)) -> return 10
+             */
+            var procedure = Eval(cell.Car).Cast<ClProc>("Unknown procedure type");
+            var args = cell.Cdr.Cast<ClCell>();
+            // eager evaluation strategy
+            var values = BuiltIn.Seq(args).Select(it => Eval(it));
+            var parent = _env;
+            _env = _env.Extend(procedure.Varargs, BuiltIn.ListOf(values));
+            obj = Eval(procedure.Body);
+            _env = parent;
+            return true;
+        }
 
         public bool TryEvalBegin(IClObj expr, out IClObj obj)
         {

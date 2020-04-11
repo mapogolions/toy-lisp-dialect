@@ -22,7 +22,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Ignore(evaluator.Eval(expr.Invoke(define)));
 
-            Assert.True(env.AtTheTopLevel);
+            Assert.True(env.IsGlobal);
             Assert.That(env.Lookup(a), Is.EqualTo(value));
         }
 
