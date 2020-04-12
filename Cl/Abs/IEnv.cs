@@ -25,7 +25,7 @@ namespace Cl.Abs
             _parent = parent;
         }
 
-        public Env(params (ClSymbol, PrimitiveProcedure)[] pairs)
+        public Env(params (ClSymbol, IClObj)[] pairs)
         {
             foreach (var pair in pairs)
             {
@@ -35,9 +35,9 @@ namespace Cl.Abs
 
         public bool IsGlobal => _parent is null;
 
-        public bool Bind(ClSymbol symbol, IClObj obj)
+        public bool Bind(ClSymbol identifier, IClObj obj)
         {
-            _bindings[symbol] = obj;
+            _bindings[identifier] = obj;
             return true;
         }
 
