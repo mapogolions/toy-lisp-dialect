@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cl.Abs;
 using Cl.Extensions;
@@ -15,6 +16,16 @@ namespace Cl
         {
             // new Evaluator(new Env(builinScope)) - inject builtin
             _env = env;
+        }
+
+        public IClObj Eval(IList<IClObj> expressions)
+        {
+            IClObj result = null;
+            foreach (var expression in expressions)
+            {
+                result = Eval(expression);
+            }
+            return result;
         }
 
         public IClObj Eval(IClObj expr)
