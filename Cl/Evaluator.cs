@@ -116,7 +116,6 @@ namespace Cl
 
         public bool TryEvalDefinition(IClObj expr, out IClObj obj)
         {
-            // NOTE: (define keyword 10) i.e. (define lambda 10) It's ok. Keywords and symbols table coexist independently
             obj = Nil.Given;
             if (!expr.IsDefinition()) return false;
             var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
