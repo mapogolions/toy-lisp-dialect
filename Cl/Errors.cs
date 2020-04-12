@@ -26,6 +26,7 @@ namespace Cl
             public const string ClauseMustBeCell = "Clause must be a cell";
             public const string ElseClauseMustBeLast = "Else clause must be last condition";
             public const string UnsupportBinding = "Unsupport binding";
+            public static string ArgumentIsNotOfType<T>() where T : IClObj => $"Argument is not of type {nameof(T)}";
         }
     }
 }

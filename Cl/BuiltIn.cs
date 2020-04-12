@@ -71,7 +71,50 @@ namespace Cl
         public static Func<IClObj, IClObj> Third = Caddr;
         public static Func<IClObj, IClObj> Fourth = Cadddr;
 
+        // Predicates
+        public static ClBool IsNull(IClObj obj) => ClBool.Of(obj == Nil.Given);
+        public static ClBool HasType<T>(IClObj obj) where T : IClObj => ClBool.Of(obj.TypeOf<T>() != null);
+        public static ClBool IsString(IClObj obj) => HasType<ClString>(obj);
+        public static ClBool IsSymbol(IClObj obj) => HasType<ClSymbol>(obj);
+        public static ClBool IsInteger(IClObj obj) => HasType<ClFixnum>(obj);
+        public static ClBool IsFloat(IClObj obj) => HasType<ClFloat>(obj);
+        public static ClBool IsChar(IClObj obj) => HasType<ClChar>(obj);
+        public static ClBool IsPair(IClObj obj) => HasType<ClCell>(obj);
+        public static ClBool IsProcedure(IClObj obj) => HasType<ClProcedure>(obj);
+
+        // Converts
+        public static ClFixnum IntegerOfChar(IClObj obj) =>
+            obj switch
+            {
+                ClChar ch => new ClFixnum((int) ch.Value),
+                _ => throw new InvalidCastException(Errors.BuiltIn.ArgumentIsNotOfType<ClChar>())
+            };
+
+        public static ClChar CharOfInteger(IClObj obj) =>
+            obj switch
+            {
+                ClFixnum number => new ClChar((char) number.Value),
+                _ => throw new InvalidCastException(Errors.BuiltIn.ArgumentIsNotOfType<ClFixnum>())
+            };
+
+        public static ClString StringOfNumber(IClObj obj) =>
+            obj switch
+            {
+                ClFixnum number => new ClString(number.ToString()),
+                ClFloat number => new ClString(number.ToString()),
+                _ => throw new InvalidCastException()
+            };
+
+        // Pervasives
         public static IEnv Env = new Env(
+            (new ClSymbol("null?"), new PrimitiveProcedure(IsNull)),
+            (new ClSymbol("string?"), new PrimitiveProcedure(IsString)),
+            (new ClSymbol("symbol?"), new PrimitiveProcedure(IsSymbol)),
+            (new ClSymbol("integer?"), new PrimitiveProcedure(IsInteger)),
+            (new ClSymbol("float?"), new PrimitiveProcedure(IsFloat)),
+            (new ClSymbol("char?"), new PrimitiveProcedure(IsChar)),
+            (new ClSymbol("prodecure?"), new PrimitiveProcedure(IsProcedure)),
+
             (new ClSymbol("head"), new PrimitiveProcedure(Head)),
             (new ClSymbol("tail"), new PrimitiveProcedure(Tail)),
             (new ClSymbol("car"), new PrimitiveProcedure(Car)),
