@@ -14,5 +14,7 @@ namespace Cl.Types
                 return _instance;
             }
         }
+
+        public override string ToString() => "nil";
     }
 }
