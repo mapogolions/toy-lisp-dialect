@@ -22,28 +22,31 @@ namespace Cl
         {
         }
 
-        public IClObj Ast()
+        public IList<IClObj> Read()
         {
-            var ast = Read();
+            var items = new List<IClObj>();
+            while (!_source.Eof())
+            {
+                items.Add(ReadExpression());
+                _source.SkipWhitespacesAndComments();
+            }
+            return items;
+        }
+
+        public IClObj ReadExpression()
+        {
             _source.SkipWhitespacesAndComments();
-            if (_source.Eof()) return ast;
+            if (TryReadExpression(ReadChar, out var ast)) return ast;
+            if (TryReadExpression(ReadBool, out ast)) return ast;
+            if (TryReadExpression(ReadString, out ast)) return ast;
+            if (TryReadExpression(ReadFloat, out ast)) return ast;
+            if (TryReadExpression(ReadFixnum, out ast)) return ast;
+            if (TryReadExpression(ReadCell, out ast)) return ast;
+            if (TryReadExpression(ReadSymbol, out ast)) return ast;
             throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
         }
 
-        private IClObj Read()
-        {
-            _source.SkipWhitespacesAndComments();
-            if (ReadLiteral(ReadChar, out var ast)) return ast;
-            if (ReadLiteral(ReadBool, out ast)) return ast;
-            if (ReadLiteral(ReadString, out ast)) return ast;
-            if (ReadLiteral(ReadFloat, out ast)) return ast;
-            if (ReadLiteral(ReadFixnum, out ast)) return ast;
-            if (ReadLiteral(ReadCell, out ast)) return ast;
-            if (ReadLiteral(ReadSymbol, out ast)) return ast;
-            throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
-        }
-
-        public bool ReadLiteral(Func<IClObj> fn, out IClObj ast)
+        public bool TryReadExpression(Func<IClObj> fn, out IClObj ast)
         {
             ast = fn();
             return ast != null;
@@ -67,10 +70,10 @@ namespace Cl
         public ClCell ReadCell()
         {
             if(TryReadNilOrNull(out var cell)) return cell;
-            var car = Read();
+            var car = ReadExpression();
             var wasDelimiter = _source.SkipWhitespacesAndComments();
             if (!_source.SkipMatched(".")) return new ClCell(car, ReadList(wasDelimiter));
-            var cdr = Read();
+            var cdr = ReadExpression();
             Ignore(_source.SkipWhitespacesAndComments());
             if (!_source.SkipMatched(")"))
                 throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
@@ -95,7 +98,7 @@ namespace Cl
             if (_source.SkipMatched(")")) return Nil.Given;
             if (!wasDelimiter)
                 throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
-            var car = Read();
+            var car = ReadExpression();
             wasDelimiter = _source.SkipWhitespacesAndComments();
             if (_source.SkipMatched(")")) return new ClCell(car, Nil.Given);
             return new ClCell(car, ReadList(wasDelimiter));

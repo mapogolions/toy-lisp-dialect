@@ -12,7 +12,7 @@ namespace Cl.Extensions
         }
         public static bool IsVariable(this IClObj expr) => expr.IsSymbol();
         public static bool IsSymbol(this IClObj expr) => expr is ClSymbol;
-        public static bool IsTaggedList(this IClObj expr, ClSymbol tag) => expr is ClCell cell && cell.Car == tag;
+        public static bool IsTaggedList(this IClObj expr, ClSymbol tag) => expr is ClCell cell && cell.Car.Equals(tag);
         public static bool IsQuoted(this IClObj expr) => expr.IsTaggedList(ClSymbol.Quote);
         public static bool IsAssignment(this IClObj expr) => expr.IsTaggedList(ClSymbol.Set);
         public static bool IsDefinition(this IClObj expr) => expr.IsTaggedList(ClSymbol.Define);

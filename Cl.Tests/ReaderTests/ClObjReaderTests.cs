@@ -7,16 +7,16 @@ using Cl.Extensions;
 namespace Cl.Tests
 {
     [TestFixture]
-    public class ClIObjReaderTests
+    public class ClObjReaderTests
     {
         [Test]
-        public void Read_Treat_WhitespacesBetweenCarAndCdrAsDelimiter()
+        public void ReadExpression_Treat_WhitespacesBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#t"; // ClBool.True
             var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Ast().TypeOf<ClCell>();
+            var cell = reader.ReadExpression().TypeOf<ClCell>();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
 
@@ -25,13 +25,13 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Read_Treat_CommentsBetweenCarAndCdrAsDelimiter()
+        public void ReadExpression_Treat_CommentsBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
             var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.Ast().TypeOf<ClCell>();
+            var cell = reader.ReadExpression().TypeOf<ClCell>();
             var first = BuiltIn.Car(cell).TypeOf<ClBool>();
             var second = BuiltIn.Cadr(cell).TypeOf<ClString>();
 
@@ -40,62 +40,62 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Read_ReturnInteger_WhenCommentsAround()
+        public void ReadExpression_ReturnInteger_WhenCommentsAround()
         {
             var input = $";before{Environment.NewLine}112;after";
             using var reader = new Reader(input);
 
-            var atom = reader.Ast().TypeOf<ClFixnum>();
+            var atom = reader.ReadExpression().TypeOf<ClFixnum>();
 
             Assert.That(atom?.Value, Is.EqualTo(112));
         }
 
         [Test]
-        public void Read_ReturnChar()
+        public void ReadExpression_ReturnChar()
         {
             using var reader = new Reader("#\\N");
 
-            var atom = reader.Ast().TypeOf<ClChar>();
+            var atom = reader.ReadExpression().TypeOf<ClChar>();
 
             Assert.That(atom?.Value, Is.EqualTo('N'));
         }
 
         [Test]
-        public void Read_ReturnString()
+        public void ReadExpression_ReturnString()
         {
             using var reader = new Reader("\"foo\"");
 
-            var atom = reader.Ast().TypeOf<ClString>();
+            var atom = reader.ReadExpression().TypeOf<ClString>();
 
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
 
         [Test]
-        public void Read_ReturnBool()
+        public void ReadExpression_ReturnBool()
         {
             using var reader = new Reader("#t");
 
-            var atom = reader.Ast().TypeOf<ClBool>();
+            var atom = reader.ReadExpression().TypeOf<ClBool>();
 
             Assert.That(atom?.Value, Is.EqualTo(true));
         }
 
         [Test]
-        public void Read_ReturnInteger()
+        public void ReadExpression_ReturnInteger()
         {
             using var reader = new Reader("12");
 
-            var atom = reader.Ast().TypeOf<ClFixnum>();
+            var atom = reader.ReadExpression().TypeOf<ClFixnum>();
 
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
 
         [TestCaseSource(nameof(CommentTestCases))]
-        public void Read_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
+        public void ReadExpression_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
         {
             using var reader = new Reader(source);
 
-            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
         static IEnumerable<string> CommentTestCases()
@@ -107,27 +107,27 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Read_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
+        public void ReadExpression_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
         {
             using var reader = new Reader("11.");
 
-            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
         [Test]
-        public void Read_ThrowException_WhenSourceContainsOnlySpaces()
+        public void ReadExpression_ThrowException_WhenSourceContainsOnlySpaces()
         {
             using var reader = new Reader("   \t");
 
-            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
         [Test]
-        public void Read_ThrowException_WhenSourceIsEmpty()
+        public void ReadExpression_ThrowException_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
 
-            Assert.That(() => reader.Ast(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
     }
 }
