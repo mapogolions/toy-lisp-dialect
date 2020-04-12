@@ -36,6 +36,7 @@ namespace Cl
 
         public bool TryEvalApplication(IClObj expr, out IClObj obj)
         {
+            // TODO: order of error
             obj = Nil.Given;
             var cell = expr.TypeOf<ClCell>();
             if (cell is null) return false;
@@ -115,10 +116,7 @@ namespace Cl
 
         public bool TryEvalDefinition(IClObj expr, out IClObj obj)
         {
-            // (define a 10) -> (define . (a . (10 . nil)))
-            // (define a b) -> (define . (a . (b . nil)))
-            // (define a a) -> (define . (a . (a . nil))) throw exception
-            // TODO: (define keyword 10) i.e. (define lambda 10) Need reject
+            // NOTE: (define keyword 10) i.e. (define lambda 10) It's ok. Keywords and symbols table coexist independently
             obj = Nil.Given;
             if (!expr.IsDefinition()) return false;
             var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();

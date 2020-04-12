@@ -34,8 +34,8 @@ namespace Cl.Tests
         public void Extend_ThrowExceptionWhenAtLeastOneArgumentIsNotProvided()
         {
             var env = new Env();
-            var identifiers = BuiltIn.ListOf(new ClSymbol("x"), new ClSymbol("y"));
-            var values = BuiltIn.ListOf(new ClString("bar"));
+            var identifiers = BuiltIn.ListOf(_foo, _bar);
+            var values = BuiltIn.ListOf(ClBool.True);
 
             Assert.That(() => env.Extend(identifiers, values),
                 Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
@@ -45,8 +45,8 @@ namespace Cl.Tests
         public void Extend_ThrowExceptionWhenTooManyArgumentsArePassed()
         {
             var env = new Env();
-            var identifiers = BuiltIn.ListOf(new ClSymbol("x"));
-            var values = BuiltIn.ListOf(new ClString("bar"), ClBool.True);
+            var identifiers = BuiltIn.ListOf(_foo);
+            var values = BuiltIn.ListOf(ClBool.False, ClBool.True);
 
             Assert.That(() => env.Extend(identifiers, values),
                 Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
@@ -56,14 +56,14 @@ namespace Cl.Tests
         public void Extend_DoesNotAffectTheParentScope()
         {
             var outer = new Env();
-            outer.Bind(new ClSymbol("x"), new ClString("foo"));
-            var identifiers = BuiltIn.ListOf(new ClSymbol("x"));
+            outer.Bind(_foo, new ClString("foo"));
+            var identifiers = BuiltIn.ListOf(_foo);
             var values = BuiltIn.ListOf(new ClString("bar"));
 
             var inner = outer.Extend(identifiers, values);
 
-            Assert.That(inner.Lookup(new ClSymbol("x")), Is.EqualTo(new ClString("bar")));
-            Assert.That(outer.Lookup(new ClSymbol("x")), Is.EqualTo(new ClString("foo")));
+            Assert.That(inner.Lookup(_foo), Is.EqualTo(new ClString("bar")));
+            Assert.That(outer.Lookup(_foo), Is.EqualTo(new ClString("foo")));
         }
 
         [Test]
