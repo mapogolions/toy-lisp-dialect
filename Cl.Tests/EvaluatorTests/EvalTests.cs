@@ -11,6 +11,17 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalTests
     {
         [Test]
+        public void Eval_IdentifiersAndKeywordsCoexistIndependently()
+        {
+            var env = new Env((ClSymbol.And, new ClFixnum(10)));
+            var evaluator = new Evaluator(env);
+            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString("foo"));
+
+            Assert.That(evaluator.Eval(ClSymbol.And), Is.EqualTo(new ClFixnum(10)));
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
+        }
+
+        [Test]
         [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
         public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
         {
