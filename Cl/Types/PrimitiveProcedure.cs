@@ -5,6 +5,7 @@ namespace Cl.Types
     public class PrimitiveProcedure : IClObj
     {
         private readonly Func<IClObj, IClObj> _fn;
+
         public PrimitiveProcedure(Func<IClObj, IClObj> fn)
         {
             _fn = fn;

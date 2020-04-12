@@ -47,18 +47,26 @@ namespace Cl
 
         public bool TryEvalApplication(IClObj expr, out IClObj obj)
         {
-            // TODO: order of error
             obj = Nil.Given;
             var cell = expr.TypeOf<ClCell>();
             if (cell is null) return false;
-            var procedure = Eval(cell.Car).Cast<ClProcedure>(Errors.Eval.UnknownProcedureType);
+            var procedure = Eval(cell.Car);
             var args = cell.Cdr.Cast<ClCell>();
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
-            var parent = _env;
-            _env = _env.Extend(procedure.Varargs, BuiltIn.ListOf(values));
-            obj = Eval(procedure.Body);
-            _env = parent;
-            return true;
+            switch (procedure)
+            {
+                case PrimitiveProcedure proc:
+                    obj = proc.Apply(BuiltIn.ListOf(values));
+                    return true;
+                case ClProcedure proc:
+                    var parentEnv = _env;
+                    _env = _env.Extend(proc.Varargs, BuiltIn.ListOf(values));
+                    obj = Eval(proc.Body);
+                    _env = parentEnv;
+                    return true;
+                default:
+                    throw new InvalidOperationException(Errors.Eval.UnknownProcedureType);
+            }
         }
 
         public bool TryEvalBegin(IClObj expr, out IClObj obj)

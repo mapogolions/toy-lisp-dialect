@@ -87,22 +87,25 @@ namespace Cl
             obj switch
             {
                 ClChar ch => new ClFixnum((int) ch.Value),
-                _ => throw new InvalidCastException(Errors.BuiltIn.ArgumentIsNotOfType<ClChar>())
+                _ => throw new ArgumentException(Errors.BuiltIn.ArgumentIsNotOfType<ClChar>())
             };
 
         public static ClChar CharOfInteger(IClObj obj) =>
             obj switch
             {
-                ClFixnum number => new ClChar((char) number.Value),
-                _ => throw new InvalidCastException(Errors.BuiltIn.ArgumentIsNotOfType<ClFixnum>())
+                ClCell { Car: ClFixnum number } cell when cell.Cdr == Nil.Given => new ClChar((char) number.Value),
+                // ClCell { Car: ClFixnum _ } => throw ArgumentException();
+                _ => throw new ArgumentException(Errors.BuiltIn.ArgumentIsNotOfType<ClFixnum>())
             };
+
+
 
         public static ClString StringOfNumber(IClObj obj) =>
             obj switch
             {
                 ClFixnum number => new ClString(number.ToString()),
                 ClFloat number => new ClString(number.ToString()),
-                _ => throw new InvalidCastException()
+                _ => throw new ArgumentException()
             };
 
         // Pervasives
