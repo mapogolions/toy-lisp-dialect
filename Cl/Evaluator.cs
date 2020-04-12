@@ -25,7 +25,7 @@ namespace Cl
             if (expr.IsCond()) return Eval(TransformCond(expr));
             if (TryEvalAssigment(expr, out var obj)) return obj;
             if (TryEvalDefinition(expr, out obj)) return obj;
-            if (TryEvalIfThenElse(expr, out obj)) return obj;
+            if (TryEvalIf(expr, out obj)) return obj;
             if (TryEvalAnd(expr, out obj)) return obj;
             if (TryEvalOr(expr, out obj)) return obj;
             if (TryEvalBegin(expr, out obj)) return obj;
@@ -99,10 +99,10 @@ namespace Cl
             return true;
         }
 
-        public bool TryEvalIfThenElse(IClObj expr, out IClObj obj)
+        public bool TryEvalIf(IClObj expr, out IClObj obj)
         {
             obj = Nil.Given;
-            if (!expr.IsIfThenElse()) return false;
+            if (!expr.IsIf()) return false;
             var condition = Eval(BuiltIn.Second(expr));
             if (condition != Nil.Given && condition != ClBool.False)
             {
@@ -148,7 +148,7 @@ namespace Cl
                     ? new ClCell(ClSymbol.Begin, clause.Cdr)
                     : throw new InvalidOperationException(Errors.BuiltIn.ElseClauseMustBeLast);
             }
-            return BuiltIn.ListOf(ClSymbol.IfThenElse,
+            return BuiltIn.ListOf(ClSymbol.If,
                 clause.Car,
                 new ClCell(ClSymbol.Begin, clause.Cdr),
                 TransformCond(BuiltIn.Tail(clauses)));

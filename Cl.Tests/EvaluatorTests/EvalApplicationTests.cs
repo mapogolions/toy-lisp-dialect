@@ -42,7 +42,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var evaluator = new Evaluator(new Env());
             var parameters = BuiltIn.ListOf(new ClSymbol("x"));
-            var body = BuiltIn.ListOf(ClSymbol.IfThenElse, new ClSymbol("x"), new ClString("foo"), new ClString("bar"));
+            var body = BuiltIn.ListOf(ClSymbol.If, new ClSymbol("x"), new ClString("foo"), new ClString("bar"));
             var compoundFn = BuiltIn.ListOf(ClSymbol.Lambda, parameters, body);
             var expr = BuiltIn.ListOf(compoundFn, ClBool.False);
 

@@ -26,7 +26,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             yield return new ClFixnum(1);
             yield return new ClString("foo");
-            yield return BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, new ClSymbol("x"), new ClSymbol("y"));
+            yield return BuiltIn.ListOf(ClSymbol.If, ClBool.True, new ClSymbol("x"), new ClSymbol("y"));
         }
 
         [Test]

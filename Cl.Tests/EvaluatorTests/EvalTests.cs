@@ -28,7 +28,7 @@ namespace Cl.Tests.EvaluatorTests
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
         {
-            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.IfThenElse, it, ClBool.True, ClBool.False));
+            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.If, it, ClBool.True, ClBool.False));
             yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.And, it, ClBool.False));
             yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.Or, it, ClBool.True));
         }
@@ -37,7 +37,7 @@ namespace Cl.Tests.EvaluatorTests
         public void Eval_ReturnTrue_WhenEachLogicExpressionIsTrue()
         {
             var evaluator = new Evaluator(new Env());
-            var ifThenElse = BuiltIn.ListOf(ClSymbol.IfThenElse, ClBool.True, ClBool.True);
+            var ifThenElse = BuiltIn.ListOf(ClSymbol.If, ClBool.True, ClBool.True);
             var logicOr = BuiltIn.ListOf(ClSymbol.Or, ClBool.False, ClBool.True);
 
             var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True);

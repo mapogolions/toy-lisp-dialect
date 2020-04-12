@@ -89,7 +89,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryTryEvalDefinition_DoesNotEvaluateExpression_WhenTagIsWrong()
+        public void TryEvalDefinition_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Set);

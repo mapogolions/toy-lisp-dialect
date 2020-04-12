@@ -107,6 +107,16 @@ namespace Cl.Tests
             Assert.That(env.Lookup(_foo), Is.EqualTo(ClBool.True));
         }
 
+        // [Test]
+        // public void Lookup_ThrowExpception_WhenSearchByKeyword()
+        // {
+        //     var env = new Env();
+        //     var errorMessage = Errors.UnboundVariable(ClSymbol.If);
+
+        //     Assert.That(() => env.Lookup(ClSymbol.If),
+        //         Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+        // }
+
         [Test]
         public void Lookup_ByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()
         {

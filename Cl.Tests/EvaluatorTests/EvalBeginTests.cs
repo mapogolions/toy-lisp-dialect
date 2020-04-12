@@ -34,7 +34,7 @@ namespace Cl.Tests.EvaluatorTests
         public void TryEvalBegin_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.IfThenElse);
+            var expr = BuiltIn.ListOf(ClSymbol.If);
 
             Assert.That(evaluator.TryEvalBegin(expr, out var _), Is.False);
         }

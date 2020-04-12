@@ -16,7 +16,7 @@ namespace Cl.Extensions
         public static bool IsQuoted(this IClObj expr) => expr.IsTaggedList(ClSymbol.Quote);
         public static bool IsAssignment(this IClObj expr) => expr.IsTaggedList(ClSymbol.Set);
         public static bool IsDefinition(this IClObj expr) => expr.IsTaggedList(ClSymbol.Define);
-        public static bool IsIfThenElse(this IClObj expr) => expr.IsTaggedList(ClSymbol.IfThenElse);
+        public static bool IsIf(this IClObj expr) => expr.IsTaggedList(ClSymbol.If);
         public static bool IsAnd(this IClObj expr) => expr.IsTaggedList(ClSymbol.And);
         public static bool IsOr(this IClObj expr) => expr.IsTaggedList(ClSymbol.Or);
         public static bool IsLet(this IClObj expr) => expr.IsTaggedList(ClSymbol.Let);
