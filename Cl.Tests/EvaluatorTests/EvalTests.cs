@@ -10,32 +10,32 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalTests
     {
-        [Test]
-        public void Eval_IdentifiersAndKeywordsCoexistIndependently()
-        {
-            var env = new Env((ClSymbol.And, new ClFixnum(10)));
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString("foo"));
+        // [Test]
+        // public void Eval_IdentifiersAndKeywordsCoexistIndependently()
+        // {
+        //     var env = new Env((ClSymbol.And, new ClFixnum(10)));
+        //     var evaluator = new Evaluator(env);
+        //     var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString("foo"));
 
-            Assert.That(evaluator.Eval(ClSymbol.And), Is.EqualTo(new ClFixnum(10)));
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
-        }
+        //     Assert.That(evaluator.Eval(ClSymbol.And), Is.EqualTo(new ClFixnum(10)));
+        //     Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
+        // }
 
-        [Test]
-        [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
-        public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
-        {
-            var env = new Env();
-            var evaluator = new Evaluator(env);
-            var a = new ClSymbol("a");
-            var value = new ClString("foo");
-            var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
+        // [Test]
+        // [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
+        // public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
+        // {
+        //     var env = new Env();
+        //     var evaluator = new Evaluator(env);
+        //     var a = new ClSymbol("a");
+        //     var value = new ClString("foo");
+        //     var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
 
-            Ignore(evaluator.Eval(expr.Invoke(define)));
+        //     Ignore(evaluator.Eval(expr.Invoke(define)));
 
-            Assert.True(env.IsGlobal);
-            Assert.That(env.Lookup(a), Is.EqualTo(value));
-        }
+        //     Assert.True(env.IsGlobal);
+        //     Assert.That(env.Lookup(a), Is.EqualTo(value));
+        // }
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
         {

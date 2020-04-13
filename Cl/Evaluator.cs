@@ -85,16 +85,18 @@ namespace Cl
         {
             if (!expr.IsOr()) return null;
             var conditions = BuiltIn.Tail(expr);
-            var result = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
-            return ClBool.Of(result);
+            return BuiltIn.Seq(conditions)
+                .Select(it => Eval(it))
+                .FirstOrLast(it => BuiltIn.IsTrue(it).Value) ?? ClBool.False;
         }
 
         public IClObj EvalAnd(IClObj expr)
         {
             if (!expr.IsAnd()) return null;
             var conditions = BuiltIn.Tail(expr);
-            var result = BuiltIn.Seq(conditions).All(it => BuiltIn.IsTrue(Eval(it)).Value);
-            return ClBool.Of(result);
+            return BuiltIn.Seq(conditions)
+                .Select(it => Eval(it))
+                .FirstOrLast(it => BuiltIn.IsFalse(it).Value) ?? ClBool.True;
         }
 
         public IClObj EvalLambda(IClObj expr)

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
@@ -33,19 +32,20 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsTrueTestCases))]
-        public void EvalOr_ReturnTrue_WhenAtLeastOneItemIsTrue(ClCell items)
+        public void EvalOr_ReturnTrue_WhenAtLeastOneItemIsTrue(ClCell items, IClObj expected)
         {
             var evaluator = new Evaluator(new Env());
             var expr = new ClCell(ClSymbol.Or, items);
 
-            Assert.That(evaluator.EvalOr(expr), Is.EqualTo(ClBool.True));
+            Assert.That(evaluator.EvalOr(expr), Is.EqualTo(expected));
         }
 
-        static IEnumerable<ClCell> AtLeastOneItemIsTrueTestCases()
-        {
-            yield return BuiltIn.ListOf(ClBool.False, Nil.Given, ClBool.True);
-            yield return BuiltIn.ListOf(ClBool.True, ClBool.False);
-        }
+        static object[] AtLeastOneItemIsTrueTestCases =
+            {
+                new object[] { BuiltIn.ListOf(new ClString("bar"), new ClString("foo")), new ClString("bar") },
+                new object[] { BuiltIn.ListOf(ClBool.False, Nil.Given, new ClFixnum(1)), new ClFixnum(1) },
+                new object[] { BuiltIn.ListOf(ClBool.True, ClBool.False), ClBool.True }
+            };
 
         [Test]
         public void EvalOr_ReturnFalse_WhenTailIsEmptyList()

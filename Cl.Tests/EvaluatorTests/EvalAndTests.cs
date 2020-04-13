@@ -24,35 +24,36 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalAnd_ReturnTrue_WhenEachItemIsTrue()
+        public void EvalAnd_ReturnLastItem_WhenEachItemIsTrue()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString(string.Empty)); // (and . (true . ("" . nil)))
+            var lastItem = new ClString("");
+            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, lastItem);
 
-            Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(ClBool.True));
+            Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(lastItem));
         }
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsFalseTestCases))]
-        public void EvalAnd_ReturnFalse_WhenAtLeastOneItemIsFalse(ClCell items)
+        public void EvalAnd_ReturnLastItem_WhenAtLeastOneItemIsFalse(ClCell items, IClObj expected)
         {
             var evaluator = new Evaluator(new Env());
             var expr = new ClCell(ClSymbol.And, items);
 
-            Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(ClBool.False));
+            Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(expected));
         }
 
-        static IEnumerable<ClCell> AtLeastOneItemIsFalseTestCases()
-        {
-            yield return BuiltIn.ListOf(new ClFixnum(10), Nil.Given, ClBool.True);
-            yield return BuiltIn.ListOf(ClBool.True, ClBool.False);
-        }
+        static object[] AtLeastOneItemIsFalseTestCases =
+            {
+                new object[] { BuiltIn.ListOf(new ClFixnum(10), Nil.Given, ClBool.True), Nil.Given },
+                new object[] { BuiltIn.ListOf(ClBool.True, ClBool.False), ClBool.False }
+            };
 
         [Test]
         public void EvalAnd_ReturnTrue_WhenTailIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.And); // (and . nil)
+            var expr = BuiltIn.ListOf(ClSymbol.And);
 
             Assert.That(evaluator.EvalAnd(expr), Is.EqualTo(ClBool.True));
         }
