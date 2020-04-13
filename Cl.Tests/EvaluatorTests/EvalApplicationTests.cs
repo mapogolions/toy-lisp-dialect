@@ -1,4 +1,3 @@
-using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -56,7 +55,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var evaluator = new Evaluator(new Env());
             var zeroArityFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, new ClString("bar"));
-            var expr = BuiltIn.ListOf(zeroArityFn); // ((lambda () true))
+            var expr = BuiltIn.ListOf(zeroArityFn);
 
             var actual = evaluator.EvalApplication(expr);
 

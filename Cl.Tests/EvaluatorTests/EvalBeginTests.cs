@@ -1,4 +1,3 @@
-using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -20,7 +19,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalBegin_ReturnNil_WhenTailIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.Begin); // (begin) -> (begin . nil)
+            var expr = BuiltIn.ListOf(ClSymbol.Begin);
 
             Assert.That(evaluator.EvalBegin(expr), Is.EqualTo(Nil.Given));
         }

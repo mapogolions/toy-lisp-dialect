@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Cl.Types;
 using Cl.Extensions;
 
-namespace Cl.Abs
+namespace Cl
 {
     public interface IEnv
     {
