@@ -1,7 +1,6 @@
 using Cl.Abs;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -9,34 +8,30 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalBeginTests
     {
         [Test]
-        public void TryEvalBegin_ReturnLastEvaluatedValue()
+        public void EvalBegin_ReturnLastEvaluatedValue()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Begin, ClBool.False, ClBool.True);
 
-            Ignore(evaluator.TryEvalBegin(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(ClBool.True));
+            Assert.That(evaluator.EvalBegin(expr), Is.EqualTo(ClBool.True));
         }
 
         [Test]
-        public void TryEvalBegin_ReturnNil_WhenTailIsEmptyList()
+        public void EvalBegin_ReturnNil_WhenTailIsEmptyList()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Begin); // (begin) -> (begin . nil)
 
-            Ignore(evaluator.TryEvalBegin(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(Nil.Given));
+            Assert.That(evaluator.EvalBegin(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]
-        public void TryEvalBegin_DoesNotEvaluateExpression_WhenTagIsWrong()
+        public void EvalBegin_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If);
 
-            Assert.That(evaluator.TryEvalBegin(expr, out var _), Is.False);
+            Assert.That(evaluator.EvalBegin(expr), Is.Null);
         }
     }
 }

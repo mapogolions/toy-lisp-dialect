@@ -9,14 +9,9 @@ namespace Cl
 {
     public class Evaluator
     {
-        // NLGB:  nested -> local -> global -> builtin
         private IEnv _env;
 
-        public Evaluator(IEnv env)
-        {
-            // new Evaluator(new Env(builinScope)) - inject builtin
-            _env = env;
-        }
+        public Evaluator(IEnv env) => _env = env;
 
         public IClObj Eval(IList<IClObj> expressions)
         {
@@ -34,78 +29,77 @@ namespace Cl
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
             if (expr.IsQuoted()) return BuiltIn.Tail(expr);
             if (expr.IsCond()) return Eval(TransformCond(expr));
-            if (TryEvalAssigment(expr, out var obj)) return obj;
-            if (TryEvalDefinition(expr, out obj)) return obj;
-            if (TryEvalIf(expr, out obj)) return obj;
-            if (TryEvalAnd(expr, out obj)) return obj;
-            if (TryEvalOr(expr, out obj)) return obj;
-            if (TryEvalBegin(expr, out obj)) return obj;
-            if (TryEvalLambda(expr, out obj)) return obj;
-            if (TryEvalApplication(expr, out obj)) return obj;
+            if (TryEvalExpression(EvalAssigment, expr, out var obj)) return obj;
+            if (TryEvalExpression(EvalDefinition, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalIf, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalAnd, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalOr, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalBegin, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalLambda, expr, out obj)) return obj;
+            if (TryEvalExpression(EvalApplication, expr, out obj)) return obj;
             throw new InvalidOperationException(Errors.Eval.EvaluationError);
+
+        }
+        public bool TryEvalExpression(Func<IClObj, IClObj> fn, IClObj expr, out IClObj result)
+        {
+            result = fn(expr);
+            return result != null;
         }
 
-        public bool TryEvalApplication(IClObj expr, out IClObj obj)
+        public IClObj EvalApplication(IClObj expr)
         {
-            obj = Nil.Given;
             var cell = expr.TypeOf<ClCell>();
-            if (cell is null) return false;
+            if (cell is null) return null;
             var procedure = Eval(cell.Car);
             var args = cell.Cdr.Cast<ClCell>();
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
             switch (procedure)
             {
                 case PrimitiveProcedure proc:
-                    obj = proc.Apply(BuiltIn.ListOf(values));
-                    return true;
+                    return proc.Apply(BuiltIn.ListOf(values));
                 case ClProcedure proc:
                     var parentEnv = _env;
                     _env = _env.Extend(proc.Varargs, BuiltIn.ListOf(values));
-                    obj = Eval(proc.Body);
+                    var result = Eval(proc.Body);
                     _env = parentEnv;
-                    return true;
+                    return result;
                 default:
                     throw new InvalidOperationException(Errors.Eval.UnknownProcedureType);
             }
         }
 
-        public bool TryEvalBegin(IClObj expr, out IClObj obj)
+        public IClObj EvalBegin(IClObj expr)
         {
-            obj = Nil.Given;
-            if (!expr.IsBegin()) return false;
+            if (!expr.IsBegin()) return null;
             var tail = BuiltIn.Tail(expr);
+            IClObj result = Nil.Given;
             while (tail != Nil.Given)
             {
-                obj = Eval(BuiltIn.Head(tail));
+                result = Eval(BuiltIn.Head(tail));
                 tail = BuiltIn.Tail(tail);
             }
-            return true;
+            return result;
         }
 
-        public bool TryEvalOr(IClObj expr, out IClObj obj)
+        public IClObj EvalOr(IClObj expr)
         {
-            obj = ClBool.False;
-            if (!expr.IsOr()) return false;
+            if (!expr.IsOr()) return null;
             var conditions = BuiltIn.Tail(expr);
-            var atLeastOneTruth = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
-            if (atLeastOneTruth) obj = ClBool.True;
-            return true;
+            var result = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsTrue(Eval(it)).Value);
+            return ClBool.Of(result);
         }
 
-        public bool TryEvalAnd(IClObj expr, out IClObj obj)
+        public IClObj EvalAnd(IClObj expr)
         {
-            obj = ClBool.True;
-            if (!expr.IsAnd()) return false;
+            if (!expr.IsAnd()) return null;
             var conditions = BuiltIn.Tail(expr);
-            var atLeastOneFalse = BuiltIn.Seq(conditions).Any(it => BuiltIn.IsFalse(Eval(it)).Value);
-            if (atLeastOneFalse) obj = ClBool.False;
-            return true;
+            var result = BuiltIn.Seq(conditions).All(it => BuiltIn.IsTrue(Eval(it)).Value);
+            return ClBool.Of(result);
         }
 
-        public bool TryEvalLambda(IClObj expr, out IClObj obj)
+        public IClObj EvalLambda(IClObj expr)
         {
-            obj = Nil.Given;
-            if (!expr.IsLambda()) return false;
+            if (!expr.IsLambda()) return null;
             if (BuiltIn.Cdddr(expr) != Nil.Given)
                 throw new InvalidOperationException(Errors.Eval.InvalidLambdaBody);
             var parameters = BuiltIn.Second(expr)
@@ -114,43 +108,35 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            obj = new ClProcedure(parameters, body);
-            return true;
+            return new ClProcedure(parameters, body);
         }
 
-        public bool TryEvalIf(IClObj expr, out IClObj obj)
+        public IClObj EvalIf(IClObj expr)
         {
-            obj = Nil.Given;
-            if (!expr.IsIf()) return false;
+            if (!expr.IsIf()) return null;
             var condition = Eval(BuiltIn.Second(expr));
             if (condition != Nil.Given && condition != ClBool.False)
-            {
-                obj = Eval(BuiltIn.Third(expr));
-                return true;
-            }
+                return Eval(BuiltIn.Third(expr));
             var elseBranch = BuiltIn.Cdddr(expr);
-            obj = elseBranch ==  Nil.Given ? Nil.Given : Eval(BuiltIn.First(elseBranch));
-            return true;
+            return elseBranch ==  Nil.Given ? Nil.Given : Eval(BuiltIn.First(elseBranch));
         }
 
-        public bool TryEvalDefinition(IClObj expr, out IClObj obj)
+        public IClObj EvalDefinition(IClObj expr)
         {
-            obj = Nil.Given;
-            if (!expr.IsDefinition()) return false;
+            if (!expr.IsDefinition()) return null;
             var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
             var result = Eval(BuiltIn.Third(expr));
             _env.Bind(identifier, result);
-            return true;
+            return Nil.Given;
         }
 
-        public bool TryEvalAssigment(IClObj expr, out IClObj obj)
+        public IClObj EvalAssigment(IClObj expr)
         {
-            obj = Nil.Given;
-            if (!expr.IsAssignment()) return false;
+            if (!expr.IsAssignment()) return null;
             var identifier = BuiltIn.Second(expr).Cast<ClSymbol>();
             var result = Eval(BuiltIn.Third(expr));
             _env.Assign(identifier, result);
-            return true;
+            return Nil.Given;
         }
 
         private IClObj TransformCond(IClObj expr)

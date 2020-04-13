@@ -10,7 +10,7 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalDefinitionTests
     {
         [Test]
-        public void TryEvalDefinition_CreateSharedReference()
+        public void EvalDefinition_CreateSharedReference()
         {
             var a = new ClSymbol("a");
             var b = new ClSymbol("b");
@@ -19,23 +19,23 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(env);
             var expr = BuiltIn.ListOf(ClSymbol.Define, a, b);
 
-            Ignore(evaluator.TryEvalDefinition(expr, out var _));
+            Ignore(evaluator.EvalDefinition(expr));
 
             Assert.That(Object.ReferenceEquals(env.Lookup(a), env.Lookup(b)), Is.True);
         }
 
         [Test]
-        public void TryEvalDefinition_ThrowException_WhenRighSideVariableDoesNotExist()
+        public void EvalDefinition_ThrowException_WhenRighSideVariableDoesNotExist()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Define, new ClSymbol("a"), new ClSymbol("b"));
 
-            Assert.That(() => evaluator.TryEvalDefinition(expr, out var _),
+            Assert.That(() => evaluator.EvalDefinition(expr),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
-        public void TryEvalDefinition_ScopeRules()
+        public void EvalDefinition_ScopeRules()
         {
             var a = new ClSymbol("a");
             var outerScope = new Env();
@@ -45,13 +45,13 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(innerScope);
             var expr = BuiltIn.ListOf(ClSymbol.Define, a, new ClFixnum(0));
 
-            Ignore(evaluator.TryEvalDefinition(expr, out var _));
+            Ignore(evaluator.EvalDefinition(expr));
 
             Assert.That(innerScope.Lookup(a), Is.EqualTo(new ClFixnum(0)));
             Assert.That(outerScope.Lookup(a), Is.EqualTo(ClBool.True));
         }
         [Test]
-        public void TryEvalDefinition_OverrideExistingBinding()
+        public void EvalDefinition_OverrideExistingBinding()
         {
             var env = new Env();
             var a = new ClSymbol("a");
@@ -59,42 +59,40 @@ namespace Cl.Tests.EvaluatorTests
             var evaluator = new Evaluator(env);
             var expr = BuiltIn.ListOf(ClSymbol.Define, a, ClBool.False);
 
-            Ignore(evaluator.TryEvalDefinition(expr, out var _));
+            Ignore(evaluator.EvalDefinition(expr));
 
             Assert.That(env.Lookup(a), Is.EqualTo(ClBool.False));
         }
 
         [Test]
-        public void TryEvalDefinition_ReturnNil_WhenOperationIsSuccessful()
+        public void EvalDefinition_ReturnNil_WhenOperationIsSuccessful()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Define, new ClSymbol("a"), ClBool.False);
 
-            Ignore(evaluator.TryEvalDefinition(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(Nil.Given));
+            Assert.That(evaluator.EvalDefinition(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]
-        public void TryEvalDefinition_CreateNewBinding_WhenEnvironmentDoesNotContainBinding()
+        public void EvalDefinition_CreateNewBinding_WhenEnvironmentDoesNotContainBinding()
         {
             var env = new Env();
             var evaluator = new Evaluator(env);
             var a = new ClSymbol("a");
             var expr = BuiltIn.ListOf(ClSymbol.Define, a, ClBool.True);
 
-            Ignore(evaluator.TryEvalDefinition(expr, out var _));
+            Ignore(evaluator.EvalDefinition(expr));
 
             Assert.That(env.Lookup(a), Is.EqualTo(ClBool.True));
         }
 
         [Test]
-        public void TryEvalDefinition_DoesNotEvaluateExpression_WhenTagIsWrong()
+        public void EvalDefinition_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Set);
 
-            Assert.That(evaluator.TryEvalDefinition(expr, out var _), Is.False);
+            Assert.That(evaluator.EvalDefinition(expr), Is.Null);
         }
     }
 }

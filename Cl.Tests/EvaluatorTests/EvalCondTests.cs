@@ -8,7 +8,7 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalCondTest
     {
         [Test]
-        public void TryEvalCond_ThrowException_WhenAtLeastOneClauseIsNoCell()
+        public void EvalCond_ThrowException_WhenAtLeastOneClauseIsNoCell()
         {
             var evaluator = new Evaluator(new Env());
             var invalidExpr = BuiltIn.ListOf(ClSymbol.Cond,
@@ -22,7 +22,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_MustBeLazy()
+        public void EvalCond_MustBeLazy()
         {
             var env = new Env();
             var evaluator = new Evaluator(env);
@@ -36,13 +36,8 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
+        public void EvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
         {
-            /*
-                (cond
-                  (#f #\a)
-                  (nil #\b))
-             */
             var evaluator = new Evaluator(new Env());
             var clause1 = BuiltIn.ListOf(ClBool.False, new ClChar('a'));
             var clause2 = BuiltIn.ListOf(Nil.Given, new ClChar('b'));
@@ -52,14 +47,8 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_ReturnLastEvaluatedResult_WhenOnlyElseClauseIsProvided()
+        public void EvalCond_ReturnLastEvaluatedResult_WhenOnlyElseClauseIsProvided()
         {
-            /*
-                (cond
-                  (else \#a \#b))
-                as
-                (cond . ((else . (\#a . (\#b . nil))) . nil))
-             */
             var evaluator = new Evaluator(new Env());
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, new ClChar('a'), new ClChar('b'), new ClChar('c'));
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause);
@@ -68,7 +57,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_ReturnResultOfElseClause_WhenItIsSingle()
+        public void EvalCond_ReturnResultOfElseClause_WhenItIsSingle()
         {
             var evaluator = new Evaluator(new Env());
             var result = new ClFixnum(10);
@@ -79,7 +68,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_ThrowException_WhenElseClauseIsNotLast()
+        public void EvalCond_ThrowException_WhenElseClauseIsNotLast()
         {
             var evaluator = new Evaluator(new Env());
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, ClBool.True);
@@ -91,7 +80,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalCond_ReturnFalse_WhenParamsAreMissed()
+        public void EvalCond_ReturnFalse_WhenParamsAreMissed()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Cond);

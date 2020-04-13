@@ -11,14 +11,14 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalIfTests
     {
         [Test]
-        public void TryEvalIf_EvalOnlyElseBranch_WhenConditionIsFalse()
+        public void EvalIf_EvalOnlyElseBranch_WhenConditionIsFalse()
         {
             var env = new Env();
             var evaluator = new Evaluator(env);
             Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
 
-            Ignore(evaluator.TryEvalIf(expr, out var _));
+            Ignore(evaluator.EvalIf(expr));
 
             Assert.That(env.Lookup(new ClSymbol("b")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("a")),
@@ -26,14 +26,14 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalIf_EvalOnlyThenBranch_WhenConditionIsTrue()
+        public void EvalIf_EvalOnlyThenBranch_WhenConditionIsTrue()
         {
             var env = new Env();
             var evaluator = new Evaluator(env);
             Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
 
-            Ignore(evaluator.TryEvalIf(expr, out var _));
+            Ignore(evaluator.EvalIf(expr));
 
             Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
             Assert.That(() => env.Lookup(new ClSymbol("b")),
@@ -42,14 +42,12 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(FalsyTestCases))]
-        public void TryEvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
+        public void EvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, ClBool.True);
 
-            Ignore(evaluator.TryEvalIf(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(ClBool.True));
+            Assert.That(evaluator.EvalIf(expr), Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -60,14 +58,12 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(TruthyTestCases))]
-        public void TryEvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
+        public void EvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.True, ClBool.False);
 
-            Ignore(evaluator.TryEvalIf(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(ClBool.True));
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -82,23 +78,21 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsSkipped()
+        public void EvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsSkipped()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, new ClFixnum(1));
 
-            Ignore(evaluator.TryEvalIf(expr, out var obj));
-
-            Assert.That(obj, Is.EqualTo(Nil.Given));
+            Assert.That(evaluator.Eval(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]
-        public void TryEvalIf_DoesNotEvaluateExpression_WhenTagIsWrong()
+        public void EvalIf_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
             var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Cond);
 
-            Assert.That(evaluator.TryEvalIf(expr, out var _), Is.False);
+            Assert.That(evaluator.EvalIf(expr), Is.Null);
         }
     }
 }
