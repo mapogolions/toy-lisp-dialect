@@ -26,6 +26,7 @@ namespace Cl
         {
             if (expr.IsSelfEvaluating()) return expr;
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
+            //TODO: maybe need evaluate
             if (expr.IsQuoted()) return BuiltIn.Tail(expr);
             if (expr.IsCond()) return Eval(TransformCond(expr));
             if (TryEvalExpression(EvalAssigment, expr, out var obj)) return obj;
@@ -58,7 +59,8 @@ namespace Cl
                     return proc.Apply(BuiltIn.ListOf(values));
                 case ClProcedure proc:
                     var parentEnv = _env;
-                    _env = _env.Extend(proc.Varargs, BuiltIn.ListOf(values));
+                    var lexicalEnvironment = proc.LexicalEnvironment.Extend(proc.Varargs, BuiltIn.ListOf(values));
+                    _env = lexicalEnvironment;
                     var result = Eval(proc.Body);
                     _env = parentEnv;
                     return result;
@@ -109,7 +111,7 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            return new ClProcedure(parameters, body);
+            return new ClProcedure(parameters, body, _env);
         }
 
         public IClObj EvalIf(IClObj expr)
