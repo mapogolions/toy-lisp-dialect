@@ -59,8 +59,7 @@ namespace Cl
                     return proc.Apply(BuiltIn.ListOf(values));
                 case ClProcedure proc:
                     var parentEnv = _env;
-                    var lexicalEnvironment = proc.LexicalEnvironment.Extend(proc.Varargs, BuiltIn.ListOf(values));
-                    _env = lexicalEnvironment;
+                    _env = proc.LexicalEnv.Extend(proc.Varargs, BuiltIn.ListOf(values));
                     var result = Eval(proc.Body);
                     _env = parentEnv;
                     return result;
