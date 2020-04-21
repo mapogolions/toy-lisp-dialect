@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -6,88 +8,113 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalApplicationTests
     {
+        private ClString _foo;
+        private ClSymbol _x;
+        private ClSymbol _f;
+
+        [SetUp]
+        public void BeforeClass()
+        {
+            _x = new ClSymbol("x");
+            _f = new ClSymbol("f");
+            _foo = new ClString("foo");
+        }
+
+        private IEnv _env;
+        private Evaluator _evaluator;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _env = new Env();
+            _evaluator = new Evaluator(_env);
+        }
+
+        [Test]
+        public void EvalApplication_SupportLexicalEnvironment()
+        {
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, _x);
+            var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(_x), procedure);
+            var definition = BuiltIn.ListOf(ClSymbol.Define, _f, hof);
+            var application = BuiltIn.ListOf(_f, new ClFixnum(10));
+            var expr = BuiltIn.ListOf(application);
+
+            var actual = _evaluator.Eval(new List<IClObj> { definition, expr });
+
+            Assert.That(actual, Is.EqualTo(new ClFixnum(10)));
+        }
+
         [Test]
         public void EvalApplication_EvalCompoundArgumentsBeforeFunctionBody()
         {
-            var env = new Env();
-            var x = new ClSymbol("x");
-            var evaluator = new Evaluator(env);
-            var compoundArg = BuiltIn.ListOf(ClSymbol.Define, x, new ClString("foo"));
-            var parameters = BuiltIn.ListOf(x);
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, parameters, x);
+            var compoundArg = BuiltIn.ListOf(ClSymbol.Define, _x, _foo);
+            var parameters = BuiltIn.ListOf(_x);
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, parameters, _x);
             var expr = BuiltIn.ListOf(procedure, compoundArg);
 
-            var actual = evaluator.EvalApplication(expr);
+            var actual = _evaluator.EvalApplication(expr);
 
             Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(x), Is.EqualTo(new ClString("foo")));
+            Assert.That(_env.Lookup(_x), Is.EqualTo(_foo));
         }
 
         [Test]
         public void EvalApplication_ThrowException_WhenBodyContainsUnboundVariable()
         {
-            var evaluator = new Evaluator(new Env());
-            var unboundVariable = new ClSymbol("x");
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, unboundVariable);
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, _x);
             var expr = BuiltIn.ListOf(procedure);
-            var errorMessage = Errors.UnboundVariable(unboundVariable);
+            var errorMessage = Errors.UnboundVariable(_x);
 
-            Assert.That(() => evaluator.EvalApplication(expr),
+            Assert.That(() => _evaluator.EvalApplication(expr),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void EvalApplication_ApplyFunctionWithCompoundBody()
         {
-            var evaluator = new Evaluator(new Env());
-            var parameters = BuiltIn.ListOf(new ClSymbol("x"));
-            var body = BuiltIn.ListOf(ClSymbol.If, new ClSymbol("x"), new ClString("foo"), new ClString("bar"));
+            var body = BuiltIn.ListOf(ClSymbol.If, _x, ClBool.True, _foo);
+            var parameters = BuiltIn.ListOf(_x);
             var compoundFn = BuiltIn.ListOf(ClSymbol.Lambda, parameters, body);
             var expr = BuiltIn.ListOf(compoundFn, ClBool.False);
 
-            var actual = evaluator.EvalApplication(expr);
+            var actual = _evaluator.EvalApplication(expr);
 
-            Assert.That(actual, Is.EqualTo(new ClString("bar")));
+            Assert.That(actual, Is.EqualTo(_foo));
         }
 
         [Test]
         public void EvalApplication_ApplyZeroArityFunction()
         {
-            var evaluator = new Evaluator(new Env());
-            var zeroArityFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, new ClString("bar"));
-            var expr = BuiltIn.ListOf(zeroArityFn);
+            var constant = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, _foo);
+            var expr = BuiltIn.ListOf(constant);
 
-            var actual = evaluator.EvalApplication(expr);
+            var actual = _evaluator.EvalApplication(expr);
 
-            Assert.That(actual, Is.EqualTo(new ClString("bar")));
+            Assert.That(actual, Is.EqualTo(_foo));
         }
 
         [Test]
         public void TryEvalAppliation_HaveAccessToGlobalScope()
         {
-            var global = new Env();
-            global.Bind(new ClSymbol("x"), new ClString("foo"));
-            var evaluator = new Evaluator(global);
-            var identity = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, new ClSymbol("x"));
+            _env.Bind(_x, _foo);
+            var identity = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, _x);
             var expr = BuiltIn.ListOf(identity);
 
-            var actual = evaluator.EvalApplication(expr);
+            var actual = _evaluator.EvalApplication(expr);
 
-            Assert.That(actual, Is.EqualTo(new ClString("foo")));
+            Assert.That(actual, Is.EqualTo(_foo));
         }
 
         [Test]
         public void EvalApplication_JustReturnPassedArgument()
         {
-            var evaluator = new Evaluator(new Env());
-            var parameters = BuiltIn.ListOf(new ClSymbol("x"));
-            var body = new ClSymbol("x");
-            var identity = BuiltIn.ListOf(ClSymbol.Lambda, parameters, body);
-            var expr = BuiltIn.ListOf(identity, new ClFixnum(10));
+            var parameters = BuiltIn.ListOf(_x);
+            var identity = BuiltIn.ListOf(ClSymbol.Lambda, parameters, _x);
+            var expr = BuiltIn.ListOf(identity, _foo);
 
-            var actual = evaluator.EvalApplication(expr);
+            var actual = _evaluator.EvalApplication(expr);
 
-            Assert.That(actual, Is.EqualTo(new ClFixnum(10)));
+            Assert.That(actual, Is.EqualTo(_foo));
         }
     }
 }
