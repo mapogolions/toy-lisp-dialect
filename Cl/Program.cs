@@ -16,7 +16,7 @@ namespace Cl
                 (define h (g 11))
                 (h)
             ";
-            var reader = new Reader(lexicalEnvironment);
+            using var reader = new Reader(lexicalEnvironment);
             var evaluator = new Evaluator(new Env(BuiltIn.Env));
             var result = evaluator.Eval(reader.Read());
             Console.WriteLine(result);
