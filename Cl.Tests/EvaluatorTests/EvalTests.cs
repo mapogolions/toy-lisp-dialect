@@ -51,14 +51,13 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void Eval_ReturnTrue_WhenEachLogicExpressionIsTrue()
         {
-            var evaluator = new Evaluator(new Env());
             var ifThenElse = BuiltIn.ListOf(ClSymbol.If, ClBool.True, ClBool.True);
             var logicOr = BuiltIn.ListOf(ClSymbol.Or, ClBool.False, ClBool.True);
 
             var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.And, ifThenElse, logicOr, logicAnd);
 
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
+            Assert.That(_evaluator.Eval(expr), Is.EqualTo(ClBool.True));
         }
 
         [Test]
