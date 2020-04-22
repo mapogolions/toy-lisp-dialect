@@ -9,33 +9,39 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalIfTests
     {
+        private IEnv _env;
+        private Evaluator _evaluator;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _env = new Env();
+            _evaluator = new Evaluator(_env);
+        }
+
         [Test]
         public void EvalIf_EvalOnlyElseBranch_WhenConditionIsFalse()
         {
-            var env = new Env();
-            var evaluator = new Evaluator(env);
-            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
-            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
+            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, spawnBranch(Var.Foo), spawnBranch(Var.Bar));
 
-            Ignore(evaluator.EvalIf(expr));
+            Ignore(_evaluator.EvalIf(expr));
 
-            Assert.That(env.Lookup(new ClSymbol("b")), Is.EqualTo(new ClFixnum(1)));
-            Assert.That(() => env.Lookup(new ClSymbol("a")),
+            Assert.That(_env.Lookup(Var.Bar), Is.EqualTo(Value.One));
+            Assert.That(() => _env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
         public void EvalIf_EvalOnlyThenBranch_WhenConditionIsTrue()
         {
-            var env = new Env();
-            var evaluator = new Evaluator(env);
-            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, new ClFixnum(1));
-            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, spawnBranch(new ClSymbol("a")), spawnBranch(new ClSymbol("b")));
+            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, spawnBranch(Var.Foo), spawnBranch(Var.Bar));
 
-            Ignore(evaluator.EvalIf(expr));
+            Ignore(_evaluator.EvalIf(expr));
 
-            Assert.That(env.Lookup(new ClSymbol("a")), Is.EqualTo(new ClFixnum(1)));
-            Assert.That(() => env.Lookup(new ClSymbol("b")),
+            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.One));
+            Assert.That(() => _env.Lookup(Var.Bar),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -43,10 +49,9 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(FalsyTestCases))]
         public void EvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, ClBool.True);
 
-            Assert.That(evaluator.EvalIf(expr), Is.EqualTo(ClBool.True));
+            Assert.That(_evaluator.EvalIf(expr), Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -59,10 +64,9 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(TruthyTestCases))]
         public void EvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.True, ClBool.False);
 
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(ClBool.True));
+            Assert.That(_evaluator.Eval(expr), Is.EqualTo(ClBool.True));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -79,19 +83,17 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsSkipped()
         {
-            var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, new ClFixnum(1));
+            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, Value.One);
 
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(Nil.Given));
+            Assert.That(_evaluator.Eval(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]
         public void EvalIf_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Cond);
 
-            Assert.That(evaluator.EvalIf(expr), Is.Null);
+            Assert.That(_evaluator.EvalIf(expr), Is.Null);
         }
     }
 }

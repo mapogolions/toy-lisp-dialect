@@ -9,31 +9,36 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalTests
     {
+        private IEnv _env;
+        private Evaluator _evaluator;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _env = new Env();
+            _evaluator = new Evaluator(_env);
+        }
+
         [Test]
         public void Eval_IdentifiersAndKeywordsCoexistIndependently()
         {
-            var env = new Env((ClSymbol.And, new ClFixnum(10)));
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClString("foo"));
+            _env.Bind(ClSymbol.And, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.Foo);
 
-            Assert.That(evaluator.Eval(ClSymbol.And), Is.EqualTo(new ClFixnum(10)));
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(new ClString("foo")));
+            Assert.That(_evaluator.Eval(ClSymbol.And), Is.EqualTo(Value.One));
+            Assert.That(_evaluator.Eval(expr), Is.EqualTo(Value.Foo));
         }
 
         [Test]
         [TestCaseSource(nameof(DoesNotCreateNewScopeTestCases))]
         public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
         {
-            var env = new Env();
-            var evaluator = new Evaluator(env);
-            var a = new ClSymbol("a");
-            var value = new ClString("foo");
-            var define = BuiltIn.ListOf(ClSymbol.Define, a, value);
+            var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
 
-            Ignore(evaluator.Eval(expr.Invoke(define)));
+            Ignore(_evaluator.Eval(expr.Invoke(define)));
 
-            Assert.True(env.IsGlobal);
-            Assert.That(env.Lookup(a), Is.EqualTo(value));
+            Assert.True(_env.IsGlobal);
+            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
@@ -59,53 +64,45 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void Eval_ReturnUnreducedList_WhenItemOfListHasComplicatedForm()
         {
-            var evaluator = new Evaluator(new Env());
-            var begin = BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, new ClString("foo"), new ClString("bar"));
-            var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True, new ClFixnum(1));
+            var begin = BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, Value.Foo, Value.Bar);
+            var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.One);
             var expr = BuiltIn.Quote(BuiltIn.ListOf(begin, logicAnd));
 
-            var result = evaluator.Eval(expr);
+            var actual = _evaluator.Eval(expr);
 
-            Assert.That(BuiltIn.First(result), Is.EqualTo(begin));
-            Assert.That(BuiltIn.Second(result), Is.EqualTo(logicAnd));
+            Assert.That(BuiltIn.First(actual), Is.EqualTo(begin));
+            Assert.That(BuiltIn.Second(actual), Is.EqualTo(logicAnd));
         }
 
         [Test]
         public void Eval_ReturnUnreducedExpression_WhenItIsQuoted()
         {
-            var evaluator = new Evaluator(new Env());
             var cell = new ClCell(new ClFixnum(1), new ClFixnum(2));
             var expr = BuiltIn.Quote(cell);
 
-            Assert.That(Object.ReferenceEquals(evaluator.Eval(expr), cell), Is.True);
+            Assert.That(Object.ReferenceEquals(_evaluator.Eval(expr), cell), Is.True);
         }
 
         [Test]
         public void Eval_Variable_ThrowUnboundException_WhenBindingIsMissed()
         {
-            var evaluator = new Evaluator(new Env());
-
-            Assert.That(() => evaluator.Eval(new ClSymbol("a")),
+            Assert.That(() => _evaluator.Eval(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
         public void Eval_Variable_ReturnBinding_WhenEnvironmentContainsVariable()
         {
-            var env = new Env();
-            env.Bind(new ClSymbol("a"), ClBool.False);
-            var evaluator = new Evaluator(env);
+            _env.Bind(Var.Foo, ClBool.False);
 
-            Assert.That(evaluator.Eval(new ClSymbol("a")), Is.EqualTo(ClBool.False));
+            Assert.That(_evaluator.Eval(Var.Foo), Is.EqualTo(ClBool.False));
         }
 
         [Test]
         [TestCaseSource(nameof(SelfEvaluatingTestCases))]
         public void Eval_SelfEvaluatingExpression_ReturnTheSameExpression(IClObj expr)
         {
-            var evaluator = new Evaluator(new Env());
-
-            Assert.That(evaluator.Eval(expr), Is.EqualTo(expr));
+            Assert.That(_evaluator.Eval(expr), Is.EqualTo(expr));
         }
 
         static IEnumerable<IClObj> SelfEvaluatingTestCases()

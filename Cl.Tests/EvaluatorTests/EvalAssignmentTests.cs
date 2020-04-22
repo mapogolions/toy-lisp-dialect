@@ -8,90 +8,72 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalAssignmentTests
     {
-        [Test]
-        public void EvalAssigment_Assignment_IsNotSoSmart_LikePython()
-        {
-            var env = new Env();
-            var a = new ClSymbol("a");
-            var b = new ClSymbol("b");
-            env.Bind(a, new ClFixnum(10));
-            env.Bind(b, new ClFixnum(10));
+        private IEnv _env;
+        private Evaluator _evaluator;
 
-            Assert.That(Object.ReferenceEquals(env.Lookup(a), env.Lookup(b)), Is.False);
+        [SetUp]
+        public void BeforeEach()
+        {
+            _env = new Env();
+            _evaluator = new Evaluator(_env);
         }
 
         [Test]
         public void EvalAssignment_SharedReference()
         {
-            var env = new Env();
-            var a = new ClSymbol("a");
-            var b = new ClSymbol("b");
-            env.Bind(a, ClBool.True);
-            env.Bind(b, new ClFixnum(10));
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.Set, a, b);
+            _env.Bind(Var.Foo, Value.Foo);
+            _env.Bind(Var.Bar, Value.Bar);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Bar);
 
-            Ignore(evaluator.EvalAssigment(expr));
+            Ignore(_evaluator.EvalAssigment(expr));
 
-            Assert.That(Object.ReferenceEquals(env.Lookup(a), env.Lookup(b)), Is.True);
+            Assert.That(Object.ReferenceEquals(_env.Lookup(Var.Foo), _env.Lookup(Var.Bar)), Is.True);
         }
 
         [Test]
         public void EvalAssignment_Reassign()
         {
-            var env = new Env();
-            var a = new ClSymbol("a");
-            env.Bind(a, new ClFixnum(1));
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.Set, a, a);
+            _env.Bind(Var.Foo, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Foo);
 
-            Assert.That(evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(a), Is.EqualTo(new ClFixnum(1)));
+            Assert.That(_evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
+            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.One));
         }
 
         [Test]
         public void EvalAssignment_CanAssignOneVariableToAnother()
         {
-            var env = new Env();
-            var a = new ClSymbol("a");
-            var b = new ClSymbol("b");
-            env.Bind(a, new ClFixnum(10));
-            env.Bind(b, new ClString("foo"));
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.Set, a, b);
+            _env.Bind(Var.Foo, Value.Foo);
+            _env.Bind(Var.Bar, Value.Bar);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Bar);
 
-            Assert.That(evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
-            Assert.That(env.Lookup(a), Is.EqualTo(new ClString("foo")));
+            Assert.That(_evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
+            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.Bar));
         }
 
         [Test]
         public void EvalAssignment_ReturnNil_WhenOperationIsSuccessful()
         {
-            var env = new Env();
-            var a = new ClSymbol("a");
-            env.Bind(a, ClBool.True);
-            var evaluator = new Evaluator(env);
-            var expr = BuiltIn.ListOf(ClSymbol.Set, a, ClBool.False);
+            _env.Bind(Var.Foo, ClBool.True);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, ClBool.False);
 
-            Assert.That(evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
+            Assert.That(_evaluator.EvalAssigment(expr), Is.EqualTo(Nil.Given));
         }
 
         [Test]
         public void EvalAssignment_ThrowException_WhenEnvironmentDoesNotContainBinding()
         {
-            var evaluator = new Evaluator(new Env());
-            var expr = BuiltIn.ListOf(ClSymbol.Set, new ClSymbol("a"), ClBool.True);
+            var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Value.Foo);
 
-            Assert.That(() => evaluator.EvalAssigment(expr), Throws.InvalidOperationException);
+            Assert.That(() => _evaluator.EvalAssigment(expr), Throws.InvalidOperationException);
         }
 
         [Test]
         public void EvalAssignment_DoesNotEvaluateExpression_WhenTagIsWrong()
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Define);
 
-            Assert.That(evaluator.EvalAssigment(expr), Is.Null);
+            Assert.That(_evaluator.EvalAssigment(expr), Is.Null);
         }
     }
 }

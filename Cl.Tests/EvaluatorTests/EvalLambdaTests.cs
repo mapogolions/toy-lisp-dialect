@@ -9,34 +9,42 @@ namespace Cl.Tests.EvaluatorTests
     [TestFixture]
     public class EvalLambdaTests
     {
+        private IEnv _env;
+        private Evaluator _evaluator;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _env = new Env();
+            _evaluator = new Evaluator(_env);
+        }
+
         [Test]
         [TestCaseSource(nameof(InvalidParameterTestCases))]
         public void EvalLambda_ThrowException_WhenAtLeastOneParameterIsNotSymbolPrimitive(IClObj parameter)
         {
-            var evaluator = new Evaluator(new Env());
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, new ClSymbol("x"));
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
             var errorMessage = Errors.BuiltIn.UnsupportBinding;
 
-            Assert.That(() => evaluator.Eval(expr),
+            Assert.That(() => _evaluator.Eval(expr),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<IClObj> InvalidParameterTestCases()
         {
-            yield return new ClFixnum(1);
-            yield return new ClString("foo");
-            yield return BuiltIn.ListOf(ClSymbol.If, ClBool.True, new ClSymbol("x"), new ClSymbol("y"));
+            yield return Value.One;
+            yield return Value.Foo;
+            yield return BuiltIn.ListOf(ClSymbol.If, ClBool.True, Var.Foo, Var.Bar);
         }
 
         [Test]
         public void EvalLambda_BodyCanBeInvalidExpression()
         {
-            var evaluator = new Evaluator(new Env());
             var body = BuiltIn.ListOf(ClSymbol.Lambda, ClBool.True, ClBool.False);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
 
-            var actual = evaluator.Eval(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.Eval(expr).TypeOf<ClProcedure>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Body, Is.EqualTo(body));
@@ -46,10 +54,9 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(BodyExpressionTestCases))]
         public void EvalLambda_BodyCanBeAnyExpression(IClObj body)
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
 
-            var actual = evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Body, Is.EqualTo(body));
@@ -57,31 +64,29 @@ namespace Cl.Tests.EvaluatorTests
 
         static IEnumerable<IClObj> BodyExpressionTestCases()
         {
-            yield return new ClFixnum(10);
-            yield return new ClString("foo");
+            yield return Value.One;
+            yield return Value.Foo;
             yield return BuiltIn.ListOf(ClSymbol.And, ClBool.True, Nil.Given);
             yield return BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, Nil.Given);
-            yield return BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(new ClSymbol("x")), new ClSymbol("x"));
+            yield return BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), Var.Bar);
         }
 
         [Test]
         public void EvalLambda_ThrowException_WhenLambdaSpecialFormHasInvalidBody()
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True, ClBool.False);
             var errorMessage = Errors.Eval.InvalidLambdaBody;
 
-            Assert.That(() => evaluator.EvalLambda(expr),
+            Assert.That(() => _evaluator.EvalLambda(expr),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void EvalLambda_ReturnProcedureWithoutParams()
         {
-            var evaluator = new Evaluator(new Env());
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True);
 
-            var actual = evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Varargs, Is.EqualTo(Nil.Given));
@@ -90,12 +95,10 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalLambda_ThrowExceptionWhenParametersIsNotList()
         {
-            var evaluator = new Evaluator(new Env());
-            var operands = new ClSymbol("x");
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, operands, operands);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
             var errorMessage = Errors.Eval.InvalidLambdaParameters;
 
-            Assert.That(() => evaluator.EvalLambda(expr),
+            Assert.That(() => _evaluator.EvalLambda(expr),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
     }
