@@ -1,4 +1,3 @@
-using System.Linq;
 using System;
 using System.Collections.Generic;
 using Cl.Types;
@@ -11,8 +10,7 @@ namespace Cl
         bool Bind(ClSymbol identifier, IClObj obj);
         IClObj Lookup(ClSymbol indentifier);
         bool Assign(ClSymbol identifier, IClObj obj);
-        IEnv Extend(ClCell identifiers, ClCell values);
-        IEnv Populate(ClCell identifiers, ClCell values);
+        IEnv Populate(IEnumerable<ClSymbol> identifiers, IEnumerable<IClObj> values);
         bool IsGlobal { get; }
     }
 
@@ -61,21 +59,10 @@ namespace Cl
             throw new InvalidOperationException(Errors.UnboundVariable(identifier));
         }
 
-        public IEnv Extend(ClCell identifiers, ClCell values)
+        public IEnv Populate(IEnumerable<ClSymbol> identifiers, IEnumerable<IClObj> values)
         {
-            var env = new Env(this);
-            BuiltIn.Seq(identifiers)
-                .Cast<ClSymbol>()
-                .BalancedZip(BuiltIn.Seq(values))
-                .ForEach(pair => env.Bind(pair.First, pair.Second));
-            return env;
-        }
-
-        public IEnv Populate(ClCell identifiers, ClCell values)
-        {
-            BuiltIn.Seq(identifiers)
-                .Cast<ClSymbol>()
-                .BalancedZip(BuiltIn.Seq(values))
+            identifiers
+                .BalancedZip(values)
                 .ForEach(pair => this.Bind(pair.First, pair.Second));
             return this;
         }

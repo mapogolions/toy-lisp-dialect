@@ -30,53 +30,6 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void Extend_ThrowExceptionWhenAtLeastOneArgumentIsNotProvided()
-        {
-            var env = new Env();
-            var identifiers = BuiltIn.ListOf(_foo, _bar);
-            var values = BuiltIn.ListOf(ClBool.True);
-
-            Assert.That(() => env.Extend(identifiers, values),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
-        }
-
-        [Test]
-        public void Extend_ThrowExceptionWhenTooManyArgumentsArePassed()
-        {
-            var env = new Env();
-            var identifiers = BuiltIn.ListOf(_foo);
-            var values = BuiltIn.ListOf(ClBool.False, ClBool.True);
-
-            Assert.That(() => env.Extend(identifiers, values),
-                Throws.InvalidOperationException.With.Message.EqualTo("Unbalanced"));
-        }
-
-        [Test]
-        public void Extend_DoesNotAffectTheParentScope()
-        {
-            var outer = new Env();
-            outer.Bind(_foo, new ClString("foo"));
-            var identifiers = BuiltIn.ListOf(_foo);
-            var values = BuiltIn.ListOf(new ClString("bar"));
-
-            var inner = outer.Extend(identifiers, values);
-
-            Assert.That(inner.Lookup(_foo), Is.EqualTo(new ClString("bar")));
-            Assert.That(outer.Lookup(_foo), Is.EqualTo(new ClString("foo")));
-        }
-
-        [Test]
-        public void Extend_CreateChainOfScopes()
-        {
-            var outer = new Env();
-
-            var inner = outer.Extend(Nil.Given, Nil.Given);
-
-            Assert.That(outer.IsGlobal, Is.True);
-            Assert.That(inner.IsGlobal, Is.False);
-        }
-
-        [Test]
         public void Assign_ValueByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()
         {
             var env = new Env(new Env());

@@ -63,29 +63,6 @@ namespace Cl
             return result;
         }
 
-        // public IClObj EvalApplication(IClObj expr)
-        // {
-        //     var cell = expr.TypeOf<ClCell>();
-        //     if (cell is null) return null;
-        //     var procedure = Eval(cell.Car);
-        //     var args = cell.Cdr.Cast<ClCell>();
-        //     var values = BuiltIn.Seq(args).Select(it => Eval(it));
-        //     switch (procedure)
-        //     {
-        //         case PrimitiveProcedure proc:
-        //             return proc.Apply(BuiltIn.ListOf(values));
-        //         case ClProcedure proc:
-        //             var parentEnv = _env;
-        //             // _env = proc.LexicalEnv.Extend(proc.Varargs, BuiltIn.ListOf(values));
-        //             _env = proc.LexicalEnv.Populate(proc.Varargs, BuiltIn.ListOf(values));
-        //             var result = Eval(proc.Body);
-        //             _env = parentEnv;
-        //             return result;
-        //         default:
-        //             throw new InvalidOperationException(Errors.Eval.UnknownProcedureType);
-        //     }
-        // }
-
         public IClObj EvalBegin(IClObj expr)
         {
             if (!expr.IsBegin()) return null;
