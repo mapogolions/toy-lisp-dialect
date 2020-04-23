@@ -22,7 +22,7 @@ namespace Cl.Tests
         {
             var env = new Env(BuiltIn.Env);
 
-            var actual = env.Lookup(new ClSymbol("head")).TypeOf<PrimitiveProcedure>();
+            var actual = env.Lookup(new ClSymbol("head")).TypeOf<NativeFn>();
 
             Assert.That(actual, Is.Not.Null);
             var first = actual.Apply(new ClCell(ClBool.True, ClBool.False));

@@ -44,7 +44,7 @@ namespace Cl.Tests.EvaluatorTests
             var body = BuiltIn.ListOf(ClSymbol.Lambda, ClBool.True, ClBool.False);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
 
-            var actual = _evaluator.Eval(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.Eval(expr).TypeOf<ClFn>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Body, Is.EqualTo(body));
@@ -56,7 +56,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
 
-            var actual = _evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.EvalLambda(expr).TypeOf<ClFn>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Body, Is.EqualTo(body));
@@ -86,7 +86,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True);
 
-            var actual = _evaluator.EvalLambda(expr).TypeOf<ClProcedure>();
+            var actual = _evaluator.EvalLambda(expr).TypeOf<ClFn>();
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Varargs, Is.EqualTo(Nil.Given));

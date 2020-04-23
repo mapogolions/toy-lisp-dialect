@@ -71,16 +71,16 @@ namespace Cl
         public static Func<IClObj, IClObj> Third = Caddr;
         public static Func<IClObj, IClObj> Fourth = Cadddr;
 
-        public static ClProcedure Curry(ClProcedure procedure, ClCell args)
+        public static ClFn Curry(ClFn procedure, ClCell args)
         {
-            ClProcedure Loop(ClCell parms, ClCell args)
+            ClFn Loop(ClCell parms, ClCell args)
             {
                 if (parms == Nil.Given && args == Nil.Given)
-                    return new ClProcedure(Nil.Given, procedure.Body, procedure.LexicalEnv);
+                    return new ClFn(Nil.Given, procedure.Body, procedure.LexicalEnv);
                 if (parms == Nil.Given)
                     throw new ArgumentException("Too many arguments are passed");
                 if (args == Nil.Given)
-                    return new ClProcedure(parms, procedure.Body, procedure.LexicalEnv);
+                    return new ClFn(parms, procedure.Body, procedure.LexicalEnv);
                 var identifier = parms.Car.Cast<ClSymbol>();
                 procedure.LexicalEnv.Bind(identifier, args.Car);
                 return Loop(parms.Cdr.Cast<ClCell>(), args.Cdr.Cast<ClCell>());
@@ -97,7 +97,7 @@ namespace Cl
         public static ClBool IsFloat(IClObj obj) => HasType<ClFloat>(obj);
         public static ClBool IsChar(IClObj obj) => HasType<ClChar>(obj);
         public static ClBool IsPair(IClObj obj) => HasType<ClCell>(obj);
-        public static ClBool IsProcedure(IClObj obj) => HasType<ClProcedure>(obj);
+        public static ClBool IsProcedure(IClObj obj) => HasType<ClFn>(obj);
 
         // Converts
         public static ClFixnum IntegerOfChar(IClObj obj) =>
@@ -127,28 +127,28 @@ namespace Cl
 
         // Pervasives
         public static IEnv Env = new Env(
-            (new ClSymbol("null?"), new PrimitiveProcedure(IsNull)),
-            (new ClSymbol("string?"), new PrimitiveProcedure(IsString)),
-            (new ClSymbol("symbol?"), new PrimitiveProcedure(IsSymbol)),
-            (new ClSymbol("integer?"), new PrimitiveProcedure(IsInteger)),
-            (new ClSymbol("float?"), new PrimitiveProcedure(IsFloat)),
-            (new ClSymbol("char?"), new PrimitiveProcedure(IsChar)),
-            (new ClSymbol("prodecure?"), new PrimitiveProcedure(IsProcedure)),
+            (new ClSymbol("null?"), new NativeFn(IsNull)),
+            (new ClSymbol("string?"), new NativeFn(IsString)),
+            (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
+            (new ClSymbol("integer?"), new NativeFn(IsInteger)),
+            (new ClSymbol("float?"), new NativeFn(IsFloat)),
+            (new ClSymbol("char?"), new NativeFn(IsChar)),
+            (new ClSymbol("prodecure?"), new NativeFn(IsProcedure)),
 
-            (new ClSymbol("head"), new PrimitiveProcedure(Head)),
-            (new ClSymbol("tail"), new PrimitiveProcedure(Tail)),
-            (new ClSymbol("car"), new PrimitiveProcedure(Car)),
-            (new ClSymbol("cdr"), new PrimitiveProcedure(Cdr)),
-            (new ClSymbol("cadr"), new PrimitiveProcedure(Cadr)),
-            (new ClSymbol("cddr"), new PrimitiveProcedure(Cddr)),
-            (new ClSymbol("caddr"), new PrimitiveProcedure(Caddr)),
-            (new ClSymbol("cadddr"), new PrimitiveProcedure(Cadddr)),
-            (new ClSymbol("first"), new PrimitiveProcedure(First)),
-            (new ClSymbol("second"), new PrimitiveProcedure(Second)),
-            (new ClSymbol("third"), new PrimitiveProcedure(Third)),
-            (new ClSymbol("fourth"), new PrimitiveProcedure(Fourth)),
-            (new ClSymbol("true?"), new PrimitiveProcedure(IsTrue)),
-            (new ClSymbol("false?"), new PrimitiveProcedure(IsFalse))
+            (new ClSymbol("head"), new NativeFn(Head)),
+            (new ClSymbol("tail"), new NativeFn(Tail)),
+            (new ClSymbol("car"), new NativeFn(Car)),
+            (new ClSymbol("cdr"), new NativeFn(Cdr)),
+            (new ClSymbol("cadr"), new NativeFn(Cadr)),
+            (new ClSymbol("cddr"), new NativeFn(Cddr)),
+            (new ClSymbol("caddr"), new NativeFn(Caddr)),
+            (new ClSymbol("cadddr"), new NativeFn(Cadddr)),
+            (new ClSymbol("first"), new NativeFn(First)),
+            (new ClSymbol("second"), new NativeFn(Second)),
+            (new ClSymbol("third"), new NativeFn(Third)),
+            (new ClSymbol("fourth"), new NativeFn(Fourth)),
+            (new ClSymbol("true?"), new NativeFn(IsTrue)),
+            (new ClSymbol("false?"), new NativeFn(IsFalse))
         );
     }
 }

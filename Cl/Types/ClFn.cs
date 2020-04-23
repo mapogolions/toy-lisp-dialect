@@ -1,8 +1,8 @@
 namespace Cl.Types
 {
-    public class ClProcedure : IClObj
+    public class ClFn : IClObj
     {
-        public ClProcedure(ClCell varargs, IClObj body, IEnv lexicalEnv)
+        public ClFn(ClCell varargs, IClObj body, IEnv lexicalEnv)
         {
             Varargs = varargs;
             Body = body;

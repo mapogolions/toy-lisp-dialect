@@ -26,7 +26,6 @@ namespace Cl
         {
             if (expr.IsSelfEvaluating()) return expr;
             if (expr.IsVariable()) return _env.Lookup(expr.Cast<ClSymbol>());
-            //TODO: maybe need evaluate
             if (expr.IsQuoted()) return BuiltIn.Tail(expr);
             if (expr.IsCond()) return Eval(TransformCond(expr));
             if (TryEvalExpression(EvalAssigment, expr, out var obj)) return obj;
@@ -46,7 +45,6 @@ namespace Cl
             return result != null;
         }
 
-        // TODO: For test purposes. Support currying out of the box
         public IClObj EvalApplication(IClObj expr)
         {
             var cell = expr.TypeOf<ClCell>();
@@ -54,7 +52,7 @@ namespace Cl
             var procedure = Eval(cell.Car);
             var args = cell.Cdr.Cast<ClCell>();
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
-            if (!(procedure is ClProcedure proc))
+            if (!(procedure is ClFn proc))
                 throw new InvalidOperationException("Error");
             var fn = BuiltIn.Curry(proc, BuiltIn.ListOf(values));
             if (fn.Varargs != Nil.Given) return fn;
@@ -130,7 +128,7 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            return new ClProcedure(parameters, body, new Env(_env));
+            return new ClFn(parameters, body, new Env(_env));
             // return new ClProcedure(parameters, body, _env);
         }
 
