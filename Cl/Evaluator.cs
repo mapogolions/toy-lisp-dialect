@@ -46,6 +46,7 @@ namespace Cl
             return result != null;
         }
 
+        // TODO: For test purposes. Support currying out of the box
         public IClObj EvalApplication(IClObj expr)
         {
             var cell = expr.TypeOf<ClCell>();
@@ -53,20 +54,39 @@ namespace Cl
             var procedure = Eval(cell.Car);
             var args = cell.Cdr.Cast<ClCell>();
             var values = BuiltIn.Seq(args).Select(it => Eval(it));
-            switch (procedure)
-            {
-                case PrimitiveProcedure proc:
-                    return proc.Apply(BuiltIn.ListOf(values));
-                case ClProcedure proc:
-                    var parentEnv = _env;
-                    _env = proc.LexicalEnv.Extend(proc.Varargs, BuiltIn.ListOf(values));
-                    var result = Eval(proc.Body);
-                    _env = parentEnv;
-                    return result;
-                default:
-                    throw new InvalidOperationException(Errors.Eval.UnknownProcedureType);
-            }
+            if (!(procedure is ClProcedure proc))
+                throw new InvalidOperationException("Error");
+            var fn = BuiltIn.Curry(proc, BuiltIn.ListOf(values));
+            if (fn.Varargs != Nil.Given) return fn;
+            var parentEnv = _env;
+            _env = fn.LexicalEnv;
+            var result = Eval(fn.Body);
+            _env = parentEnv;
+            return result;
         }
+
+        // public IClObj EvalApplication(IClObj expr)
+        // {
+        //     var cell = expr.TypeOf<ClCell>();
+        //     if (cell is null) return null;
+        //     var procedure = Eval(cell.Car);
+        //     var args = cell.Cdr.Cast<ClCell>();
+        //     var values = BuiltIn.Seq(args).Select(it => Eval(it));
+        //     switch (procedure)
+        //     {
+        //         case PrimitiveProcedure proc:
+        //             return proc.Apply(BuiltIn.ListOf(values));
+        //         case ClProcedure proc:
+        //             var parentEnv = _env;
+        //             // _env = proc.LexicalEnv.Extend(proc.Varargs, BuiltIn.ListOf(values));
+        //             _env = proc.LexicalEnv.Populate(proc.Varargs, BuiltIn.ListOf(values));
+        //             var result = Eval(proc.Body);
+        //             _env = parentEnv;
+        //             return result;
+        //         default:
+        //             throw new InvalidOperationException(Errors.Eval.UnknownProcedureType);
+        //     }
+        // }
 
         public IClObj EvalBegin(IClObj expr)
         {
@@ -110,7 +130,8 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            return new ClProcedure(parameters, body, _env);
+            return new ClProcedure(parameters, body, new Env(_env));
+            // return new ClProcedure(parameters, body, _env);
         }
 
         public IClObj EvalIf(IClObj expr)

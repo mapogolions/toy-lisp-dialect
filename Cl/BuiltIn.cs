@@ -71,6 +71,23 @@ namespace Cl
         public static Func<IClObj, IClObj> Third = Caddr;
         public static Func<IClObj, IClObj> Fourth = Cadddr;
 
+        public static ClProcedure Curry(ClProcedure procedure, ClCell args)
+        {
+            ClProcedure Loop(ClCell parms, ClCell args)
+            {
+                if (parms == Nil.Given && args == Nil.Given)
+                    return new ClProcedure(Nil.Given, procedure.Body, procedure.LexicalEnv);
+                if (parms == Nil.Given)
+                    throw new ArgumentException("Too many arguments are passed");
+                if (args == Nil.Given)
+                    return new ClProcedure(parms, procedure.Body, procedure.LexicalEnv);
+                var identifier = parms.Car.Cast<ClSymbol>();
+                procedure.LexicalEnv.Bind(identifier, args.Car);
+                return Loop(parms.Cdr.Cast<ClCell>(), args.Cdr.Cast<ClCell>());
+            }
+            return Loop(procedure.Varargs, args);
+        }
+
         // Predicates
         public static ClBool IsNull(IClObj obj) => ClBool.Of(obj == Nil.Given);
         public static ClBool HasType<T>(IClObj obj) where T : IClObj => ClBool.Of(obj.TypeOf<T>() != null);

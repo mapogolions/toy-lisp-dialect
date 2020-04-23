@@ -12,6 +12,7 @@ namespace Cl
         IClObj Lookup(ClSymbol indentifier);
         bool Assign(ClSymbol identifier, IClObj obj);
         IEnv Extend(ClCell identifiers, ClCell values);
+        IEnv Populate(ClCell identifiers, ClCell values);
         bool IsGlobal { get; }
     }
 
@@ -68,6 +69,15 @@ namespace Cl
                 .BalancedZip(BuiltIn.Seq(values))
                 .ForEach(pair => env.Bind(pair.First, pair.Second));
             return env;
+        }
+
+        public IEnv Populate(ClCell identifiers, ClCell values)
+        {
+            BuiltIn.Seq(identifiers)
+                .Cast<ClSymbol>()
+                .BalancedZip(BuiltIn.Seq(values))
+                .ForEach(pair => this.Bind(pair.First, pair.Second));
+            return this;
         }
     }
 }
