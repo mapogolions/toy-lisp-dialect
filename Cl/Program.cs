@@ -6,17 +6,14 @@ namespace Cl
     {
         static void Main(string[] args)
         {
-            var lexicalEnvironment = @"
+            var partial = @"
                 (define f
-                    (lambda (x)
-                        (lambda (x)
-                            (lambda () x))))
+                    (lambda (x y) y))
 
-                (define g (f 10))
-                (define h (g 11))
-                (h)
+                (define partially-applied (f 10))
+                (partially-applied 11)
             ";
-            using var reader = new Reader(lexicalEnvironment);
+            using var reader = new Reader(partial);
             var evaluator = new Evaluator(new Env(BuiltIn.Env));
             var result = evaluator.Eval(reader.Read());
             Console.WriteLine(result);
