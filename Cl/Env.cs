@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cl.Types;
-using Cl.Extensions;
 
 namespace Cl
 {
@@ -10,8 +9,7 @@ namespace Cl
         bool Bind(ClSymbol identifier, IClObj obj);
         IClObj Lookup(ClSymbol indentifier);
         bool Assign(ClSymbol identifier, IClObj obj);
-        IEnv Populate(IEnumerable<ClSymbol> identifiers, IEnumerable<IClObj> values);
-        bool IsGlobal { get; }
+        IEnv New();
     }
 
     public class Env : IEnv
@@ -31,8 +29,6 @@ namespace Cl
                 Bind(pair.Item1, pair.Item2);
             }
         }
-
-        public bool IsGlobal => _parent is null;
 
         public bool Bind(ClSymbol identifier, IClObj obj)
         {
@@ -59,12 +55,6 @@ namespace Cl
             throw new InvalidOperationException(Errors.UnboundVariable(identifier));
         }
 
-        public IEnv Populate(IEnumerable<ClSymbol> identifiers, IEnumerable<IClObj> values)
-        {
-            identifiers
-                .BalancedZip(values)
-                .ForEach(pair => this.Bind(pair.First, pair.Second));
-            return this;
-        }
+        public IEnv New() => new Env(this);
     }
 }

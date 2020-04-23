@@ -37,7 +37,6 @@ namespace Cl.Tests.EvaluatorTests
 
             Ignore(_evaluator.Eval(expr.Invoke(define)));
 
-            Assert.True(_env.IsGlobal);
             Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 

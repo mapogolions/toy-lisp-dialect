@@ -47,6 +47,7 @@ namespace Cl
 
         public IClObj EvalApplication(IClObj expr)
         {
+            // TODO: rewrite
             var cell = expr.TypeOf<ClCell>();
             if (cell is null) return null;
             var procedure = Eval(cell.Car);
@@ -105,8 +106,7 @@ namespace Cl
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Third(expr);
-            return new ClFn(parameters, body, new Env(_env));
-            // return new ClProcedure(parameters, body, _env);
+            return new ClFn(parameters, body, _env.New());
         }
 
         public IClObj EvalIf(IClObj expr)
