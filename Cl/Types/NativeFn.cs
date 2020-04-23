@@ -12,5 +12,7 @@ namespace Cl.Types
         }
 
         public IClObj Apply(IClObj obj) => _fn(obj);
+
+        public override string ToString() => "#<procedure>";
     }
 }

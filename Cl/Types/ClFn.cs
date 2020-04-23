@@ -12,5 +12,7 @@ namespace Cl.Types
         public ClCell Varargs { get; }
         public IClObj Body { get; }
         public IEnv LexicalEnv { get; }
+
+        public override string ToString() => "#<procedure>";
     }
 }
