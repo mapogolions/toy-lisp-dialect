@@ -1,4 +1,4 @@
-### `dotnet run --project Cl\Cl.csproj`
+### `dotnet run --project Cl/Cl.csproj`
 
 #### to be continued ...
 
