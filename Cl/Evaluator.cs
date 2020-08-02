@@ -141,9 +141,7 @@ namespace Cl
         {
             var clauses = BuiltIn.Tail(expr);
             if (clauses == Nil.Given) return ClBool.False;
-            var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
-            if (clause is null)
-                throw new InvalidOperationException(Errors.BuiltIn.ClauseMustBeCell);
+            var clause = BuiltIn.First(clauses).CastOrThrow<ClCell>(Errors.BuiltIn.ClauseMustBeCell);
             if (clause.Car == ClSymbol.Else)
             {
                 return BuiltIn.Tail(clauses) == Nil.Given
