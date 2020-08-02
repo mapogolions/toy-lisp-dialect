@@ -5,14 +5,14 @@ namespace Cl.Extensions
 {
     public static class IEnumerableOps
     {
-        public static void ForEach<A>(this IEnumerable<A> it, Action<A> apply)
+        public static void ForEach<A>(this IEnumerable<A> @this, Action<A> apply)
         {
-            foreach (var item in it) apply(item);
+            foreach (var item in @this) apply(item);
         }
 
-        public static IEnumerable<(A First, B Second)> BalancedZip<A, B>(this IEnumerable<A> it, IEnumerable<B> that)
+        public static IEnumerable<(A First, B Second)> ZipIfBalanced<A, B>(this IEnumerable<A> @this, IEnumerable<B> that)
         {
-            var first = it.GetEnumerator();
+            var first = @this.GetEnumerator();
             var second = that.GetEnumerator();
             while (true)
             {
@@ -28,10 +28,10 @@ namespace Cl.Extensions
             }
         }
 
-        public static T FirstOrLastDefault<T>(this IEnumerable<T> it, Func<T, bool> predicate)
+        public static T FirstOrLastDefault<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
         {
             var current = default(T);
-            foreach (var item in it)
+            foreach (var item in @this)
             {
                 current = item;
                 if (predicate(current)) break;

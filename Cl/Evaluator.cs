@@ -101,7 +101,7 @@ namespace Cl
             if (BuiltIn.Cdddr(expr) != Nil.Given)
                 throw new InvalidOperationException(Errors.Eval.InvalidLambdaBody);
             var parameters = BuiltIn.Second(expr)
-                .Cast<ClCell>(Errors.Eval.InvalidLambdaParameters);
+                .CastOrThrow<ClCell>(Errors.Eval.InvalidLambdaParameters);
             var hasUnsupportBinding = BuiltIn.Seq(parameters).Any(it => it.TypeOf<ClSymbol>() is null);
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);

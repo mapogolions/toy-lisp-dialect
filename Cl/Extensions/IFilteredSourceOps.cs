@@ -5,14 +5,14 @@ namespace Cl.Extensions
 {
     public static class IFilteredSourceOps
     {
-        public static bool SkipWhitespacesAndComments(this IFilteredSource self,
+        public static bool SkipWhitespacesAndComments(this IFilteredSource @this,
             string startsWith = ";", bool atLeastOne = false)
         {
-            if (self.SkipWhitespaces())
+            if (@this.SkipWhitespaces())
                 atLeastOne = true;
-            if (!self.SkipMatched(startsWith)) return atLeastOne;
-            Ignore(self.SkipLine());
-            return self.SkipWhitespacesAndComments(startsWith, atLeastOne: true);
+            if (!@this.SkipMatched(startsWith)) return atLeastOne;
+            Ignore(@this.SkipLine());
+            return @this.SkipWhitespacesAndComments(startsWith, atLeastOne: true);
         }
     }
 }
