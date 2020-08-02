@@ -17,8 +17,14 @@ namespace Cl.Tests.EvaluatorTests
             _evaluator = new Evaluator(_env);
         }
 
+        /**
+         * (define fn
+         *   (lambda (foo)
+         *     (lambda () foo)))
+         * (fn 1)
+         */
         [Test]
-        public void EvalApplication_SupportLexicalEnvironment()
+        public void EvalApplication_SupportLexicalEnvironmentAndGlobalDefinition()
         {
             var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
@@ -27,6 +33,22 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(application);
 
             var actual = _evaluator.Eval(new List<IClObj> { definition, expr });
+
+            Assert.That(actual, Is.EqualTo(Value.One));
+        }
+
+        /**
+         * ((lambda (foo)
+         *   (lambda () foo)) 1)
+         */
+        [Test]
+        public void EvalApplication_SupportLexicalEnvironment()
+        {
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
+            var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
+            var expr = BuiltIn.ListOf(BuiltIn.ListOf(hof, Value.One));
+
+            var actual = _evaluator.EvalApplication(expr);
 
             Assert.That(actual, Is.EqualTo(Value.One));
         }
@@ -57,7 +79,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalApplication_ApplyFunctionWithCompoundBody()
+        public void EvalApplication_FunctionWithCompoundBody()
         {
             var body = BuiltIn.ListOf(ClSymbol.If, Var.Foo, ClBool.True, Value.Foo);
             var parameters = BuiltIn.ListOf(Var.Foo);
@@ -70,7 +92,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalApplication_ApplyZeroArityFunction()
+        public void EvalApplication_ZeroArityFunction()
         {
             var constant = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Value.One);
             var expr = BuiltIn.ListOf(constant);
@@ -81,7 +103,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void TryEvalAppliation_HaveAccessToGlobalScope()
+        public void EvalAppliation_AccessToGlobalScope()
         {
             _env.Bind(Var.Foo, Value.Foo);
             var identity = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
@@ -93,7 +115,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalApplication_JustReturnPassedArgument()
+        public void EvalApplication_IdentityFunction()
         {
             var parameters = BuiltIn.ListOf(Var.Foo);
             var identity = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Var.Foo);
