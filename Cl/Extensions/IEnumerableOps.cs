@@ -28,7 +28,7 @@ namespace Cl.Extensions
             }
         }
 
-        public static T FirstOrLast<T>(this IEnumerable<T> it, Func<T, bool> predicate)
+        public static T FirstOrLastDefault<T>(this IEnumerable<T> it, Func<T, bool> predicate)
         {
             var current = default(T);
             foreach (var item in it)
