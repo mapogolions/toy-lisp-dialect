@@ -83,7 +83,7 @@ namespace Cl
             var conditions = BuiltIn.Tail(expr);
             return BuiltIn.Seq(conditions)
                 .Select(it => Eval(it))
-                .FirstOrLastDefault(it => BuiltIn.IsTrue(it).Value) ?? ClBool.False;
+                .FirstOrLastOrDefault(it => BuiltIn.IsTrue(it).Value) ?? ClBool.False;
         }
 
         public IClObj EvalAnd(IClObj expr)
@@ -92,7 +92,7 @@ namespace Cl
             var conditions = BuiltIn.Tail(expr);
             return BuiltIn.Seq(conditions)
                 .Select(it => Eval(it))
-                .FirstOrLastDefault(it => BuiltIn.IsFalse(it).Value) ?? ClBool.True;
+                .FirstOrLastOrDefault(it => BuiltIn.IsFalse(it).Value) ?? ClBool.True;
         }
 
         public IClObj EvalLambda(IClObj expr)
