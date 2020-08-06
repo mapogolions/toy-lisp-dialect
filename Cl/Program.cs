@@ -6,7 +6,7 @@ namespace Cl
     {
         static void Main(string[] args)
         {
-            var partial = @"
+            /* var partial = @"
                 (define f
                     (lambda (x y) y))
 
@@ -16,8 +16,8 @@ namespace Cl
             using var reader = new Reader(partial);
             var evaluator = new Evaluator(new Env(BuiltIn.Env));
             var result = evaluator.Eval(reader.Read());
-            Console.WriteLine(result);
-            // new Repl().Start();
+            Console.WriteLine(result); */
+            new Repl().Start();
         }
     }
 }

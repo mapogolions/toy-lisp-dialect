@@ -1,4 +1,6 @@
+using Cl.Contracts;
+
 namespace Cl.Types
 {
-    public interface IClObj { }
+    public interface IClObj : IReducable { }
 }

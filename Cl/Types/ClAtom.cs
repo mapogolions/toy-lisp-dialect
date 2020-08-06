@@ -1,4 +1,5 @@
 using System;
+using Cl.Contracts;
 
 namespace Cl.Types
 {
@@ -19,5 +20,7 @@ namespace Cl.Types
         public override int GetHashCode() => Value.GetHashCode();
 
         public override string ToString() => Value.ToString();
+
+        public virtual IContext Reduce(IContext ctx) => ctx.FromResult(this);
     }
 }

@@ -1,3 +1,5 @@
+using Cl.Contracts;
+
 namespace Cl.Types
 {
     public sealed class Nil : ClCell
@@ -14,6 +16,8 @@ namespace Cl.Types
                 return _instance;
             }
         }
+
+        public override IContext Reduce(IContext ctx) => ctx.FromResult(this);
 
         public override string ToString() => "nil";
     }
