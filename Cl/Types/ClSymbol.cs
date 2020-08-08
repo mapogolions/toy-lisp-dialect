@@ -1,8 +1,16 @@
+using Cl.Contracts;
+
 namespace Cl.Types
 {
     public class ClSymbol : ClAtom<string>
     {
         public ClSymbol(string name) : base(name) { }
+
+         public override IContext Reduce(IContext ctx)
+        {
+            var result = ctx.Env.Lookup(this);
+            return ctx.FromResult(result);
+        }
 
         public static ClSymbol And = new ClSymbol("and");
         public static ClSymbol If = new ClSymbol("if");

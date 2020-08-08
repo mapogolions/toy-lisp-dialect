@@ -22,7 +22,9 @@ namespace Cl.Contracts
             Env = env;
         }
 
-        public Context() : this(Nil.Given, new Env()) { }
+        public Context(IEnv env) : this(Nil.Given, env) { }
+
+        public Context() : this(new Env()) { }
 
         public IContext FromResult(IClObj result) => new Context(result, Env);
 

@@ -15,9 +15,15 @@ namespace Cl.Types
         public IClObj Car { get; }
         public IClObj Cdr { get; }
 
-        public virtual IContext Reduce(IContext ctx) => Car is ClSymbol tag
-            ? new BaseSpecialForm(tag, Cdr).Reduce(ctx)
-            : throw new InvalidOperationException("Invalid function call");
+        public virtual IContext Reduce(IContext ctx)
+        {
+            if (Car is ClSymbol tag)
+                return new BaseSpecialForm(tag, Cdr).Reduce(ctx);
+            // ((define x 10) (set x 11)) ~> (nil . (nil . nil))
+            var carCtx = Car.Reduce(ctx);
+            var cdrCtx = Cdr.Reduce(carCtx);
+            return cdrCtx.FromResult(new ClCell(carCtx.Result, cdrCtx.Result));
+        }
 
         public override string ToString() => $"({Car} . {Cdr})";
     }
