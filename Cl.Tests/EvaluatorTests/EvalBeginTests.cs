@@ -1,3 +1,4 @@
+using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -7,37 +8,29 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalBeginTests
     {
         private IEnv _env;
-        private Evaluator _evaluator;
+        private IContext _context;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _evaluator = new Evaluator(_env);
+            _context = new Context(_env);
         }
 
         [Test]
         public void EvalBegin_ReturnLastEvaluatedValue()
         {
-            var expr = BuiltIn.ListOf(ClSymbol.Begin, ClBool.False, ClBool.True);
-
-            Assert.That(_evaluator.EvalBegin(expr), Is.EqualTo(ClBool.True));
+            var expr = BuiltIn.ListOf(ClSymbol.Begin, ClBool.False, ClBool.True, Value.One);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Value.One));
         }
 
         [Test]
         public void EvalBegin_ReturnNil_WhenTailIsEmptyList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Begin);
-
-            Assert.That(_evaluator.EvalBegin(expr), Is.EqualTo(Nil.Given));
-        }
-
-        [Test]
-        public void EvalBegin_DoesNotEvaluateExpression_WhenTagIsWrong()
-        {
-            var expr = BuiltIn.ListOf(ClSymbol.If);
-
-            Assert.That(_evaluator.EvalBegin(expr), Is.Null);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Nil.Given));
         }
     }
 }

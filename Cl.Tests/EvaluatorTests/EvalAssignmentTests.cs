@@ -2,7 +2,6 @@ using System;
 using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
