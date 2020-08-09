@@ -1,6 +1,6 @@
+using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -8,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAndTests
     {
         private IEnv _env;
-        private Evaluator _evaluator;
+        private IContext _context;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _evaluator = new Evaluator(_env);
+            _context = new Context(_env);
         }
 
         [Test]
@@ -23,9 +23,9 @@ namespace Cl.Tests.EvaluatorTests
             var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, ClBool.False, define, ClBool.True);
 
-            Ignore(_evaluator.EvalAnd(expr));
+            var context = expr.Reduce(_context);
 
-            Assert.That(() => _env.Lookup(Var.Foo),
+            Assert.That(() => context.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -33,17 +33,17 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAnd_ReturnLastItem_WhenEachItemIsTrue()
         {
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.Foo);
-
-            Assert.That(_evaluator.EvalAnd(expr), Is.EqualTo(Value.Foo));
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Value.Foo));
         }
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsFalseTestCases))]
-        public void EvalAnd_ReturnLastItem_WhenAtLeastOneItemIsFalse(ClCell items, IClObj expected)
+        public void EvalAnd_ReturnFalsyItem_WhenAtLeastOneItemIsFalse(ClCell items, IClObj expected)
         {
             var expr = new ClCell(ClSymbol.And, items);
-
-            Assert.That(_evaluator.EvalAnd(expr), Is.EqualTo(expected));
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(expected));
         }
 
         static object[] AtLeastOneItemIsFalseTestCases =
@@ -56,16 +56,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAnd_ReturnTrue_WhenTailIsEmptyList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.And);
-
-            Assert.That(_evaluator.EvalAnd(expr), Is.EqualTo(ClBool.True));
-        }
-
-        [Test]
-        public void EvalAnd_DoesNotEvaluateExpression_WhenTagIsWrong()
-        {
-            var expr = BuiltIn.ListOf(ClSymbol.Or);
-
-            Assert.That(_evaluator.EvalAnd(expr), Is.Null);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(ClBool.True));
         }
     }
 }

@@ -10,14 +10,15 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             var tail = Cdr;
+            var currentCtx = ctx.FromResult(ClBool.True);
             while (tail != Nil.Given)
             {
-                ctx = BuiltIn.Head(tail).Reduce(ctx);
-                if (ctx.Result == Nil.Given || ctx.Result == ClBool.False)
-                    return ctx.FromResult(ClBool.False);
+                currentCtx = BuiltIn.Head(tail).Reduce(currentCtx);
+                if (currentCtx.Result == Nil.Given || currentCtx.Result == ClBool.False)
+                    break;
                 tail = BuiltIn.Tail(tail);
             }
-            return ctx.FromResult(ClBool.True);
+            return ctx.FromResult(currentCtx.Result);
         }
     }
 }
