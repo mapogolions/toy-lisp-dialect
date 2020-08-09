@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using Cl.Contracts;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -10,13 +10,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalLambdaTests
     {
         private IEnv _env;
-        private Evaluator _evaluator;
+        private IContext _context;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _evaluator = new Evaluator(_env);
+            _context = new Context(_env);
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
             var errorMessage = Errors.BuiltIn.UnsupportBinding;
 
-            Assert.That(() => _evaluator.Eval(expr),
+            Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -44,10 +44,13 @@ namespace Cl.Tests.EvaluatorTests
             var body = BuiltIn.ListOf(ClSymbol.Lambda, ClBool.True, ClBool.False);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
 
-            var actual = _evaluator.Eval(expr).TypeOf<ClFn>();
+            var fn = expr
+                .Reduce(_context)
+                .Result
+                .Cast<ClFn>();
 
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.Body, Is.EqualTo(body));
+            Assert.That(fn, Is.Not.Null);
+            Assert.That(fn.Body, Is.EqualTo(body));
         }
 
         [Test]
@@ -55,11 +58,12 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_BodyCanBeAnyExpression(IClObj body)
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
+            var fn = expr
+                .Reduce(_context)
+                .Result
+                .Cast<ClFn>();
 
-            var actual = _evaluator.EvalLambda(expr).TypeOf<ClFn>();
-
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.Body, Is.EqualTo(body));
+            Assert.That(fn.Body, Is.EqualTo(body));
         }
 
         static IEnumerable<IClObj> BodyExpressionTestCases()
@@ -77,7 +81,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True, ClBool.False);
             var errorMessage = Errors.Eval.InvalidLambdaBody;
 
-            Assert.That(() => _evaluator.EvalLambda(expr),
+            Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -85,11 +89,12 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ReturnProcedureWithoutParams()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True);
+            var fn = expr
+                .Reduce(_context)
+                .Result
+                .Cast<ClFn>();
 
-            var actual = _evaluator.EvalLambda(expr).TypeOf<ClFn>();
-
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.Varargs, Is.EqualTo(Nil.Given));
+            Assert.That(fn.Varargs, Is.EqualTo(Nil.Given));
         }
 
         [Test]
@@ -98,7 +103,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
             var errorMessage = Errors.Eval.InvalidLambdaParameters;
 
-            Assert.That(() => _evaluator.EvalLambda(expr),
+            Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
     }

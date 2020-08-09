@@ -19,6 +19,7 @@ namespace Cl.SpecialForms
             if (Car == ClSymbol.Begin) return new BeginSpecialForm(Cdr).Reduce(context);
             if (Car == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(context);
             if (Car == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(context);
+            if (Car == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(context);
             throw new InvalidOperationException("Invalid special form");
         }
 
