@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -10,38 +10,38 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalIfTests
     {
         private IEnv _env;
-        private Evaluator _evaluator;
+        private IContext _context;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _evaluator = new Evaluator(_env);
+            _context = new Context(_env);
         }
 
         [Test]
         public void EvalIf_EvalOnlyElseBranch_WhenConditionIsFalse()
         {
-            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
-            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, spawnBranch(Var.Foo), spawnBranch(Var.Bar));
+            Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, defineVar(Var.Foo), defineVar(Var.Bar));
 
-            Ignore(_evaluator.EvalIf(expr));
+            var context = expr.Reduce(_context);
 
-            Assert.That(_env.Lookup(Var.Bar), Is.EqualTo(Value.One));
-            Assert.That(() => _env.Lookup(Var.Foo),
+            Assert.That(context.Env.Lookup(Var.Bar), Is.EqualTo(Value.One));
+            Assert.That(() => context.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
         public void EvalIf_EvalOnlyThenBranch_WhenConditionIsTrue()
         {
-            Func<ClSymbol, ClCell> spawnBranch = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
-            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, spawnBranch(Var.Foo), spawnBranch(Var.Bar));
+            Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, defineVar(Var.Foo), defineVar(Var.Bar));
 
-            Ignore(_evaluator.EvalIf(expr));
+            var context = expr.Reduce(_context);
 
-            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.One));
-            Assert.That(() => _env.Lookup(Var.Bar),
+            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
+            Assert.That(() => context.Env.Lookup(Var.Bar),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -49,9 +49,9 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(FalsyTestCases))]
         public void EvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
         {
-            var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, ClBool.True);
-
-            Assert.That(_evaluator.EvalIf(expr), Is.EqualTo(ClBool.True));
+            var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, Value.One);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -64,9 +64,9 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(TruthyTestCases))]
         public void EvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
         {
-            var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.True, ClBool.False);
-
-            Assert.That(_evaluator.Eval(expr), Is.EqualTo(ClBool.True));
+            var expr = BuiltIn.ListOf(ClSymbol.If, predicate, Value.One, ClBool.False);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -81,19 +81,11 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         [Test]
-        public void EvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsSkipped()
+        public void EvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsMissed()
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, Value.One);
-
-            Assert.That(_evaluator.Eval(expr), Is.EqualTo(Nil.Given));
-        }
-
-        [Test]
-        public void EvalIf_DoesNotEvaluateExpression_WhenTagIsWrong()
-        {
-            var expr = BuiltIn.ListOf(ClSymbol.Cond);
-
-            Assert.That(_evaluator.EvalIf(expr), Is.Null);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(Nil.Given));
         }
     }
 }
