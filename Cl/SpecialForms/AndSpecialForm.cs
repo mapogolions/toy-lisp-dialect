@@ -18,7 +18,7 @@ namespace Cl.SpecialForms
                     break;
                 tail = BuiltIn.Tail(tail);
             }
-            return ctx.FromResult(currentCtx.Result);
+            return currentCtx;
         }
     }
 }

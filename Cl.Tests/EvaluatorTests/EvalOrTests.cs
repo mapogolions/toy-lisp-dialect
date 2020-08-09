@@ -1,3 +1,4 @@
+using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -7,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalOrTests
     {
         private IEnv _env;
-        private Evaluator _evaluator;
+        private IContext _context;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _evaluator = new Evaluator(_env);
+            _context = new Context(_env);
         }
 
         [Test]
@@ -22,27 +23,36 @@ namespace Cl.Tests.EvaluatorTests
             var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
             var expr = BuiltIn.ListOf(ClSymbol.Or, ClBool.True, define);
 
-            Assert.That(_evaluator.EvalOr(expr), Is.EqualTo(ClBool.True));
-            Assert.That(() => _env.Lookup(Var.Foo),
+            var context = expr.Reduce(_context);
+
+            Assert.That(context.Result, Is.EqualTo(ClBool.True));
+            Assert.That(() => context.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
         [Test]
-        public void EvalOr_ReturnFalse_WhenEachItemIsFalse()
+        [TestCaseSource(nameof(EachItemIsFalseTestCases))]
+        public void EvalOr_ReturnLastItem_WhenEachItemIsFalse(ClCell items, IClObj expected)
         {
-            var expr = BuiltIn.ListOf(ClSymbol.Or, Nil.Given, ClBool.False);
-
-            Assert.That(_evaluator.EvalOr(expr), Is.EqualTo(ClBool.False));
+            var expr = new ClCell(ClSymbol.Or, items);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(expected));
         }
+
+        static object[] EachItemIsFalseTestCases =
+            {
+                new object[] { BuiltIn.ListOf(Nil.Given, ClBool.False), ClBool.False },
+                new object[] { BuiltIn.ListOf(ClBool.False, Nil.Given), Nil.Given },
+            };
 
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsTrueTestCases))]
-        public void EvalOr_ReturnTrue_WhenAtLeastOneItemIsTrue(ClCell items, IClObj expected)
+        public void EvalOr_ReturnTruthyItem_WhenAtLeastOneItemIsTrue(ClCell items, IClObj expected)
         {
             var expr = new ClCell(ClSymbol.Or, items);
-
-            Assert.That(_evaluator.EvalOr(expr), Is.EqualTo(expected));
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(expected));
         }
 
         static object[] AtLeastOneItemIsTrueTestCases =
@@ -56,16 +66,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalOr_ReturnFalse_WhenTailIsEmptyList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Or);
-
-            Assert.That(_evaluator.EvalOr(expr), Is.EqualTo(ClBool.False));
-        }
-
-        [Test]
-        public void EvalOr_DoesNotEvaluateExpression_WhenTagIsWrong()
-        {
-            var expr = BuiltIn.ListOf(ClSymbol.And);
-
-            Assert.That(_evaluator.EvalOr(expr), Is.Null);
+            var context = expr.Reduce(_context);
+            Assert.That(context.Result, Is.EqualTo(ClBool.False));
         }
     }
 }
