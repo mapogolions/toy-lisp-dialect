@@ -9,20 +9,20 @@ namespace Cl.SpecialForms
     {
         internal BaseSpecialForm(ClSymbol tag, IClObj cdr) : base(tag, cdr) { }
 
-        public override IContext Reduce(IContext context)
+        public ClSymbol Tag => Car as ClSymbol;
+
+        public override IContext Reduce(IContext ctx)
         {
-            if (Car == ClSymbol.Quote) return context.FromResult(Cdr);
-            if (Car == ClSymbol.Define) return new DefineSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.Set) return new SetSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.And) return new AndSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.Or) return new OrSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.Begin) return new BeginSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(context);
-            if (Car == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(context);
-            // var fnName = Car.CastOrThrow<ClSymbol>("Invalid function call");
-            // var fn = context.Env.Lookup(fnName).CastOrThrow<ClFn>("Invlid function call");
-            throw new InvalidOperationException("Invalid special form");
+            if (Tag == ClSymbol.Quote) return ctx.FromResult(Cdr);
+            if (Tag == ClSymbol.Define) return new DefineSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.Set) return new SetSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.And) return new AndSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.Or) return new OrSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.Begin) return new BeginSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(ctx);
+            if (Tag == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(ctx);
+            return new ApplySpecialForm(Tag, Cdr).Reduce(ctx);
         }
 
         private IClObj ConvertToBeginForm(IClObj clauses)
