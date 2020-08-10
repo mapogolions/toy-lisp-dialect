@@ -11,10 +11,10 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             return BuiltIn.Seq(Cdr)
-                .ReduceWhile<IContext, IClObj>(
+                .ReduceWhile<IClObj, IContext>(
                     ctx.FromResult(ClBool.False),
                     (ctx, x) => x.Reduce(ctx),
-                    ctx => ctx.Result == Nil.Given || ctx.Result == ClBool.False);
+                    ctx => ctx.Value == Nil.Given || ctx.Value == ClBool.False);
         }
     }
 }

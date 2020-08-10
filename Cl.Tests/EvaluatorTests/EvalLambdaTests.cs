@@ -46,7 +46,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var fn = expr
                 .Reduce(_context)
-                .Result
+                .Value
                 .Cast<ClFn>();
 
             Assert.That(fn, Is.Not.Null);
@@ -60,7 +60,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
             var fn = expr
                 .Reduce(_context)
-                .Result
+                .Value
                 .Cast<ClFn>();
 
             Assert.That(fn.Body, Is.EqualTo(body));
@@ -91,7 +91,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True);
             var fn = expr
                 .Reduce(_context)
-                .Result
+                .Value
                 .Cast<ClFn>();
 
             Assert.That(fn.Varargs, Is.EqualTo(Nil.Given));

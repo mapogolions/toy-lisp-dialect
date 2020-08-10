@@ -5,20 +5,22 @@ namespace Cl.Contracts
     public interface IContext
     {
         IEnv Env { get; }
-        IClObj Result { get; }
+        IClObj Value { get; }
 
         IContext FromResult(IClObj result);
         IContext FromEnv(IEnv env);
+
+        void Deconstruct(out IClObj result, out IEnv env);
     }
 
     public class Context : IContext
     {
-        public IClObj Result { get; }
+        public IClObj Value { get; }
         public IEnv Env { get; }
 
         public Context(IClObj result, IEnv env)
         {
-            Result = result;
+            Value = result;
             Env = env;
         }
 
@@ -28,6 +30,12 @@ namespace Cl.Contracts
 
         public IContext FromResult(IClObj result) => new Context(result, Env);
 
-        public IContext FromEnv(IEnv env) => new Context(Result, env);
+        public IContext FromEnv(IEnv env) => new Context(Value, env);
+
+        public void Deconstruct(out IClObj result, out IEnv env)
+        {
+            result = Value;
+            env = Env;
+        }
     }
 }

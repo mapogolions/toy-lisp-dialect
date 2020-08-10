@@ -12,7 +12,7 @@ namespace Cl.SpecialForms
         {
             var identifier = BuiltIn.First(Cdr).Cast<ClSymbol>();
             var newCtx = BuiltIn.Second(Cdr).Reduce(ctx);
-            newCtx.Env.Bind(identifier, newCtx.Result);
+            newCtx.Env.Bind(identifier, newCtx.Value);
             return newCtx.FromResult(Nil.Given);
         }
     }

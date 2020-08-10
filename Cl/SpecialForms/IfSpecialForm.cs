@@ -10,7 +10,7 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             var newCtx = BuiltIn.First(Cdr).Reduce(ctx);
-            if (newCtx.Result != Nil.Given && newCtx.Result != ClBool.False)
+            if (newCtx.Value != Nil.Given && newCtx.Value != ClBool.False)
                 return BuiltIn.Second(Cdr).Reduce(newCtx);
             var elseBranch = BuiltIn.Cddr(Cdr);
             return elseBranch ==  Nil.Given

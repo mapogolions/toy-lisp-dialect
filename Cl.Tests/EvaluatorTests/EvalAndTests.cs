@@ -34,7 +34,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.Foo);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Value.Foo));
+            Assert.That(context.Value, Is.EqualTo(Value.Foo));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = new ClCell(ClSymbol.And, items);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(expected));
+            Assert.That(context.Value, Is.EqualTo(expected));
         }
 
         static object[] AtLeastOneItemIsFalseTestCases =
@@ -57,7 +57,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.And);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(ClBool.True));
+            Assert.That(context.Value, Is.EqualTo(ClBool.True));
         }
     }
 }

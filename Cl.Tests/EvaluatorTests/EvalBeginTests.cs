@@ -22,7 +22,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Begin, ClBool.False, ClBool.True, Value.One);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Begin);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Nil.Given));
+            Assert.That(context.Value, Is.EqualTo(Nil.Given));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Cl.Types
             // ((define x 10) (set x 11)) ~> (nil . (nil . nil))
             var carCtx = Car.Reduce(ctx);
             var cdrCtx = Cdr.Reduce(carCtx);
-            return cdrCtx.FromResult(new ClCell(carCtx.Result, cdrCtx.Result));
+            return cdrCtx.FromResult(new ClCell(carCtx.Value, cdrCtx.Value));
         }
 
         public override string ToString() => $"({Car} . {Cdr})";

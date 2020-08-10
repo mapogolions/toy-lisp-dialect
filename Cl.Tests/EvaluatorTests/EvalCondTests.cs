@@ -39,7 +39,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-            Assert.That(context.Result, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
             Assert.That(() => context.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
@@ -53,7 +53,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-            Assert.That(context.Result, Is.EqualTo(ClBool.False));
+            Assert.That(context.Value, Is.EqualTo(ClBool.False));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-           Assert.That(context.Result, Is.EqualTo(Value.One));
+           Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-            Assert.That(context.Result, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Cond);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(ClBool.False));
+            Assert.That(context.Value, Is.EqualTo(ClBool.False));
         }
     }
 }

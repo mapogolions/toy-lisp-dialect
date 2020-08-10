@@ -51,7 +51,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, Value.One);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -66,7 +66,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, Value.One, ClBool.False);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -85,7 +85,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, Value.One);
             var context = expr.Reduce(_context);
-            Assert.That(context.Result, Is.EqualTo(Nil.Given));
+            Assert.That(context.Value, Is.EqualTo(Nil.Given));
         }
     }
 }

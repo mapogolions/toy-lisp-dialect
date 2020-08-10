@@ -9,17 +9,19 @@ namespace Cl.SpecialForms
     {
         internal ApplySpecialForm(ClSymbol car, IClObj cdr) : base(car, cdr) { }
 
-        public override IContext Reduce(IContext context)
+        public override IContext Reduce(IContext ctx)
         {
-            // var obj = context.Env.Lookup(Car);
-            // var proc = obj.CastOrThrow<ClFn>($"Function with {Car} name doesn't exist");
-            // var args = Cdr.CastOrThrow<ClCell>("Invalid function call");
-            //     var values = BuiltIn.Seq(args)
-            //     .Aggregate<IClObj, IContext>(context.FromResult(Nil.Given), (seed, x) => {
-            //         var evaluatedArgs = seed.Result;
-            //         var newContext = x.Reduce(seed);
-            //         return new Context(new ClCell(newContext.Result, evaluatedArgs), newContext.Env);
-            //     });
+            var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>($"Function with {Tag} name doesn't exist");
+            var args = Cdr.CastOrThrow<ClCell>("Invalid function call");
+            var (values, env) = BuiltIn.Seq(args)
+                .Aggregate<IClObj, IContext>(
+                    ctx.FromResult(Nil.Given),
+                    (ctx, arg) => {
+                        var values = ctx.Value;
+                        var (value, env) = arg.Reduce(ctx);
+                        return new Context(new ClCell(value, values), env);
+                    });
+
             return null;
         }
     }
