@@ -5,6 +5,17 @@ namespace Cl.Extensions
 {
     public static class IEnumerableOps
     {
+        public static S ReduceWhile<S, E>(this IEnumerable<E> @this, S seed,Func<S, E, S> func, Predicate<S> test)
+        {
+            var acc = seed;
+            foreach (var item in @this)
+            {
+                acc = func(seed, item);
+                if (!test(acc)) break;
+            }
+            return acc;
+        }
+
         public static void ForEach<A>(this IEnumerable<A> @this, Action<A> apply)
         {
             foreach (var item in @this) apply(item);

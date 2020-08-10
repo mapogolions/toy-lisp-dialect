@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms
@@ -9,16 +10,11 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext ctx)
         {
-            var tail = Cdr;
-            var currentCtx = ctx.FromResult(ClBool.False);
-            while (tail != Nil.Given)
-            {
-                currentCtx = BuiltIn.Head(tail).Reduce(currentCtx);
-                if (currentCtx.Result != Nil.Given && currentCtx.Result != ClBool.False)
-                    break;
-                tail = BuiltIn.Tail(tail);
-            }
-            return currentCtx;
+            return BuiltIn.Seq(Cdr)
+                .ReduceWhile<IContext, IClObj>(
+                    ctx.FromResult(ClBool.False),
+                    (ctx, x) => x.Reduce(ctx),
+                    ctx => ctx.Result == Nil.Given || ctx.Result == ClBool.False);
         }
     }
 }
