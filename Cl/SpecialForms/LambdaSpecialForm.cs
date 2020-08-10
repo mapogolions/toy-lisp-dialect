@@ -10,7 +10,7 @@ namespace Cl.SpecialForms
     {
         internal LambdaSpecialForm(IClObj cdr) : base(ClSymbol.Lambda, cdr) { }
 
-        public override IContext Reduce(IContext ctx)
+        public override IContext Reduce(IContext context)
         {
             if (BuiltIn.Cddr(Cdr) != Nil.Given)
                 throw new InvalidOperationException(Errors.Eval.InvalidLambdaBody);
@@ -20,7 +20,7 @@ namespace Cl.SpecialForms
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Second(Cdr);
-            return ctx.FromResult(new ClFn(parameters, body, null));
+            return context.FromResult(new ClFn(parameters, body, null));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -8,12 +9,14 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalApplicationTests
     {
         private IEnv _env;
+        private IContext _context;
         private Evaluator _evaluator;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
+            _context = new Context(_env);
             _evaluator = new Evaluator(_env);
         }
 

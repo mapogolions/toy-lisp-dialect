@@ -20,6 +20,8 @@ namespace Cl.SpecialForms
             if (Car == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(context);
             if (Car == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(context);
             if (Car == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(context);
+            // var fnName = Car.CastOrThrow<ClSymbol>("Invalid function call");
+            // var fn = context.Env.Lookup(fnName).CastOrThrow<ClFn>("Invlid function call");
             throw new InvalidOperationException("Invalid special form");
         }
 
