@@ -13,15 +13,15 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext ctx)
         {
-            if (Tag == ClSymbol.Quote) return ctx.FromResult(Cdr);
-            if (Tag == ClSymbol.Define) return new DefineSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.Set) return new SetSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.And) return new AndSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.Or) return new OrSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.Begin) return new BeginSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(ctx);
-            if (Tag == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Quote)) return ctx.FromResult(Cdr);
+            if (Tag.Equals(ClSymbol.Define)) return new DefineSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Set)) return new SetSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.And)) return new AndSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Or)) return new OrSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Begin)) return new BeginSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.If)) return new IfSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Cond)) return ConvertToBeginForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Lambda)) return new LambdaSpecialForm(Cdr).Reduce(ctx);
             var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>($"Function with {Tag} name doesn't exist");
             return new ApplySpecialForm(fn, Cdr).Reduce(ctx);
         }

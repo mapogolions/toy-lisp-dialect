@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 using Cl.Types;
-
+using Cl.Contracts;
 
 namespace Cl
 {
@@ -126,29 +126,29 @@ namespace Cl
             };
 
         // Pervasives
-        // public static IEnv Env = new Env(
-        //     (new ClSymbol("null?"), new NativeFn(IsNull)),
-        //     (new ClSymbol("string?"), new NativeFn(IsString)),
-        //     (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
-        //     (new ClSymbol("integer?"), new NativeFn(IsInteger)),
-        //     (new ClSymbol("float?"), new NativeFn(IsFloat)),
-        //     (new ClSymbol("char?"), new NativeFn(IsChar)),
-        //     (new ClSymbol("prodecure?"), new NativeFn(IsProcedure)),
+        public static IEnv Env = new Env(
+            // (new ClSymbol("null?"), new NativeFn(IsNull)),
+            // (new ClSymbol("string?"), new NativeFn(IsString)),
+            // (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
+            // (new ClSymbol("integer?"), new NativeFn(IsInteger)),
+            // (new ClSymbol("float?"), new NativeFn(IsFloat)),
+            // (new ClSymbol("char?"), new NativeFn(IsChar)),
+            // (new ClSymbol("prodecure?"), new NativeFn(IsProcedure)),
 
-        //     (new ClSymbol("head"), new NativeFn(Head)),
-        //     (new ClSymbol("tail"), new NativeFn(Tail)),
-        //     (new ClSymbol("car"), new NativeFn(Car)),
-        //     (new ClSymbol("cdr"), new NativeFn(Cdr)),
-        //     (new ClSymbol("cadr"), new NativeFn(Cadr)),
-        //     (new ClSymbol("cddr"), new NativeFn(Cddr)),
-        //     (new ClSymbol("caddr"), new NativeFn(Caddr)),
-        //     (new ClSymbol("cadddr"), new NativeFn(Cadddr)),
-        //     (new ClSymbol("first"), new NativeFn(First)),
-        //     (new ClSymbol("second"), new NativeFn(Second)),
-        //     (new ClSymbol("third"), new NativeFn(Third)),
-        //     (new ClSymbol("fourth"), new NativeFn(Fourth)),
-        //     (new ClSymbol("true?"), new NativeFn(IsTrue)),
-        //     (new ClSymbol("false?"), new NativeFn(IsFalse))
-        // );
+            // (new ClSymbol("head"), new NativeFn(Head)),
+            // (new ClSymbol("tail"), new NativeFn(Tail)),
+            // (new ClSymbol("car"), new NativeFn(Car)),
+            // (new ClSymbol("cdr"), new NativeFn(Cdr)),
+            // (new ClSymbol("cadr"), new NativeFn(Cadr)),
+            // (new ClSymbol("cddr"), new NativeFn(Cddr)),
+            // (new ClSymbol("caddr"), new NativeFn(Caddr)),
+            // (new ClSymbol("cadddr"), new NativeFn(Cadddr)),
+            // (new ClSymbol("first"), new NativeFn(First)),
+            // (new ClSymbol("second"), new NativeFn(Second)),
+            // (new ClSymbol("third"), new NativeFn(Third)),
+            // (new ClSymbol("fourth"), new NativeFn(Fourth)),
+            // (new ClSymbol("true?"), new NativeFn(IsTrue)),
+            // (new ClSymbol("false?"), new NativeFn(IsFalse))
+        );
     }
 }

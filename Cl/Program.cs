@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using Cl.Contracts;
+using Cl.Types;
 
 namespace Cl
 {
@@ -6,18 +9,15 @@ namespace Cl
     {
         static void Main(string[] args)
         {
-            /* var partial = @"
+            var snippet = @"
                 (define f
                     (lambda (x y) y))
-
-                (define partially-applied (f 10))
-                (partially-applied 11)
+                (f 10 11)
             ";
-            using var reader = new Reader(partial);
-            var evaluator = new Evaluator(new Env(BuiltIn.Env));
-            var result = evaluator.Eval(reader.Read());
-            Console.WriteLine(result); */
-            new Repl().Start();
+            using var reader = new Reader(snippet);
+            var (result, _) = reader.Read()
+                .Aggregate<IClObj, IContext>(new Context(BuiltIn.Env), (ctx, obj) => obj.Reduce(ctx));
+            Console.WriteLine(result);
         }
     }
 }

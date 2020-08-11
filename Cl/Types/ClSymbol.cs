@@ -12,6 +12,11 @@ namespace Cl.Types
             return ctx.FromResult(result);
         }
 
+        public override string ToString()
+        {
+            return $"symbol({Value})";
+        }
+
         public static ClSymbol And = new ClSymbol("and");
         public static ClSymbol If = new ClSymbol("if");
         public static ClSymbol Else = new ClSymbol("else");
@@ -23,6 +28,5 @@ namespace Cl.Types
         public static ClSymbol Define = new ClSymbol("define");
         public static ClSymbol Quote = new ClSymbol("quote");
         public static ClSymbol Lambda = new ClSymbol("lambda");
-        public static ClSymbol Recur = new ClSymbol("recur");
     }
 }

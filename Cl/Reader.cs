@@ -22,7 +22,7 @@ namespace Cl
         {
         }
 
-        public IList<IClObj> Read()
+        public IEnumerable<IClObj> Read()
         {
             var items = new List<IClObj>();
             while (!_source.Eof())
