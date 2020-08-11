@@ -38,16 +38,5 @@ namespace Cl.Extensions
                 throw new InvalidOperationException("Unbalanced");
             }
         }
-
-        public static T FirstOrLastOrDefault<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
-        {
-            var current = default(T);
-            foreach (var item in @this)
-            {
-                current = item;
-                if (predicate(current)) break;
-            }
-            return current;
-        }
     }
 }
