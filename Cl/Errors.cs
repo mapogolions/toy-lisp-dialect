@@ -12,10 +12,9 @@ namespace Cl
 
         public static class Eval
         {
+            public const string InvalidFunctionCall = "Invalid function call";
             public const string InvalidLambdaBody = "Invalid function body format";
             public const string InvalidLambdaParameters = "Invalid function parameters format";
-            public const string EvaluationError = "Evaluation error";
-            public const string UnknownProcedureType = "Unknown procedure type";
         }
 
         public static string UnboundVariable(ClSymbol identifier) => $"Unbound variable {identifier}";
@@ -27,7 +26,6 @@ namespace Cl
             public const string ElseClauseMustBeLast = "Else clause must be last condition";
             public const string UnsupportBinding = "Unsupport binding";
             public static string ArgumentIsNotOfType<T>() where T : IClObj => $"Argument is not of type {nameof(T)}";
-            public const string ArityException = "Arity exception";
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-           Assert.That(context.Value, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         [Test]

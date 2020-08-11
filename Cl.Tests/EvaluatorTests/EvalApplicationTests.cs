@@ -17,6 +17,17 @@ namespace Cl.Tests.EvaluatorTests
             _context = new Context(_env);
         }
 
+        [Test]
+        public void EvalApplication_ThrowInvalidFunctionCall_WhenCarIsNotCallable()
+        {
+            _env.Bind(Var.Fn, Value.One);
+            var expr = BuiltIn.ListOf(Var.Fn, Value.One);
+            var errorMessage = Errors.Eval.InvalidFunctionCall;
+
+            Assert.That(() => expr.Reduce(_context),
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+        }
+
         /**
          * (define fn
          *   (lambda (foo)

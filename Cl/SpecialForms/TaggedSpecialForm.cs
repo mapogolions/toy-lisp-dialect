@@ -22,7 +22,7 @@ namespace Cl.SpecialForms
             if (Tag.Equals(ClSymbol.If)) return new IfSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Cond)) return ConvertToBeginForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Lambda)) return new LambdaSpecialForm(Cdr).Reduce(ctx);
-            var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>($"Function with {Tag} name doesn't exist");
+            var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>(Errors.Eval.InvalidFunctionCall);
             return new ApplySpecialForm(fn, Cdr).Reduce(ctx);
         }
 
