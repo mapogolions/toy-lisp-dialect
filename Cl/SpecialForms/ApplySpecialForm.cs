@@ -21,13 +21,11 @@ namespace Cl.SpecialForms
                         var (value, env) = arg.Reduce(ctx);
                         return new Context(new ClCell(value, values), env);
                     });
-            var lexicalEnv = new Env(ctx.Env);
-            var lexicalCtx = ctx.FromEnv(lexicalEnv);
             BuiltIn
                 .Seq(fn.Varargs)
                 .ZipIfBalanced(BuiltIn.Seq(flipped).Reverse())
-                .ForEach(pair => lexicalEnv.Bind(pair.First as ClSymbol, pair.Second));
-            var (result, _) = fn.Body.Reduce(lexicalCtx);
+                .ForEach(pair => fn.LexicalEnv.Bind(pair.First as ClSymbol, pair.Second));
+            var (result, _) = fn.Body.Reduce(new Context(fn.LexicalEnv));
             return ctx.FromResult(result);
         }
     }

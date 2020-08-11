@@ -1,3 +1,4 @@
+using System;
 using Cl.Contracts;
 using Cl.SpecialForms;
 
@@ -18,10 +19,10 @@ namespace Cl.Types
         {
             if (Car is ClSymbol tag)
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
-            // ((define x 10) (set x 11)) ~> (nil . (nil . nil))
-            var carCtx = Car.Reduce(ctx);
-            var cdrCtx = Cdr.Reduce(carCtx);
-            return cdrCtx.FromResult(new ClCell(carCtx.Value, cdrCtx.Value));
+            var (obj, env) = Car.Reduce(ctx);
+            if (obj is ClFn fn)
+                return new ApplySpecialForm(fn, Cdr).Reduce(new Context(env));
+            throw new InvalidOperationException();
         }
 
         public override string ToString() => $"({Car} . {Cdr})";

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Cl.Contracts;
 using Cl.Types;
 using NUnit.Framework;
@@ -10,14 +9,12 @@ namespace Cl.Tests.EvaluatorTests
     {
         private IEnv _env;
         private IContext _context;
-        private Evaluator _evaluator;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
             _context = new Context(_env);
-            _evaluator = new Evaluator(_env);
         }
 
         /**
@@ -32,18 +29,14 @@ namespace Cl.Tests.EvaluatorTests
             var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
             var definition = BuiltIn.ListOf(ClSymbol.Define, Var.Fn, hof);
-            var application = BuiltIn.ListOf(Var.Fn, Value.One);
-            var expr = BuiltIn.ListOf(application);
+            var application = BuiltIn.ListOf(BuiltIn.ListOf(Var.Fn, Value.One));
 
-            var actual = _evaluator.Eval(new List<IClObj> { definition, expr });
+            var context = definition.Reduce(_context);
+            var (actual, _) = application.Reduce(context);
 
             Assert.That(actual, Is.EqualTo(Value.One));
         }
 
-        /**
-         * ((lambda (foo)
-         *   (lambda () foo)) 1)
-         */
         [Test]
         public void EvalApplication_SupportLexicalEnvironment()
         {
@@ -51,11 +44,15 @@ namespace Cl.Tests.EvaluatorTests
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
             var expr = BuiltIn.ListOf(BuiltIn.ListOf(hof, Value.One));
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
+        /**
+         * ((lambda (foo) foo)
+         *   (define foo "foo")) // side effect
+         */
         [Test]
         public void EvalApplication_EvalCompoundArgumentsBeforeFunctionBody()
         {
@@ -64,12 +61,15 @@ namespace Cl.Tests.EvaluatorTests
             var procedure = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Var.Foo);
             var expr = BuiltIn.ListOf(procedure, compoundArg);
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Nil.Given));
-            Assert.That(_env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
+            Assert.That(context.Value, Is.EqualTo(Nil.Given));
+            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
+        /**
+         * ((lambda () bar))
+         */
         [Test]
         public void EvalApplication_ThrowException_WhenBodyContainsUnboundVariable()
         {
@@ -77,46 +77,60 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(procedure);
             var errorMessage = Errors.UnboundVariable(Var.Bar);
 
-            Assert.That(() => _evaluator.EvalApplication(expr),
+            Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
+        /**
+         * ((lambda (foo)
+         *   (if foo #t #f)) #f)
+         */
         [Test]
         public void EvalApplication_FunctionWithCompoundBody()
         {
-            var body = BuiltIn.ListOf(ClSymbol.If, Var.Foo, ClBool.True, Value.Foo);
+            var body = BuiltIn.ListOf(ClSymbol.If, Var.Foo, ClBool.True, ClBool.False);
             var parameters = BuiltIn.ListOf(Var.Foo);
             var compoundFn = BuiltIn.ListOf(ClSymbol.Lambda, parameters, body);
             var expr = BuiltIn.ListOf(compoundFn, ClBool.False);
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Value.Foo));
+            Assert.That(context.Value, Is.EqualTo(ClBool.False));
         }
 
+        /**
+         * ((lambda () 1))
+         */
         [Test]
         public void EvalApplication_ZeroArityFunction()
         {
-            var constant = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Value.One);
-            var expr = BuiltIn.ListOf(constant);
+            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Value.One);
+            var expr = BuiltIn.ListOf(constantFn);
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Value.One));
+            Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
+        /**
+         * (define foo "foo")
+         * ((lambda () foo))
+         */
         [Test]
         public void EvalAppliation_AccessToGlobalScope()
         {
             _env.Bind(Var.Foo, Value.Foo);
-            var identity = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
-            var expr = BuiltIn.ListOf(identity);
+            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
+            var expr = BuiltIn.ListOf(constantFn);
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Value.Foo));
+            Assert.That(context.Value, Is.EqualTo(Value.Foo));
         }
 
+        /**
+         * ((lambda (foo) foo) "foo")
+         */
         [Test]
         public void EvalApplication_IdentityFunction()
         {
@@ -124,9 +138,9 @@ namespace Cl.Tests.EvaluatorTests
             var identity = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Var.Foo);
             var expr = BuiltIn.ListOf(identity, Value.Foo);
 
-            var actual = _evaluator.EvalApplication(expr);
+            var context = expr.Reduce(_context);
 
-            Assert.That(actual, Is.EqualTo(Value.Foo));
+            Assert.That(context.Value, Is.EqualTo(Value.Foo));
         }
     }
 }
