@@ -1,17 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Cl.Contracts;
 using Cl.Types;
 
 namespace Cl
 {
-    public interface IEnv
-    {
-        bool Bind(ClSymbol identifier, IClObj obj);
-        IClObj Lookup(ClSymbol indentifier);
-        bool Assign(ClSymbol identifier, IClObj obj);
-        IEnv New();
-    }
-
     public class Env : IEnv
     {
         private readonly IEnv _parent;
