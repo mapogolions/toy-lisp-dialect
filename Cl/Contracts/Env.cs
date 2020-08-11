@@ -46,7 +46,5 @@ namespace Cl.Contracts
             if (result) return true;
             throw new InvalidOperationException(Errors.UnboundVariable(identifier));
         }
-
-        public IEnv New() => new Env(this);
     }
 }
