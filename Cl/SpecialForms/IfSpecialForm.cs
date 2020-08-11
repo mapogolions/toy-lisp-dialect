@@ -3,7 +3,7 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class IfSpecialForm : BaseSpecialForm
+    internal class IfSpecialForm : TaggedSpecialForm
     {
         internal IfSpecialForm(IClObj cdr) : base(ClSymbol.Set, cdr) { }
 

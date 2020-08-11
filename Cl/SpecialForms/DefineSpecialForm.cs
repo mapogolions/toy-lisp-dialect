@@ -4,7 +4,7 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class DefineSpecialForm : BaseSpecialForm
+    internal class DefineSpecialForm : TaggedSpecialForm
     {
         internal DefineSpecialForm(IClObj cdr) : base(ClSymbol.Define, cdr) { }
 

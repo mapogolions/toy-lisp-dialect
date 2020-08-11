@@ -6,7 +6,7 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class LambdaSpecialForm : BaseSpecialForm
+    internal class LambdaSpecialForm : TaggedSpecialForm
     {
         internal LambdaSpecialForm(IClObj cdr) : base(ClSymbol.Lambda, cdr) { }
 
@@ -20,7 +20,7 @@ namespace Cl.SpecialForms
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Second(Cdr);
-            return context.FromResult(new ClFn(parameters, body, null));
+            return context.FromResult(new ClFn(parameters, body, context.Env));
         }
     }
 }

@@ -5,9 +5,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class BaseSpecialForm : ClCell
+    internal class TaggedSpecialForm : ClCell
     {
-        internal BaseSpecialForm(ClSymbol tag, IClObj cdr) : base(tag, cdr) { }
+        internal TaggedSpecialForm(ClSymbol tag, IClObj cdr) : base(tag, cdr) { }
 
         public ClSymbol Tag => Car as ClSymbol;
 
@@ -22,7 +22,8 @@ namespace Cl.SpecialForms
             if (Tag == ClSymbol.If) return new IfSpecialForm(Cdr).Reduce(ctx);
             if (Tag == ClSymbol.Cond) return ConvertToBeginForm(Cdr).Reduce(ctx);
             if (Tag == ClSymbol.Lambda) return new LambdaSpecialForm(Cdr).Reduce(ctx);
-            return new ApplySpecialForm(Tag, Cdr).Reduce(ctx);
+            var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>($"Function with {Tag} name doesn't exist");
+            return new ApplySpecialForm(fn, Cdr).Reduce(ctx);
         }
 
         private IClObj ConvertToBeginForm(IClObj clauses)

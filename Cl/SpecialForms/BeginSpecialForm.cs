@@ -3,7 +3,7 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class BeginSpecialForm : BaseSpecialForm
+    internal class BeginSpecialForm : TaggedSpecialForm
     {
         internal BeginSpecialForm(IClObj cdr) : base(ClSymbol.Begin, cdr) { }
 

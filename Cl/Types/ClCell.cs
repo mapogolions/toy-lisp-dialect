@@ -17,7 +17,7 @@ namespace Cl.Types
         public virtual IContext Reduce(IContext ctx)
         {
             if (Car is ClSymbol tag)
-                return new BaseSpecialForm(tag, Cdr).Reduce(ctx);
+                return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
             // ((define x 10) (set x 11)) ~> (nil . (nil . nil))
             var carCtx = Car.Reduce(ctx);
             var cdrCtx = Cdr.Reduce(carCtx);

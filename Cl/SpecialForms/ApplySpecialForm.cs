@@ -5,15 +5,15 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class ApplySpecialForm : BaseSpecialForm
+    internal class ApplySpecialForm : ClCell
     {
-        internal ApplySpecialForm(ClSymbol car, IClObj cdr) : base(car, cdr) { }
+        internal ApplySpecialForm(ClFn car, IClObj cdr) : base(car, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
-            var fn = ctx.Env.Lookup(Tag).CastOrThrow<ClFn>($"Function with {Tag} name doesn't exist");
+            var fn = Car as ClFn;
             var args = Cdr.CastOrThrow<ClCell>("Invalid function call");
-            var (values, env) = BuiltIn.Seq(args)
+            var (flipped, env) = BuiltIn.Seq(args)
                 .Aggregate<IClObj, IContext>(
                     ctx.FromResult(Nil.Given),
                     (ctx, arg) => {
@@ -21,8 +21,14 @@ namespace Cl.SpecialForms
                         var (value, env) = arg.Reduce(ctx);
                         return new Context(new ClCell(value, values), env);
                     });
-
-            return null;
+            var lexicalEnv = new Env(ctx.Env);
+            var lexicalCtx = ctx.FromEnv(lexicalEnv);
+            BuiltIn
+                .Seq(fn.Varargs)
+                .ZipIfBalanced(BuiltIn.Seq(flipped).Reverse())
+                .ForEach(pair => lexicalEnv.Bind(pair.First as ClSymbol, pair.Second));
+            var (result, _) = fn.Body.Reduce(lexicalCtx);
+            return ctx.FromResult(result);
         }
     }
 }
