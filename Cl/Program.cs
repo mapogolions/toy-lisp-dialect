@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Cl.Contracts;
-using Cl.Types;
 
 namespace Cl
 {
@@ -11,12 +8,11 @@ namespace Cl
         {
             var snippet = @"
                 (define f
-                    (lambda (x y) y))
+                    (lambda (x x) x))
                 (f 10 11)
             ";
             using var reader = new Reader(snippet);
-            var (result, _) = reader.Read()
-                .Aggregate<IClObj, IContext>(new Context(BuiltIn.Env), (ctx, obj) => obj.Reduce(ctx));
+            var (result, _) = BuiltIn.Eval(reader.Read());
             Console.WriteLine(result);
         }
     }
