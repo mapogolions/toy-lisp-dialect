@@ -5,12 +5,12 @@ namespace Cl.Extensions
 {
     public static class IEnumerableOps
     {
-        public static S ReduceWhile<E, S>(this IEnumerable<E> @this, S seed,Func<S, E, S> func, Predicate<S> test)
+        public static S AggregateWhile<E, S>(this IEnumerable<E> @this, S seed,Func<S, E, S> func, Predicate<S> test)
         {
             var acc = seed;
-            foreach (var item in @this)
+            foreach (var el in @this)
             {
-                acc = func(seed, item);
+                acc = func(seed, el);
                 if (!test(acc)) break;
             }
             return acc;
@@ -18,7 +18,7 @@ namespace Cl.Extensions
 
         public static void ForEach<A>(this IEnumerable<A> @this, Action<A> apply)
         {
-            foreach (var item in @this) apply(item);
+            foreach (var el in @this) apply(el);
         }
 
         public static IEnumerable<(A First, B Second)> ZipIfBalanced<A, B>(this IEnumerable<A> @this, IEnumerable<B> that)

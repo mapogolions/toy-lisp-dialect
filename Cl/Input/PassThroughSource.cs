@@ -1,5 +1,6 @@
 namespace Cl.Input
 {
+    // like Kotlin by-construction
     public abstract class PassThroughSource : IFilteredSource
     {
         protected readonly ISource _source;

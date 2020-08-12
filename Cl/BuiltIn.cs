@@ -9,25 +9,52 @@ namespace Cl
 {
     public static class BuiltIn
     {
-        public static IClObj Car(IClObj expr) =>
-            expr switch
-            {
-                ClCell cell => cell.Car,
-                _ => throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell)
-            };
+        public static IContext Eval(IEnumerable<IClObj> expressions) => expressions
+            .Aggregate<IClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
 
-        public static IClObj Cdr(IClObj expr) =>
-            expr switch
-            {
-                ClCell cell => cell.Cdr,
-                _ => throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell)
-            };
+        public static IClObj Car(params IClObj[] obj)
+        {
+            if (obj != null && obj.Length != 1)
+                throw new ArgumentException("Arity exception");
+            if (obj[0] is ClCell cell) return cell.Car;
+            throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell);
+        }
 
-        public static IClObj Cadr(IClObj expr) => Car(Cdr(expr));
-        public static IClObj Cddr(IClObj expr) => Cdr(Cdr(expr));
-        public static IClObj Caddr(IClObj expr) => Car(Cddr(expr));
-        public static IClObj Cdddr(IClObj expr) => Cdr(Cddr(expr));
-        public static IClObj Cadddr(IClObj expr) => Car(Cdddr(expr));
+        public static IClObj Cdr(params IClObj[] obj)
+        {
+            if (obj != null && obj.Length != 1)
+                throw new ArgumentException("Arity exception");
+            if (obj[0] is ClCell cell) return cell.Cdr;
+            throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell);
+        }
+
+        public static IClObj Cadr(params IClObj[] obj) => Car(Cdr(obj));
+        public static IClObj Cddr(params IClObj[] obj) => Cdr(Cdr(obj));
+        public static IClObj Caddr(params IClObj[] obj) => Car(Cddr(obj));
+        public static IClObj Cdddr(params IClObj[] obj) => Cdr(Cddr(obj));
+        public static IClObj Cadddr(params IClObj[] obj) => Car(Cdddr(obj));
+        public static ParamsFunc<IClObj, IClObj> Head = Car;
+        public static ParamsFunc<IClObj, IClObj> Tail = Cdr;
+
+        public static ParamsFunc<IClObj, IClObj> First = Car;
+        public static ParamsFunc<IClObj, IClObj> Second = Cadr;
+        public static ParamsFunc<IClObj, IClObj> Third = Caddr;
+        public static ParamsFunc<IClObj, IClObj> Fourth = Cadddr;
+        public static ClBool IsTrue(params IClObj[] obj)
+        {
+             if (obj != null && obj.Length != 1)
+                throw new ArgumentException("Arity exception");
+            return ClBool.Of(obj[0] != Nil.Given && obj[0] != ClBool.False);
+        }
+        public static ClBool IsFalse(params IClObj[] obj) => Negate(IsTrue(obj));
+        public static ClBool Negate(params IClObj[] obj)
+        {
+            if (obj != null && obj.Length != 1)
+                throw new ArgumentException("Arity exception");
+            if (obj[0] is ClBool flag) return ClBool.Of(!flag.Value);
+            throw new ArgumentException("Argument must have bool type");
+        }
+
 
         public static ClCell ListOf(params IClObj[] items)
         {
@@ -40,10 +67,6 @@ namespace Cl
         }
 
         public static ClCell ListOf(IEnumerable<IClObj> items) => ListOf(items.ToArray());
-
-        public static ClBool IsTrue(IClObj obj) => ClBool.Of(obj != Nil.Given && obj != ClBool.False);
-        public static ClBool IsFalse(IClObj obj) => Negate(IsTrue(obj));
-        public static ClBool Negate(ClBool flag) => ClBool.Of(!flag.Value);
 
         public static IEnumerable<IClObj> Seq(IClObj obj)
         {
@@ -62,31 +85,6 @@ namespace Cl
         }
 
         public static ClCell Quote(ClCell cell) => new ClCell(ClSymbol.Quote, cell);
-
-        public static Func<IClObj, IClObj> Head = Car;
-        public static Func<IClObj, IClObj> Tail = Cdr;
-
-        public static Func<IClObj, IClObj> First = Car;
-        public static Func<IClObj, IClObj> Second = Cadr;
-        public static Func<IClObj, IClObj> Third = Caddr;
-        public static Func<IClObj, IClObj> Fourth = Cadddr;
-
-        public static ClFn Curry(ClFn procedure, ClCell args)
-        {
-            ClFn Loop(ClCell parms, ClCell args)
-            {
-                if (parms == Nil.Given && args == Nil.Given)
-                    return new ClFn(Nil.Given, procedure.Body, procedure.LexicalEnv);
-                if (parms == Nil.Given)
-                    throw new ArgumentException("Too many arguments are passed");
-                if (args == Nil.Given)
-                    return new ClFn(parms, procedure.Body, procedure.LexicalEnv);
-                var identifier = parms.Car.Cast<ClSymbol>();
-                procedure.LexicalEnv.Bind(identifier, args.Car);
-                return Loop(parms.Cdr.Cast<ClCell>(), args.Cdr.Cast<ClCell>());
-            }
-            return Loop(procedure.Varargs, args);
-        }
 
         // Predicates
         public static ClBool IsNull(IClObj obj) => ClBool.Of(obj == Nil.Given);

@@ -1,3 +1,4 @@
+using System.Linq;
 using Cl.Contracts;
 using Cl.Types;
 
@@ -7,16 +8,7 @@ namespace Cl.SpecialForms
     {
         internal BeginSpecialForm(IClObj cdr) : base(ClSymbol.Begin, cdr) { }
 
-        public override IContext Reduce(IContext ctx)
-        {
-            var tail = Cdr;
-            ctx = ctx.FromResult(Nil.Given);
-            while (tail != Nil.Given)
-            {
-                ctx = BuiltIn.Head(tail).Reduce(ctx);
-                tail = BuiltIn.Tail(tail);
-            }
-            return ctx;
-        }
+        public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
+            .Aggregate(ctx.FromResult(Nil.Given), (ctx, expr) => expr.Reduce(ctx));
     }
 }

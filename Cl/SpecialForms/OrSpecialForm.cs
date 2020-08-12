@@ -8,13 +8,10 @@ namespace Cl.SpecialForms
     {
         internal OrSpecialForm(IClObj cdr) : base(ClSymbol.Or, cdr) { }
 
-        public override IContext Reduce(IContext ctx)
-        {
-            return BuiltIn.Seq(Cdr)
-                .ReduceWhile<IClObj, IContext>(
-                    ctx.FromResult(ClBool.False),
-                    (ctx, x) => x.Reduce(ctx),
-                    ctx => ctx.Value == Nil.Given || ctx.Value == ClBool.False);
-        }
+        public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
+            .AggregateWhile<IClObj, IContext>(
+                ctx.FromResult(ClBool.False),
+                (ctx, expr) => expr.Reduce(ctx),
+                ctx => ctx.Value == Nil.Given || ctx.Value == ClBool.False);
     }
 }
