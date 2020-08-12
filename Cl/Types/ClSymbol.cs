@@ -12,11 +12,6 @@ namespace Cl.Types
             return ctx.FromResult(result);
         }
 
-        public override string ToString()
-        {
-            return $"symbol({Value})";
-        }
-
         public static ClSymbol And = new ClSymbol("and");
         public static ClSymbol If = new ClSymbol("if");
         public static ClSymbol Else = new ClSymbol("else");
