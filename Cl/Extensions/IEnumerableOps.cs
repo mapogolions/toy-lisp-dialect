@@ -5,7 +5,7 @@ namespace Cl.Extensions
 {
     public static class IEnumerableOps
     {
-        public static S AggregateWhile<E, S>(this IEnumerable<E> @this, S seed,Func<S, E, S> func, Predicate<S> test)
+        public static S AggregateWhile<E, S>(this IEnumerable<E> @this, S seed, Func<S, E, S> func, Predicate<S> test)
         {
             var acc = seed;
             foreach (var el in @this)
