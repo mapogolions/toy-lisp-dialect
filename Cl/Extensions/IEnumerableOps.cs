@@ -10,7 +10,7 @@ namespace Cl.Extensions
             var acc = seed;
             foreach (var el in @this)
             {
-                acc = func(seed, el);
+                acc = func(acc, el);
                 if (!test(acc)) break;
             }
             return acc;
