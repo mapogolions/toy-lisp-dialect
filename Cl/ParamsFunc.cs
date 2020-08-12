@@ -1,4 +1,4 @@
 namespace Cl
 {
-    public delegate A ParamsFunc<A, B>(params B[] obj);
+    public delegate B ParamsFunc<A, B>(params A[] obj);
 }
