@@ -1,4 +1,5 @@
 ﻿using System;
+using Cl.Types;
 
 namespace Cl
 {
@@ -7,9 +8,18 @@ namespace Cl
         static void Main(string[] args)
         {
             var snippet = @"
+                ;; custom function
                 (define f
-                    (lambda (x x) x))
-                (f 10 11)
+                    (lambda () (quote 1 2 #f 4.12 #t)))
+
+                ;; like HOF
+                (define g
+                    (lambda () tail))
+
+                ;; skip the first two items
+                (cdr
+                    ;; comment here is valid
+                    ((g) (f)))
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());
