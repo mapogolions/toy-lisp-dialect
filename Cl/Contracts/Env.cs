@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.Contracts
@@ -45,6 +46,13 @@ namespace Cl.Contracts
             var result = _parent?.Assign(identifier, obj) ?? false;
             if (result) return true;
             throw new InvalidOperationException(Errors.UnboundVariable(identifier));
+        }
+
+        public bool Bind(IEnumerable<IClObj> identifiers, IEnumerable<IClObj> values)
+        {
+            var pairs = identifiers.ZipIfBalanced(values);
+            pairs.ForEach(pair => Bind(pair.First as ClSymbol, pair.Second));
+            return true;
         }
     }
 }

@@ -20,8 +20,8 @@ namespace Cl.Types
             if (Car is ClSymbol tag)
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
             var (obj, env) = Car.Reduce(ctx);
-            if (obj is ClFn fn)
-                return new ApplySpecialForm(fn, Cdr).Reduce(new Context(env));
+            if (obj is ClCallable callable)
+                return new ApplySpecialForm(callable, Cdr).Reduce(new Context(env));
             throw new InvalidOperationException();
         }
 
