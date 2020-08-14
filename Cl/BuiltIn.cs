@@ -12,21 +12,8 @@ namespace Cl
         public static IContext Eval(IEnumerable<IClObj> expressions) => expressions
             .Aggregate<IClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
 
-        public static IClObj Car(params IClObj[] obj)
-        {
-            if (obj != null && obj.Length != 1)
-                throw new ArgumentException("Arity exception");
-            if (obj[0] is ClCell cell) return cell.Car;
-            throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell);
-        }
-
-        public static IClObj Cdr(params IClObj[] obj)
-        {
-            if (obj != null && obj.Length != 1)
-                throw new ArgumentException("Arity exception");
-            if (obj[0] is ClCell cell) return cell.Cdr;
-            throw new InvalidOperationException(Errors.BuiltIn.ArgumentMustBeCell);
-        }
+        public static IClObj Car(params IClObj[] obj) => obj?.Unpack<IClObj, ClCell>()?.Car;
+        public static IClObj Cdr(params IClObj[] obj) => obj?.Unpack<IClObj, ClCell>()?.Cdr;
 
         public static IClObj Cadr(params IClObj[] obj) => Car(Cdr(obj));
         public static IClObj Cddr(params IClObj[] obj) => Cdr(Cdr(obj));
@@ -42,19 +29,11 @@ namespace Cl
         public static ParamsFunc<IClObj, IClObj> Fourth = Cadddr;
         public static ClBool IsTrue(params IClObj[] obj)
         {
-             if (obj != null && obj.Length != 1)
-                throw new ArgumentException("Arity exception");
-            return ClBool.Of(obj[0] != Nil.Given && obj[0] != ClBool.False);
+            var value = obj?.Unpack<IClObj, IClObj>();
+            return ClBool.Of(value != Nil.Given && value != ClBool.False);
         }
-        public static ClBool IsFalse(params IClObj[] obj) => Negate(IsTrue(obj));
-        public static ClBool Negate(params IClObj[] obj)
-        {
-            if (obj != null && obj.Length != 1)
-                throw new ArgumentException("Arity exception");
-            if (obj[0] is ClBool flag) return ClBool.Of(!flag.Value);
-            throw new ArgumentException("Argument must have bool type");
-        }
-
+        public static ClBool IsFalse(params IClObj[] obj) => Not(IsTrue(obj));
+        public static ClBool Not(params IClObj[] obj) => ClBool.Of((!obj.Unpack<IClObj, ClBool>().Value));
 
         public static ClCell ListOf(params IClObj[] items)
         {
@@ -147,7 +126,8 @@ namespace Cl
             (new ClSymbol("fourth"), new NativeFn(Fourth)),
             (new ClSymbol("true?"), new NativeFn(IsTrue)),
             (new ClSymbol("false?"), new NativeFn(IsFalse)),
-            (new ClSymbol("negate"), new NativeFn(Negate))
+            (new ClSymbol("not"), new NativeFn(Not)),
+            (new ClSymbol("list"), new NativeFn(ListOf))
         );
     }
 }
