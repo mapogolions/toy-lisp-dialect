@@ -1,5 +1,4 @@
 ﻿using System;
-using Cl.Types;
 
 namespace Cl
 {
@@ -10,7 +9,7 @@ namespace Cl
             var snippet = @"
                 ;; custom function
                 (define f
-                    (lambda () (quote 1 2 #f 4.12 #t)))
+                    (lambda () (list 1 2 #f 4.12 #t)))
 
                 ;; like HOF
                 (define g
