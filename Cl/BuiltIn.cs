@@ -66,15 +66,17 @@ namespace Cl
         public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(IClObj obj) => ClBool.Of(obj == Nil.Given);
-        public static ClBool HasType<T>(IClObj obj) where T : IClObj => ClBool.Of(obj.TypeOf<T>() != null);
-        public static ClBool IsString(IClObj obj) => HasType<ClString>(obj);
-        public static ClBool IsSymbol(IClObj obj) => HasType<ClSymbol>(obj);
-        public static ClBool IsInteger(IClObj obj) => HasType<ClFixnum>(obj);
-        public static ClBool IsFloat(IClObj obj) => HasType<ClFloat>(obj);
-        public static ClBool IsChar(IClObj obj) => HasType<ClChar>(obj);
-        public static ClBool IsPair(IClObj obj) => HasType<ClCell>(obj);
-        public static ClBool IsProcedure(IClObj obj) => HasType<ClFn>(obj);
+        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj, IClObj>() != Nil.Given);
+        public static ClBool HasType<T>(params IClObj[] obj) where T : IClObj  =>
+            ClBool.Of(obj.Unpack<IClObj, IClObj>().TypeOf<T>() != null);
+
+        public static ClBool IsString(params IClObj[] obj) => HasType<ClString>(obj);
+        public static ClBool IsSymbol(params IClObj[] obj) => HasType<ClSymbol>(obj);
+        public static ClBool IsInteger(params IClObj[] obj) => HasType<ClFixnum>(obj);
+        public static ClBool IsFloat(params IClObj[] obj) => HasType<ClFloat>(obj);
+        public static ClBool IsChar(params IClObj[] obj) => HasType<ClChar>(obj);
+        public static ClBool IsPair(params IClObj[] obj) => HasType<ClCell>(obj);
+        public static ClBool IsCallable(params IClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
         public static ClFixnum IntegerOfChar(IClObj obj) =>
@@ -104,14 +106,13 @@ namespace Cl
 
         // Pervasives
         public static IEnv Env = new Env(
-            // (new ClSymbol("null?"), new NativeFn(IsNull)),
-            // (new ClSymbol("string?"), new NativeFn(IsString)),
-            // (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
-            // (new ClSymbol("integer?"), new NativeFn(IsInteger)),
-            // (new ClSymbol("float?"), new NativeFn(IsFloat)),
-            // (new ClSymbol("char?"), new NativeFn(IsChar)),
-            // (new ClSymbol("prodecure?"), new NativeFn(IsProcedure)),
-
+            (new ClSymbol("null?"), new NativeFn(IsNull)),
+            (new ClSymbol("string?"), new NativeFn(IsString)),
+            (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
+            (new ClSymbol("int?"), new NativeFn(IsInteger)),
+            (new ClSymbol("float?"), new NativeFn(IsFloat)),
+            (new ClSymbol("char?"), new NativeFn(IsChar)),
+            (new ClSymbol("callable?"), new NativeFn(IsCallable)),
             (new ClSymbol("head"), new NativeFn(Head)),
             (new ClSymbol("tail"), new NativeFn(Tail)),
             (new ClSymbol("car"), new NativeFn(Car)),

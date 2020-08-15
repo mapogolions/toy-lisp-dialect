@@ -29,3 +29,23 @@
 (quote (define x 10))
 (list (define x 10))
 ```
+
+### `callable?`
+```lisp
+(define x
+    (list
+        (callable? tail)
+        (callable? (lambda (x) x))
+        (callable? 3)))
+x
+```
+
+### check primitive
+```lisp
+(define x
+    (list
+        (char? #\a)
+        (int? 12)
+        (float? 3.3)))
+x
+```
