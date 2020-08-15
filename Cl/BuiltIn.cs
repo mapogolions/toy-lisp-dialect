@@ -12,8 +12,8 @@ namespace Cl
         public static IContext Eval(IEnumerable<IClObj> expressions) => expressions
             .Aggregate<IClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
 
-        public static IClObj Car(params IClObj[] obj) => obj?.Unpack<IClObj, ClCell>()?.Car;
-        public static IClObj Cdr(params IClObj[] obj) => obj?.Unpack<IClObj, ClCell>()?.Cdr;
+        public static IClObj Car(params IClObj[] obj) => obj.Unpack<IClObj, ClCell>().Car;
+        public static IClObj Cdr(params IClObj[] obj) => obj.Unpack<IClObj, ClCell>().Cdr;
 
         public static IClObj Cadr(params IClObj[] obj) => Car(Cdr(obj));
         public static IClObj Cddr(params IClObj[] obj) => Cdr(Cdr(obj));
@@ -63,7 +63,7 @@ namespace Cl
             yield return tail;
         }
 
-        public static ClCell Quote(ClCell cell) => new ClCell(ClSymbol.Quote, cell);
+        public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
         public static ClBool IsNull(IClObj obj) => ClBool.Of(obj == Nil.Given);
