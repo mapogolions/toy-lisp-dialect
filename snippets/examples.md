@@ -23,3 +23,9 @@
 
 (f)
 ```
+
+### `quote` vs `list`
+```lisp
+(quote (define x 10))
+(list (define x 10))
+```
