@@ -1,4 +1,4 @@
-### Lexical Environment
+#### Lexical Environment
 
 ```clojure
 (define f
@@ -11,7 +11,7 @@
 (h)
 ```
 
-### Compound function body
+#### Compound function body
 
 ```clojure
 (define f
@@ -24,13 +24,13 @@
 (f)
 ```
 
-### `quote` vs `list`
+#### `quote` vs `list`
 ```clojure
 (quote (define x 10))
 (list (define x 10))
 ```
 
-### `callable?`
+#### `callable?`
 ```clojure
 (define x
     (list
@@ -40,7 +40,7 @@
 x
 ```
 
-### check primitive
+#### check primitive
 ```clojure
 (define x
     (list
@@ -50,7 +50,7 @@ x
 x
 ```
 
-### `defun` is more consice version of `define-lambda`
+#### `defun` is more consice version of `define-lambda`
 ```clojure
 (defun f (x y)
     (list x y))
@@ -63,4 +63,21 @@ x
         (list x y)))
 
 (f 10 11)
+```
+
+#### `cond`
+
+```clojure
+(define x
+    (cond
+        (#f 10)
+        ((list) 11)
+        (else 0)))
+
+(define y
+    (cond
+        (#t 10)
+        (else 11)))
+
+(list x y)
 ```

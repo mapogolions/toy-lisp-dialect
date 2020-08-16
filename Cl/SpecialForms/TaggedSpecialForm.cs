@@ -32,7 +32,7 @@ namespace Cl.SpecialForms
         {
             if (clauses == Nil.Given) return ClBool.False;
             var clause = BuiltIn.First(clauses).CastOrThrow<ClCell>(Errors.BuiltIn.ClauseMustBeCell);
-            if (clause.Car == ClSymbol.Else)
+            if (clause.Car.Equals(ClSymbol.Else))
             {
                 return BuiltIn.Tail(clauses) == Nil.Given
                     ? new ClCell(ClSymbol.Begin, clause.Cdr)

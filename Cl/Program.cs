@@ -7,11 +7,10 @@ namespace Cl
         static void Main(string[] args)
         {
             var snippet = @"
-                (define x
-                    (cond
-                        (#f 10)
-                        (else 11)))
-                x
+                (cond
+                    (#f 10)
+                    ((list) 11)
+                    (else 0))
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());
