@@ -22,6 +22,7 @@ namespace Cl.SpecialForms
             if (Tag.Equals(ClSymbol.If)) return new IfSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Cond)) return ConvertToBeginForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Lambda)) return new LambdaSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Defun)) return new DefunSpecialForm(Cdr).Reduce(ctx);
             var obj = ctx.Env.Lookup(Tag);
             if (obj is ClCallable callable) return new ApplySpecialForm(callable, Cdr).Reduce(ctx);
             throw new InvalidOperationException(Errors.Eval.InvalidFunctionCall);

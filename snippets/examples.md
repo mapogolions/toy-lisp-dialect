@@ -49,3 +49,18 @@ x
         (float? 3.3)))
 x
 ```
+
+### `defun` is more consice version of `define-lambda`
+```lisp
+(defun f (x y)
+    (list x y))
+
+(f 10 11)
+
+;; the same as
+(define f
+    (lambda (x y)
+        (list x y)))
+
+(f 10 11)
+```

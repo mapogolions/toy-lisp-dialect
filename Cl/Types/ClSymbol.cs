@@ -23,6 +23,6 @@ namespace Cl.Types
         public static ClSymbol Define = new ClSymbol("define");
         public static ClSymbol Quote = new ClSymbol("quote");
         public static ClSymbol Lambda = new ClSymbol("lambda");
+        public static ClSymbol Defun = new ClSymbol("defun");
     }
 }
-
