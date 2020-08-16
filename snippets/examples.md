@@ -1,6 +1,6 @@
 ### Lexical Environment
 
-```lisp
+```clojure
 (define f
     (lambda (x)
         (lambda (x)
@@ -13,7 +13,7 @@
 
 ### Compound function body
 
-```lisp
+```clojure
 (define f
     (lambda ()
         (begin
@@ -25,13 +25,13 @@
 ```
 
 ### `quote` vs `list`
-```lisp
+```clojure
 (quote (define x 10))
 (list (define x 10))
 ```
 
 ### `callable?`
-```lisp
+```clojure
 (define x
     (list
         (callable? tail)
@@ -41,7 +41,7 @@ x
 ```
 
 ### check primitive
-```lisp
+```clojure
 (define x
     (list
         (char? #\a)
@@ -51,7 +51,7 @@ x
 ```
 
 ### `defun` is more consice version of `define-lambda`
-```lisp
+```clojure
 (defun f (x y)
     (list x y))
 
