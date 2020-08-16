@@ -7,18 +7,11 @@ namespace Cl
         static void Main(string[] args)
         {
             var snippet = @"
-                ;; custom function
-                (define f
-                    (lambda () (list 1 2 #f 4.12 #t)))
-
-                ;; like HOF
-                (define g
-                    (lambda () tail))
-
-                ;; skip the first two items
-                (cdr
-                    ;; comment here is valid
-                    ((g) (f)))
+                (define x
+                    (cond
+                        (#f 10)
+                        (else 11)))
+                x
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());
