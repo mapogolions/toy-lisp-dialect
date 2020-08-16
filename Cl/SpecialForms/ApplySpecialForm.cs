@@ -29,15 +29,13 @@ namespace Cl.SpecialForms
         {
             var obj = Cdr.CastOrThrow<ClCell>(Errors.Eval.InvalidFunctionCall);
             var (reversedArgs, env) = BuiltIn.Seq(obj)
-                .Aggregate<IClObj, IContext>(ctx.FromResult(Nil.Given), Step);
+                .Aggregate<IClObj, IContext>(ctx.FromResult(Nil.Given),
+                    (ctx, expr) => {
+                        var acc = ctx.Value;
+                        var (obj, env) = expr.Reduce(ctx);
+                        return new Context(new ClCell(obj, acc), env);
+                    });
             return (BuiltIn.Seq(reversedArgs).Reverse(), env);
-        }
-
-        private static IContext Step(IContext ctx, IClObj expr)
-        {
-            var acc = ctx.Value;
-            var (obj, env) = expr.Reduce(ctx);
-            return new Context(new ClCell(obj, acc), env);
         }
     }
 }
