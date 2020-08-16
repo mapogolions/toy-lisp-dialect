@@ -7,7 +7,7 @@ namespace Cl.SpecialForms
 {
     internal class CondSpecialForm : TaggedSpecialForm
     {
-        internal CondSpecialForm(IClObj cdr) : base(ClSymbol.And, cdr) { }
+        internal CondSpecialForm(IClObj cdr) : base(ClSymbol.Cond, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
