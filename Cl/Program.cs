@@ -7,10 +7,9 @@ namespace Cl
         static void Main(string[] args)
         {
             var snippet = @"
-                (cond
-                    (#f 10)
-                    ((list) 11)
-                    (else 0))
+                (let ((x 10)
+                      (y 11))
+                    (list x y))
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());

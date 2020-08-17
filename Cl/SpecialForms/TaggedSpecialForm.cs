@@ -21,6 +21,7 @@ namespace Cl.SpecialForms
             if (Tag.Equals(ClSymbol.Begin)) return new BeginSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.If)) return new IfSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Cond)) return new CondSpecialForm(Cdr).Reduce(ctx);
+            if (Tag.Equals(ClSymbol.Let)) return new LetSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Lambda)) return new LambdaSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Defun)) return new DefunSpecialForm(Cdr).Reduce(ctx);
             var obj = ctx.Env.Lookup(Tag);
