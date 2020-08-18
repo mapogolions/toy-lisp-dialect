@@ -12,8 +12,8 @@ namespace Cl.Types
             Cdr = cdr;
         }
 
-        public IClObj Car { get; }
-        public IClObj Cdr { get; }
+        public virtual IClObj Car { get; }
+        public virtual IClObj Cdr { get; }
 
         public virtual IContext Reduce(IContext ctx)
         {

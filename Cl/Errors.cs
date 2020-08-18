@@ -13,9 +13,10 @@ namespace Cl
         public static class Eval
         {
             public const string InvalidFunctionCall = "Invalid function call";
-            public const string InvalidLambdaBody = "Invalid function body format";
-            public const string InvalidLetBody = "Invalid let body format";
-            public const string InvalidLambdaParameters = "Invalid function parameters format";
+            public const string InvalidLambdaBodyFormat = "Invalid function body format";
+            public const string InvalidLetBodyFormat = "Invalid let body format";
+            public const string InvalidBindingsFormat = "Invalid bindings format";
+            public const string InvalidLambdaParametersFormat = "Invalid function parameters format";
         }
 
         public static string UnboundVariable(ClSymbol identifier) => $"Unbound variable {identifier}";

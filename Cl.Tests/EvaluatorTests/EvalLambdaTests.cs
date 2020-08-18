@@ -79,7 +79,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowException_WhenLambdaSpecialFormHasInvalidBody()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True, ClBool.False);
-            var errorMessage = Errors.Eval.InvalidLambdaBody;
+            var errorMessage = Errors.Eval.InvalidLambdaBodyFormat;
 
             Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
@@ -101,7 +101,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowExceptionWhenParametersIsNotList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
-            var errorMessage = Errors.Eval.InvalidLambdaParameters;
+            var errorMessage = Errors.Eval.InvalidLambdaParametersFormat;
 
             Assert.That(() => expr.Reduce(_context),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));

@@ -13,9 +13,9 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext context)
         {
             if (BuiltIn.Cddr(Cdr) != Nil.Given)
-                throw new InvalidOperationException(Errors.Eval.InvalidLambdaBody);
+                throw new InvalidOperationException(Errors.Eval.InvalidLambdaBodyFormat);
             var parameters = BuiltIn.First(Cdr)
-                .CastOrThrow<ClCell>(Errors.Eval.InvalidLambdaParameters);
+                .CastOrThrow<ClCell>(Errors.Eval.InvalidLambdaParametersFormat);
             var hasUnsupportBinding = BuiltIn.Seq(parameters).Any(it => it.TypeOf<ClSymbol>() is null);
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
