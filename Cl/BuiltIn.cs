@@ -12,8 +12,8 @@ namespace Cl
         public static IContext Eval(IEnumerable<IClObj> expressions) => expressions
             .Aggregate<IClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
 
-        public static IClObj Car(params IClObj[] obj) => obj.Unpack<IClObj, ClCell>().Car;
-        public static IClObj Cdr(params IClObj[] obj) => obj.Unpack<IClObj, ClCell>().Cdr;
+        public static IClObj Car(params IClObj[] obj) => obj.Unpack<ClCell>().Car;
+        public static IClObj Cdr(params IClObj[] obj) => obj.Unpack<ClCell>().Cdr;
 
         public static IClObj Cadr(params IClObj[] obj) => Car(Cdr(obj));
         public static IClObj Cddr(params IClObj[] obj) => Cdr(Cdr(obj));
@@ -29,11 +29,11 @@ namespace Cl
         public static ParamsFunc<IClObj, IClObj> Fourth = Cadddr;
         public static ClBool IsTrue(params IClObj[] obj)
         {
-            var value = obj?.Unpack<IClObj, IClObj>();
+            var value = obj.Unpack<IClObj>();
             return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
         public static ClBool IsFalse(params IClObj[] obj) => Not(IsTrue(obj));
-        public static ClBool Not(params IClObj[] obj) => ClBool.Of((!obj.Unpack<IClObj, ClBool>().Value));
+        public static ClBool Not(params IClObj[] obj) => ClBool.Of((!obj.Unpack<ClBool>().Value));
 
         public static ClCell ListOf(params IClObj[] items)
         {
@@ -66,9 +66,9 @@ namespace Cl
         public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj, IClObj>() != ClCell.Nil);
+        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj>() != ClCell.Nil);
         public static ClBool HasType<T>(params IClObj[] obj) where T : IClObj  =>
-            ClBool.Of(obj.Unpack<IClObj, IClObj>().TypeOf<T>() != null);
+            ClBool.Of(obj.Unpack<IClObj>().TypeOf<T>() != null);
 
         public static ClBool IsString(params IClObj[] obj) => HasType<ClString>(obj);
         public static ClBool IsSymbol(params IClObj[] obj) => HasType<ClSymbol>(obj);
