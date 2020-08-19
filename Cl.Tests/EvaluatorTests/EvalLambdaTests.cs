@@ -42,7 +42,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_BodyCanBeInvalidExpression()
         {
             var body = BuiltIn.ListOf(ClSymbol.Lambda, ClBool.True, ClBool.False);
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, body);
 
             var fn = expr
                 .Reduce(_context)
@@ -57,7 +57,7 @@ namespace Cl.Tests.EvaluatorTests
         [TestCaseSource(nameof(BodyExpressionTestCases))]
         public void EvalLambda_BodyCanBeAnyExpression(IClObj body)
         {
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, body);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, body);
             var fn = expr
                 .Reduce(_context)
                 .Value
@@ -70,15 +70,15 @@ namespace Cl.Tests.EvaluatorTests
         {
             yield return Value.One;
             yield return Value.Foo;
-            yield return BuiltIn.ListOf(ClSymbol.And, ClBool.True, Nil.Given);
-            yield return BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, Nil.Given);
+            yield return BuiltIn.ListOf(ClSymbol.And, ClBool.True, ClCell.Nil);
+            yield return BuiltIn.ListOf(ClSymbol.Begin, ClBool.True, ClCell.Nil);
             yield return BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), Var.Bar);
         }
 
         [Test]
         public void EvalLambda_ThrowException_WhenLambdaSpecialFormHasInvalidBody()
         {
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True, ClBool.False);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True, ClBool.False);
             var errorMessage = Errors.Eval.InvalidLambdaBodyFormat;
 
             Assert.That(() => expr.Reduce(_context),
@@ -88,13 +88,13 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalLambda_ReturnProcedureWithoutParams()
         {
-            var expr = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, ClBool.True);
+            var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True);
             var fn = expr
                 .Reduce(_context)
                 .Value
                 .Cast<ClFn>();
 
-            Assert.That(fn.Varargs, Is.EqualTo(Nil.Given));
+            Assert.That(fn.Varargs, Is.EqualTo(ClCell.Nil));
         }
 
         [Test]

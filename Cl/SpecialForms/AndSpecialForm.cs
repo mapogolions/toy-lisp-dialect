@@ -12,6 +12,6 @@ namespace Cl.SpecialForms
             .AggregateWhile<IClObj, IContext>(
                 ctx.FromResult(ClBool.True),
                 (ctx, expr) => expr.Reduce(ctx),
-                ctx => ctx.Value != Nil.Given && ctx.Value != ClBool.False);
+                ctx => ctx.Value != ClCell.Nil && ctx.Value != ClBool.False);
     }
 }

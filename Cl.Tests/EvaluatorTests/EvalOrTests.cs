@@ -41,8 +41,8 @@ namespace Cl.Tests.EvaluatorTests
 
         static object[] EachItemIsFalseTestCases =
             {
-                new object[] { BuiltIn.ListOf(Nil.Given, ClBool.False), ClBool.False },
-                new object[] { BuiltIn.ListOf(ClBool.False, Nil.Given), Nil.Given },
+                new object[] { BuiltIn.ListOf(ClCell.Nil, ClBool.False), ClBool.False },
+                new object[] { BuiltIn.ListOf(ClBool.False, ClCell.Nil), ClCell.Nil },
             };
 
 
@@ -58,7 +58,7 @@ namespace Cl.Tests.EvaluatorTests
         static object[] AtLeastOneItemIsTrueTestCases =
             {
                 new object[] { BuiltIn.ListOf(Value.Foo, Value.Bar), Value.Foo },
-                new object[] { BuiltIn.ListOf(ClBool.False, Nil.Given, Value.One), Value.One },
+                new object[] { BuiltIn.ListOf(ClBool.False, ClCell.Nil, Value.One), Value.One },
                 new object[] { BuiltIn.ListOf(ClBool.True, ClBool.False), ClBool.True }
             };
 

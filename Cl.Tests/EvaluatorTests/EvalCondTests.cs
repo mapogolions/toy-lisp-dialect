@@ -48,7 +48,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalCond_ReturnNil_WhenEachClausePredicateIsFalse()
         {
             var clause1 = BuiltIn.ListOf(ClBool.False, Value.Foo);
-            var clause2 = BuiltIn.ListOf(Nil.Given, Value.Bar);
+            var clause2 = BuiltIn.ListOf(ClCell.Nil, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, clause1, clause2);
 
             var context = expr.Reduce(_context);

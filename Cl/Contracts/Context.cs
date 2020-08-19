@@ -13,7 +13,7 @@ namespace Cl.Contracts
             Env = env;
         }
 
-        public Context(IEnv env) : this(Nil.Given, env) { }
+        public Context(IEnv env) : this(ClCell.Nil, env) { }
 
         public Context() : this(new Env()) { }
 

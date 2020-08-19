@@ -95,7 +95,7 @@ namespace Cl.Tests.ReaderTests
             var first = cell.Car.TypeOf<ClFixnum>();
 
             Assert.That(first?.Value, Is.EqualTo(1));
-            Assert.That(cell.Cdr, Is.EqualTo(Nil.Given));
+            Assert.That(cell.Cdr, Is.EqualTo(ClCell.Nil));
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader(source);
 
-            Assert.That(reader.ReadCell(), Is.EqualTo(Nil.Given));
+            Assert.That(reader.ReadCell(), Is.EqualTo(ClCell.Nil));
         }
 
         static IEnumerable<string> EmptyListTestCases()

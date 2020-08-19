@@ -57,7 +57,7 @@ namespace Cl.Tests.EvaluatorTests
         static IEnumerable<IClObj> FalsyTestCases()
         {
             yield return ClBool.False;
-            yield return Nil.Given;
+            yield return ClCell.Nil;
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Cl.Tests.EvaluatorTests
             yield return ClBool.True;
             yield return new ClChar('\0');
             yield return BuiltIn.Quote(BuiltIn.ListOf(ClBool.False)); // (quote . (false . nil))
-            yield return BuiltIn.Quote(BuiltIn.ListOf(Nil.Given)); // (quote . (nil . nil))
+            yield return BuiltIn.Quote(BuiltIn.ListOf(ClCell.Nil)); // (quote . (nil . nil))
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, Value.One);
             var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Nil.Given));
+            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
         }
     }
 }

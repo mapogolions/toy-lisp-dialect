@@ -18,13 +18,43 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         /**
-         * (let (()) foo)
+         * (let () 1)
          */
         [Test]
-        public void EvalLet_ThrowException_WhenAtLeastOnePairIsNil()
+        public void EvalLet_LikeConstantFunction()
         {
-            var bindings = BuiltIn.ListOf(Nil.Given);
-            var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Var.Foo);
+            var expr = BuiltIn.ListOf(ClSymbol.Let, ClCell.Nil, Value.One);
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
+        }
+
+        /**
+         * (let ((foo #t)
+         *       (bar #f)
+         *       ()) 1)
+         */
+         [Test]
+         public void EvalLet_ThrowException_WhenAtLeastOneBindingIsNil()
+         {
+            var foo = BuiltIn.ListOf(Var.Foo, ClBool.True);
+            var bar = BuiltIn.ListOf(Var.Bar, ClBool.False);
+            var bindings = BuiltIn.ListOf(foo, bar, ClCell.Nil);
+            var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Value.One);
+            var errorMessage = Errors.Eval.InvalidBindingsFormat;
+
+            Assert.That(() => expr.Reduce(_ctx),
+                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+         }
+
+
+        /**
+         * (let (()) 1)
+         */
+        [Test]
+        public void EvalLet_ThrowException_WhenBindingIsNil()
+        {
+            var bindings = BuiltIn.ListOf(ClCell.Nil);
+            var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Value.One);
             var errorMessage = Errors.Eval.InvalidBindingsFormat;
 
             Assert.That(() => expr.Reduce(_ctx),
@@ -35,7 +65,7 @@ namespace Cl.Tests.EvaluatorTests
          * (let ((foo #t #f)) foo)
          */
         [Test]
-        public void EvalLet_ThrowExceptionWhenTooManyValuesTryToBingWithSingleVariable()
+        public void EvalLet_ThrowExceptionWhenTooManyValuesArePassedForBinding()
         {
             var bindings = BuiltIn.ListOf(BuiltIn.ListOf(Var.Foo, ClBool.True, ClBool.False));
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Var.Foo);

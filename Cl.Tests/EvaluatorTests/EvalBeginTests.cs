@@ -30,7 +30,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Begin);
             var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Nil.Given));
+            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
         }
     }
 }

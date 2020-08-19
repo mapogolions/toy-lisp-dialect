@@ -13,15 +13,15 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             var body = BuiltIn.Tail(Cdr);
-            if (body == Nil.Given || BuiltIn.Cdr(body) != Nil.Given)
+            if (body == ClCell.Nil || BuiltIn.Cdr(body) != ClCell.Nil)
                 throw new InvalidOperationException(Errors.Eval.InvalidLetBodyFormat);
             var pairs = BuiltIn.Head(Cdr).Cast<ClCell>();
             // Todo: refactoring
             var cells = BuiltIn.ListOf(BuiltIn.Seq(pairs).Select(obj => {
                 var cell = obj.CastOrThrow<ClCell>(Errors.Eval.InvalidBindingsFormat);
-                if (cell == Nil.Given)
+                if (cell == ClCell.Nil)
                     throw new InvalidOperationException(Errors.Eval.InvalidBindingsFormat);
-                if (BuiltIn.Cdr(cell) == Nil.Given || BuiltIn.Cddr(cell) != Nil.Given)
+                if (BuiltIn.Cdr(cell) == ClCell.Nil || BuiltIn.Cddr(cell) != ClCell.Nil)
                     throw new InvalidOperationException(Errors.Eval.InvalidBindingsFormat);
                 return cell;
             }));

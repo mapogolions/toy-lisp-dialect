@@ -20,7 +20,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(second?.Value, Is.EqualTo("foo"));
             Assert.That(third?.Value, Is.EqualTo('w'));
-            Assert.That(BuiltIn.Cdddr(cell), Is.EqualTo(Nil.Given));
+            Assert.That(BuiltIn.Cdddr(cell), Is.EqualTo(ClCell.Nil));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(second?.Value, Is.EqualTo("foo"));
             Assert.That(third?.Value, Is.EqualTo('w'));
-            Assert.That(BuiltIn.Cdddr(cell), Is.EqualTo(Nil.Given));
+            Assert.That(BuiltIn.Cdddr(cell), Is.EqualTo(ClCell.Nil));
         }
 
 

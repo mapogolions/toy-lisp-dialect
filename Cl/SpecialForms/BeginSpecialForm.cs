@@ -9,6 +9,6 @@ namespace Cl.SpecialForms
         internal BeginSpecialForm(IClObj cdr) : base(ClSymbol.Begin, cdr) { }
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
-            .Aggregate(ctx.FromResult(Nil.Given), (ctx, expr) => expr.Reduce(ctx));
+            .Aggregate(ctx.FromResult(ClCell.Nil), (ctx, expr) => expr.Reduce(ctx));
     }
 }

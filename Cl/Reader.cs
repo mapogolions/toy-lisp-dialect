@@ -87,7 +87,7 @@ namespace Cl
             Ignore(_source.SkipWhitespacesAndComments());
             if (_source.SkipMatched(")"))
             {
-                cell = Nil.Given;
+                cell = ClCell.Nil;
                 return true;
             }
             return false;
@@ -95,12 +95,12 @@ namespace Cl
 
         private ClCell ReadList(bool wasDelimiter)
         {
-            if (_source.SkipMatched(")")) return Nil.Given;
+            if (_source.SkipMatched(")")) return ClCell.Nil;
             if (!wasDelimiter)
                 throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
             var car = ReadExpression();
             wasDelimiter = _source.SkipWhitespacesAndComments();
-            if (_source.SkipMatched(")")) return new ClCell(car, Nil.Given);
+            if (_source.SkipMatched(")")) return new ClCell(car, ClCell.Nil);
             return new ClCell(car, ReadList(wasDelimiter));
         }
 

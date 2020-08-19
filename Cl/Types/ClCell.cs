@@ -6,6 +6,8 @@ namespace Cl.Types
 {
     public class ClCell : IClObj
     {
+        public static ClCell Nil = new Nothing(null, null);
+
         public ClCell(IClObj car, IClObj cdr)
         {
             Car = car;
@@ -26,5 +28,15 @@ namespace Cl.Types
         }
 
         public override string ToString() => $"({Car} . {Cdr})";
+
+        private class Nothing : ClCell
+        {
+            internal Nothing(IClObj car, IClObj cdr) : base(car, cdr) { }
+
+            public override IClObj Car => throw new InvalidOperationException();
+            public override IClObj Cdr => throw new InvalidOperationException();
+            public override string ToString() => "nil";
+            public override IContext Reduce(IContext ctx) => ctx.FromResult(this);
+        }
     }
 }

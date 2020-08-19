@@ -12,7 +12,7 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext context)
         {
-            if (BuiltIn.Cddr(Cdr) != Nil.Given)
+            if (BuiltIn.Cddr(Cdr) != ClCell.Nil)
                 throw new InvalidOperationException(Errors.Eval.InvalidLambdaBodyFormat);
             var parameters = BuiltIn.First(Cdr)
                 .CastOrThrow<ClCell>(Errors.Eval.InvalidLambdaParametersFormat);

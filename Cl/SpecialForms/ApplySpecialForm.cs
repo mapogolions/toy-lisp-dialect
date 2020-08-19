@@ -29,7 +29,7 @@ namespace Cl.SpecialForms
         {
             var obj = Cdr.CastOrThrow<ClCell>(Errors.Eval.InvalidFunctionCall);
             var (reversedArgs, env) = BuiltIn.Seq(obj)
-                .Aggregate<IClObj, IContext>(ctx.FromResult(Nil.Given),
+                .Aggregate<IClObj, IContext>(ctx.FromResult(ClCell.Nil),
                     (ctx, expr) => {
                         var acc = ctx.Value;
                         var (obj, env) = expr.Reduce(ctx);

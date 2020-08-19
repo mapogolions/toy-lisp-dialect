@@ -13,11 +13,11 @@ namespace Cl.SpecialForms
         {
             static IClObj Transform(IClObj clauses)
             {
-                if (clauses == Nil.Given) return ClBool.False;
+                if (clauses == ClCell.Nil) return ClBool.False;
                 var clause = BuiltIn.First(clauses).CastOrThrow<ClCell>(Errors.BuiltIn.ClauseMustBeCell);
                 if (clause.Car.Equals(ClSymbol.Else))
                 {
-                    return BuiltIn.Tail(clauses) == Nil.Given
+                    return BuiltIn.Tail(clauses) == ClCell.Nil
                         ? new ClCell(ClSymbol.Begin, clause.Cdr)
                         : throw new InvalidOperationException(Errors.BuiltIn.ElseClauseMustBeLast);
                 }

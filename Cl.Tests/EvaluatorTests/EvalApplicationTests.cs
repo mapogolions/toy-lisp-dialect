@@ -37,7 +37,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalApplication_SupportLexicalEnvironmentAndGlobalDefinition()
         {
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Foo);
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
             var definition = BuiltIn.ListOf(ClSymbol.Define, Var.Fn, hof);
             var application = BuiltIn.ListOf(BuiltIn.ListOf(Var.Fn, Value.One));
@@ -51,7 +51,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalApplication_SupportLexicalEnvironment()
         {
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Foo);
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
             var expr = BuiltIn.ListOf(BuiltIn.ListOf(hof, Value.One));
 
@@ -74,7 +74,7 @@ namespace Cl.Tests.EvaluatorTests
 
             var context = expr.Reduce(_context);
 
-            Assert.That(context.Value, Is.EqualTo(Nil.Given));
+            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
             Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
@@ -84,7 +84,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalApplication_ThrowException_WhenBodyContainsUnboundVariable()
         {
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Bar);
+            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Bar);
             var expr = BuiltIn.ListOf(procedure);
             var errorMessage = Errors.UnboundVariable(Var.Bar);
 
@@ -115,7 +115,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalApplication_ZeroArityFunction()
         {
-            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Value.One);
+            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Value.One);
             var expr = BuiltIn.ListOf(constantFn);
 
             var context = expr.Reduce(_context);
@@ -131,7 +131,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAppliation_AccessToGlobalScope()
         {
             _env.Bind(Var.Foo, Value.Foo);
-            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, Nil.Given, Var.Foo);
+            var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Foo);
             var expr = BuiltIn.ListOf(constantFn);
 
             var context = expr.Reduce(_context);

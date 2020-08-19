@@ -30,14 +30,14 @@ namespace Cl
         public static ClBool IsTrue(params IClObj[] obj)
         {
             var value = obj?.Unpack<IClObj, IClObj>();
-            return ClBool.Of(value != Nil.Given && value != ClBool.False);
+            return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
         public static ClBool IsFalse(params IClObj[] obj) => Not(IsTrue(obj));
         public static ClBool Not(params IClObj[] obj) => ClBool.Of((!obj.Unpack<IClObj, ClBool>().Value));
 
         public static ClCell ListOf(params IClObj[] items)
         {
-            ClCell cell = Nil.Given;
+            ClCell cell = ClCell.Nil;
             for (var i = items.Length - 1; i >= 0; i--)
             {
                 cell = new ClCell(items[i], cell);
@@ -51,12 +51,12 @@ namespace Cl
         {
             var cell = obj.TypeOf<ClCell>();
             if (cell is null) throw new InvalidOperationException();
-            if (cell == Nil.Given) yield break;
+            if (cell == ClCell.Nil) yield break;
             yield return cell.Car;
             var tail = cell.Cdr;
             while (tail is ClCell pair)
             {
-                if (tail == Nil.Given) yield break;
+                if (tail == ClCell.Nil) yield break;
                 yield return pair.Car;
                 tail = pair.Cdr;
             }
@@ -66,7 +66,7 @@ namespace Cl
         public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj, IClObj>() != Nil.Given);
+        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj, IClObj>() != ClCell.Nil);
         public static ClBool HasType<T>(params IClObj[] obj) where T : IClObj  =>
             ClBool.Of(obj.Unpack<IClObj, IClObj>().TypeOf<T>() != null);
 
@@ -89,7 +89,7 @@ namespace Cl
         public static ClChar CharOfInteger(IClObj obj) =>
             obj switch
             {
-                ClCell { Car: ClFixnum number } cell when cell.Cdr == Nil.Given => new ClChar((char) number.Value),
+                ClCell { Car: ClFixnum number } cell when cell.Cdr == ClCell.Nil => new ClChar((char) number.Value),
                 // ClCell { Car: ClFixnum _ } => throw ArgumentException();
                 _ => throw new ArgumentException(Errors.BuiltIn.ArgumentIsNotOfType<ClFixnum>())
             };

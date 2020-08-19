@@ -10,11 +10,11 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             var newCtx = BuiltIn.First(Cdr).Reduce(ctx);
-            if (newCtx.Value != Nil.Given && newCtx.Value != ClBool.False)
+            if (newCtx.Value != ClCell.Nil && newCtx.Value != ClBool.False)
                 return BuiltIn.Second(Cdr).Reduce(newCtx);
             var elseBranch = BuiltIn.Cddr(Cdr);
-            return elseBranch ==  Nil.Given
-                ? newCtx.FromResult(Nil.Given) : BuiltIn.First(elseBranch).Reduce(newCtx);
+            return elseBranch ==  ClCell.Nil
+                ? newCtx.FromResult(ClCell.Nil) : BuiltIn.First(elseBranch).Reduce(newCtx);
         }
     }
 }
