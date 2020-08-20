@@ -1,6 +1,7 @@
 using Cl.Types;
 using NUnit.Framework;
 using Cl.Contracts;
+using Cl.Extensions;
 
 namespace Cl.Tests
 {
@@ -17,17 +18,15 @@ namespace Cl.Tests
             _bar = new ClSymbol("bar");
         }
 
-        // [Test]
-        // public void Env_InjectPredifinedEntities()
-        // {
-        //     var env = new Env(BuiltIn.Env);
+        [Test]
+        public void Env_InjectPredifinedEntities()
+        {
+            var env = new Env(BuiltIn.Env);
+            var nativeFn = env.Lookup(new ClSymbol("head")).Cast<NativeFn>();
+            var args = BuiltIn.ListOf(ClBool.True, ClBool.False);
 
-        //     var actual = env.Lookup(new ClSymbol("head")).TypeOf<NativeFn>();
-
-        //     Assert.That(actual, Is.Not.Null);
-        //     var first = actual.Apply(new ClCell(ClBool.True, ClBool.False));
-        //     Assert.That(first, Is.EqualTo(ClBool.True));
-        // }
+            Assert.That(nativeFn.Call(args), Is.EqualTo(ClBool.True));
+        }
 
         [Test]
         public void Assign_ValueByKey_ThrowException_WhenChainOfFramesDoesNotContainKey()

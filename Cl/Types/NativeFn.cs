@@ -7,10 +7,10 @@ namespace Cl.Types
     {
         public NativeFn(ParamsFunc<IClObj, IClObj> fn)
         {
-            Fn = fn;
+            Call = fn;
         }
 
-        public ParamsFunc<IClObj, IClObj> Fn { get; }
+        public ParamsFunc<IClObj, IClObj> Call { get; }
 
         public override string ToString() => "#<native>";
     }
