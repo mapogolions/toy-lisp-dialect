@@ -18,6 +18,23 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         /**
+         * (let ((foo 1)
+         *       (bar foo))
+         *   bar)
+         */
+        [Test]
+        public void EvalLet_EarlyCanAssingLater()
+        {
+            var bindings = BuiltIn.ListOf(BuiltIn.ListOf(Var.Foo, Value.One),
+                BuiltIn.ListOf(Var.Bar, Var.Foo));
+            var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Var.Bar);
+
+            var ctx = expr.Reduce(_ctx);
+
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
+        }
+
+        /**
          * (let () 1)
          */
         [Test]
