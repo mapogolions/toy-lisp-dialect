@@ -61,7 +61,7 @@ namespace Cl
             {
                 if (_source.Eof()) return acc;
                 var ch = (char) _source.Peek();
-                if (!char.IsLetterOrDigit(ch) && ch != '-' && ch != '?') return acc;
+                if (!char.IsLetterOrDigit(ch) && ch != '-' && ch != '?' && ch != '!') return acc;
                 return loop($"{acc}{(char) _source.Read()}");
             }
             return new ClSymbol(loop($"{(char) _source.Read()}"));

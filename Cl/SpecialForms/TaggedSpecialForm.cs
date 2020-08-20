@@ -1,6 +1,5 @@
 using System;
 using Cl.Contracts;
-using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms

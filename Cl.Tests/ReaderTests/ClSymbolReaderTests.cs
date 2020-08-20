@@ -37,7 +37,8 @@ namespace Cl.Tests.ReaderTests
                 new object[] { "foo", "foo" },
                 new object[] { "f", "f" },
                 new object[] { "bar1", "bar1" },
-                new object[] { "a1b", "a1b" }
+                new object[] { "a1b", "a1b" },
+                new object[] { "set!", "set!"}
             };
 
         [TestCaseSource(nameof(InvalidSymbolsTestCases))]
