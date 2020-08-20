@@ -5,12 +5,10 @@ namespace Cl.Types
 {
     public class NativeFn : ClCallable
     {
-        public NativeFn(ParamsFunc<IClObj, IClObj> fn)
-        {
-            Call = fn;
-        }
+        private readonly ParamsFunc<IClObj, IClObj> _fn;
+        public NativeFn(ParamsFunc<IClObj, IClObj> fn) => _fn = fn;
 
-        public ParamsFunc<IClObj, IClObj> Call { get; }
+        public IClObj Call(params IClObj[] items) => _fn(items);
 
         public override string ToString() => "#<native>";
     }
