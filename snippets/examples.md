@@ -81,3 +81,22 @@ x
 
 (list x y)
 ```
+
+#### `let` under the hood
+```clojure
+(let ((x 1)
+      (y x))
+    (list x y))
+
+;; the same as
+((lambda ()
+    (begin
+        (define x 1)
+        (define y x)
+        (list x y))))
+```
+
+#### look under the hood
+```clojure
+(head (quote (begin 1 2)))
+```
