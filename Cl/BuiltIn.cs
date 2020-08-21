@@ -66,7 +66,7 @@ namespace Cl
         public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj>() != ClCell.Nil);
+        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj>() == ClCell.Nil);
         public static ClBool HasType<T>(params IClObj[] obj) where T : IClObj  =>
             ClBool.Of(obj.Unpack<IClObj>().TypeOf<T>() != null);
 
@@ -102,7 +102,8 @@ namespace Cl
             (new ClSymbol("true?"), new NativeFn(IsTrue)),
             (new ClSymbol("false?"), new NativeFn(IsFalse)),
             (new ClSymbol("not"), new NativeFn(Not)),
-            (new ClSymbol("list"), new NativeFn(ListOf))
+            (new ClSymbol("list"), new NativeFn(ListOf)),
+            (new ClSymbol("cons"), null) // TODO: add implementation
         );
     }
 }

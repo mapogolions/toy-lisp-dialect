@@ -12,12 +12,11 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext ctx)
         {
-            var body = BuiltIn.Tail(Cdr);
-            if (body == ClCell.Nil || BuiltIn.Cdr(body) != ClCell.Nil)
+            var tail = BuiltIn.Tail(Cdr);
+            if (tail == ClCell.Nil || BuiltIn.Cdr(tail) != ClCell.Nil)
                 throw new InvalidOperationException(Errors.Eval.InvalidLetBodyFormat);
             var pairs = BuiltIn.Head(Cdr).Cast<ClCell>();
-            // Todo: refactoring
-            var cells = BuiltIn.ListOf(BuiltIn.Seq(pairs).Select(obj => {
+            var bindings = BuiltIn.ListOf(BuiltIn.Seq(pairs).Select(obj => {
                 var cell = obj.CastOrThrow<ClCell>(Errors.Eval.InvalidBindingsFormat);
                 if (cell == ClCell.Nil)
                     throw new InvalidOperationException(Errors.Eval.InvalidBindingsFormat);
@@ -25,11 +24,11 @@ namespace Cl.SpecialForms
                     throw new InvalidOperationException(Errors.Eval.InvalidBindingsFormat);
                 return cell;
             }));
-
-            var parameters = BuiltIn.ListOf(BuiltIn.Seq(cells).Select(cell => BuiltIn.First(cell)));
-            var args = BuiltIn.ListOf(BuiltIn.Seq(pairs).Select(cell => BuiltIn.Second(cell)));
-            var lambda = new ClCell(ClSymbol.Lambda, new ClCell(parameters, body));
-            return new ClCell(lambda, args).Reduce(ctx);
+            var definitions = BuiltIn.Seq(bindings)
+                .Select(binding => BuiltIn.ListOf(ClSymbol.Define, BuiltIn.First(binding), BuiltIn.Second(binding)));
+            var begin = new ClCell(ClSymbol.Begin, BuiltIn.ListOf(definitions.Append(BuiltIn.Car(tail))));
+            var lambda = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, begin);
+            return BuiltIn.ListOf(lambda).Reduce(ctx);
         }
     }
 }

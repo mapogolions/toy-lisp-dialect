@@ -8,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalApplicationTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(Var.Fn, Value.One);
             var errorMessage = Errors.Eval.InvalidFunctionCall;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -42,7 +42,7 @@ namespace Cl.Tests.EvaluatorTests
             var definition = BuiltIn.ListOf(ClSymbol.Define, Var.Fn, hof);
             var application = BuiltIn.ListOf(BuiltIn.ListOf(Var.Fn, Value.One));
 
-            var context = definition.Reduce(_context);
+            var context = definition.Reduce(_ctx);
             var (actual, _) = application.Reduce(context);
 
             Assert.That(actual, Is.EqualTo(Value.One));
@@ -55,27 +55,26 @@ namespace Cl.Tests.EvaluatorTests
             var hof = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), procedure);
             var expr = BuiltIn.ListOf(BuiltIn.ListOf(hof, Value.One));
 
-            var context = expr.Reduce(_context);
+            var context = expr.Reduce(_ctx);
 
             Assert.That(context.Value, Is.EqualTo(Value.One));
         }
 
         /**
-         * ((lambda (foo) foo)
+         * ((lambda () foo)
          *   (define foo "foo")) // side effect
          */
         [Test]
         public void EvalApplication_EvalCompoundArgumentsBeforeFunctionBody()
         {
-            var compoundArg = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
-            var parameters = BuiltIn.ListOf(Var.Foo);
-            var procedure = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Var.Foo);
-            var expr = BuiltIn.ListOf(procedure, compoundArg);
+            var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
+            var lambda = BuiltIn.ListOf(ClSymbol.Lambda, BuiltIn.ListOf(Var.Foo), Var.Foo);
+            var expr = BuiltIn.ListOf(lambda, define);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
+            Assert.That(ctx.Value, Is.EqualTo(ClCell.Nil));
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
         /**
@@ -88,7 +87,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(procedure);
             var errorMessage = Errors.UnboundVariable(Var.Bar);
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -104,7 +103,7 @@ namespace Cl.Tests.EvaluatorTests
             var compoundFn = BuiltIn.ListOf(ClSymbol.Lambda, parameters, body);
             var expr = BuiltIn.ListOf(compoundFn, ClBool.False);
 
-            var context = expr.Reduce(_context);
+            var context = expr.Reduce(_ctx);
 
             Assert.That(context.Value, Is.EqualTo(ClBool.False));
         }
@@ -118,7 +117,7 @@ namespace Cl.Tests.EvaluatorTests
             var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Value.One);
             var expr = BuiltIn.ListOf(constantFn);
 
-            var context = expr.Reduce(_context);
+            var context = expr.Reduce(_ctx);
 
             Assert.That(context.Value, Is.EqualTo(Value.One));
         }
@@ -134,7 +133,7 @@ namespace Cl.Tests.EvaluatorTests
             var constantFn = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Foo);
             var expr = BuiltIn.ListOf(constantFn);
 
-            var context = expr.Reduce(_context);
+            var context = expr.Reduce(_ctx);
 
             Assert.That(context.Value, Is.EqualTo(Value.Foo));
         }
@@ -149,7 +148,7 @@ namespace Cl.Tests.EvaluatorTests
             var identity = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Var.Foo);
             var expr = BuiltIn.ListOf(identity, Value.Foo);
 
-            var context = expr.Reduce(_context);
+            var context = expr.Reduce(_ctx);
 
             Assert.That(context.Value, Is.EqualTo(Value.Foo));
         }
