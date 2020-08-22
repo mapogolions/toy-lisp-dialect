@@ -100,3 +100,13 @@ x
 ```clojure
 (head (quote (begin 1 2)))
 ```
+
+#### `list` vs `cons`
+```clojure
+(cons 1
+    (cons 2
+        (cons 3 nil)))
+
+;; the same as
+(list 1 2 3)
+```
