@@ -45,6 +45,12 @@ namespace Cl
             return cell;
         }
 
+        public static ClCell Cons(params IClObj[] obj)
+        {
+            var (head, tail) = obj.Unpack<IClObj, IClObj>();
+            return new ClCell(head, tail);
+        }
+
         public static ClCell ListOf(IEnumerable<IClObj> items) => ListOf(items.ToArray());
 
         public static IEnumerable<IClObj> Seq(IClObj obj)
@@ -103,7 +109,7 @@ namespace Cl
             (new ClSymbol("false?"), new NativeFn(IsFalse)),
             (new ClSymbol("not"), new NativeFn(Not)),
             (new ClSymbol("list"), new NativeFn(ListOf)),
-            (new ClSymbol("cons"), null) // TODO: add implementation
+            (new ClSymbol("cons"), new NativeFn(Cons))
         );
     }
 }

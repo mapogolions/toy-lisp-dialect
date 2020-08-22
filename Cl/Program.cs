@@ -7,9 +7,9 @@ namespace Cl
         static void Main(string[] args)
         {
             var snippet = @"
-                (let ((x 1)
-                      (y x))
-                    (list x y))
+                (cons 1
+                    (cons 2
+                        (cons 3 nil)))
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());

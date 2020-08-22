@@ -24,7 +24,7 @@ namespace Cl.Types
             var (obj, env) = Car.Reduce(ctx);
             if (obj is ClCallable callable)
                 return new ApplySpecialForm(callable, Cdr).Reduce(new Context(env));
-            throw new InvalidOperationException();
+            throw new InvalidOperationException(Errors.Eval.InvalidFunctionCall);
         }
 
         public override string ToString() => $"({Car} . {Cdr})";

@@ -6,8 +6,9 @@ namespace Cl.Types
     {
         public ClSymbol(string name) : base(name) { }
 
-         public override IContext Reduce(IContext ctx)
+        public override IContext Reduce(IContext ctx)
         {
+            if (this.Equals(Nil)) return ctx.FromResult(ClCell.Nil);
             var result = ctx.Env.Lookup(this);
             return ctx.FromResult(result);
         }
@@ -24,5 +25,6 @@ namespace Cl.Types
         public static ClSymbol Quote = new ClSymbol("quote");
         public static ClSymbol Lambda = new ClSymbol("lambda");
         public static ClSymbol Defun = new ClSymbol("defun");
+        public static ClSymbol Nil = new ClSymbol("nil");
     }
 }
