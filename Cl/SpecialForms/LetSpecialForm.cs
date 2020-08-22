@@ -16,9 +16,9 @@ namespace Cl.SpecialForms
             var tail = BuiltIn.Tail(Cdr);
             if (tail == ClCell.Nil || BuiltIn.Cdr(tail) != ClCell.Nil)
                 throw new InvalidOperationException(Errors.Eval.InvalidLetBodyFormat);
-            var definitions = VariableDefinitionExpressions();
-            var body = BuiltIn.Car(tail);
-            var begin = new ClCell(ClSymbol.Begin, BuiltIn.ListOf(definitions.Append(body)));
+            var beginBody = VariableDefinitionExpressions()
+                .Append(BuiltIn.Car(tail)).ListOf();
+            var begin = new ClCell(ClSymbol.Begin, beginBody);
             var lambda = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, begin);
             return BuiltIn.ListOf(lambda).Reduce(ctx);
         }
