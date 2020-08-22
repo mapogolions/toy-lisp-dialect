@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Cl.Types;
 
 namespace Cl.Extensions
 {
     public static class IEnumerableOps
     {
+        public static ClCell ListOf(this IEnumerable<IClObj> @this) => BuiltIn.ListOf(@this);
+
         public static S AggregateWhile<E, S>(this IEnumerable<E> @this, S seed, Func<S, E, S> func, Predicate<S> test)
         {
             var acc = seed;
