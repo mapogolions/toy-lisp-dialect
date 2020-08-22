@@ -7,7 +7,6 @@ namespace Cl.SpecialForms
     {
         internal DefunSpecialForm(IClObj cdr) : base(ClSymbol.Defun, cdr) { }
 
-        // (defun f (x) x) ~> (define f (lambda (x) x))
         public override IContext Reduce(IContext ctx)
         {
             var funcName = BuiltIn.Head(Cdr);

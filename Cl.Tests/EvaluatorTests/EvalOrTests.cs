@@ -8,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalOrTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -23,10 +23,10 @@ namespace Cl.Tests.EvaluatorTests
             var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
             var expr = BuiltIn.ListOf(ClSymbol.Or, ClBool.True, define);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(ClBool.True));
-            Assert.That(() => context.Env.Lookup(Var.Foo),
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.True));
+            Assert.That(() => ctx.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -35,8 +35,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalOr_ReturnLastItem_WhenEachItemIsFalse(ClCell items, IClObj expected)
         {
             var expr = new ClCell(ClSymbol.Or, items);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(expected));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(expected));
         }
 
         static object[] EachItemIsFalseTestCases =
@@ -51,8 +51,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalOr_ReturnTruthyItem_WhenAtLeastOneItemIsTrue(ClCell items, IClObj expected)
         {
             var expr = new ClCell(ClSymbol.Or, items);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(expected));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(expected));
         }
 
         static object[] AtLeastOneItemIsTrueTestCases =
@@ -66,8 +66,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalOr_ReturnFalse_WhenTailIsEmptyList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Or);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(ClBool.False));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.False));
         }
     }
 }

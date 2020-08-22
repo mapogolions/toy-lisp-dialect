@@ -10,13 +10,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -25,8 +25,8 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(ClSymbol.And, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.Foo);
 
-            Assert.That(ClSymbol.And.Reduce(_context).Value, Is.EqualTo(Value.One));
-            Assert.That(expr.Reduce(_context).Value, Is.EqualTo(Value.Foo));
+            Assert.That(ClSymbol.And.Reduce(_ctx).Value, Is.EqualTo(Value.One));
+            Assert.That(expr.Reduce(_ctx).Value, Is.EqualTo(Value.Foo));
         }
 
         [Test]
@@ -34,8 +34,8 @@ namespace Cl.Tests.EvaluatorTests
         public void Eval_DoesNotCreateNewScope(Func<ClCell, ClCell> expr)
         {
             var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
-            var context = expr.Invoke(define).Reduce(_context);
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
+            var ctx = expr.Invoke(define).Reduce(_ctx);
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
@@ -53,9 +53,9 @@ namespace Cl.Tests.EvaluatorTests
             var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.And, ifThenElse, logicOr, logicAnd);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(ClBool.True));
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.True));
         }
 
         [Test]
@@ -65,10 +65,10 @@ namespace Cl.Tests.EvaluatorTests
             var logicAnd = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.One);
             var expr = BuiltIn.Quote(BuiltIn.ListOf(begin, logicAnd));
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(BuiltIn.First(context.Value), Is.EqualTo(begin));
-            Assert.That(BuiltIn.Second(context.Value), Is.EqualTo(logicAnd));
+            Assert.That(BuiltIn.First(ctx.Value), Is.EqualTo(begin));
+            Assert.That(BuiltIn.Second(ctx.Value), Is.EqualTo(logicAnd));
         }
 
         [Test]
@@ -77,15 +77,15 @@ namespace Cl.Tests.EvaluatorTests
             var cell = new ClCell(new ClFixnum(1), new ClFixnum(2));
             var expr = BuiltIn.Quote(cell);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(Object.ReferenceEquals(context.Value, cell), Is.True);
+            Assert.That(Object.ReferenceEquals(ctx.Value, cell), Is.True);
         }
 
         [Test]
         public void Eval_Variable_ThrowUnboundException_WhenBindingIsMissed()
         {
-            Assert.That(() => Var.Foo.Reduce(_context),
+            Assert.That(() => Var.Foo.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -93,16 +93,16 @@ namespace Cl.Tests.EvaluatorTests
         public void Eval_Variable_ReturnBinding_WhenEnvironmentContainsVariable()
         {
             _env.Bind(Var.Foo, Value.One);
-            var context = Var.Foo.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Value.One));
+            var ctx = Var.Foo.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
         [TestCaseSource(nameof(SelfEvaluatingTestCases))]
         public void Eval_SelfEvaluatingExpression(IClObj expr)
         {
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(expr));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(expr));
         }
 
         static IEnumerable<IClObj> SelfEvaluatingTestCases()

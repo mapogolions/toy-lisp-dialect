@@ -8,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalCondTest
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace Cl.Tests.EvaluatorTests
                 Value.One);
             var errorMessage = Errors.BuiltIn.ClauseMustBeCell;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -37,10 +37,10 @@ namespace Cl.Tests.EvaluatorTests
             var truthy = BuiltIn.ListOf(ClBool.True, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, truthy, define);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(Value.One));
-            Assert.That(() => context.Env.Lookup(Var.Foo),
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
+            Assert.That(() => ctx.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -51,9 +51,9 @@ namespace Cl.Tests.EvaluatorTests
             var clause2 = BuiltIn.ListOf(ClCell.Nil, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, clause1, clause2);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(ClBool.False));
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.False));
         }
 
         [Test]
@@ -62,9 +62,9 @@ namespace Cl.Tests.EvaluatorTests
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, Value.Foo, Value.Bar, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(Value.One));
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -73,9 +73,9 @@ namespace Cl.Tests.EvaluatorTests
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(Value.One));
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause, BuiltIn.ListOf(ClSymbol.Else, ClBool.True));
             var errorMessage = Errors.BuiltIn.ElseClauseMustBeLast;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -93,8 +93,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalCond_ReturnFalse_WhenClausesAreMissed()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Cond);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(ClBool.False));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.False));
         }
     }
 }

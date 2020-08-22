@@ -10,13 +10,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalIfTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -25,10 +25,10 @@ namespace Cl.Tests.EvaluatorTests
             Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, defineVar(Var.Foo), defineVar(Var.Bar));
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Env.Lookup(Var.Bar), Is.EqualTo(Value.One));
-            Assert.That(() => context.Env.Lookup(Var.Foo),
+            Assert.That(ctx.Env.Lookup(Var.Bar), Is.EqualTo(Value.One));
+            Assert.That(() => ctx.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -38,10 +38,10 @@ namespace Cl.Tests.EvaluatorTests
             Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, defineVar(Var.Foo), defineVar(Var.Bar));
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
-            Assert.That(() => context.Env.Lookup(Var.Bar),
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
+            Assert.That(() => ctx.Env.Lookup(Var.Bar),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -50,8 +50,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, Value.One);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Value.One));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> FalsyTestCases()
@@ -65,8 +65,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, Value.One, ClBool.False);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Value.One));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
         static IEnumerable<IClObj> TruthyTestCases()
@@ -84,8 +84,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalIf_ReturnNil_WhenConditionIsFalseAndElseBranchIsMissed()
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, Value.One);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(ClCell.Nil));
         }
     }
 }

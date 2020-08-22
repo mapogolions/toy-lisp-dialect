@@ -9,13 +9,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAssignmentTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -25,9 +25,9 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Bar, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Bar);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(Object.ReferenceEquals(context.Env.Lookup(Var.Foo), _env.Lookup(Var.Bar)), Is.True);
+            Assert.That(Object.ReferenceEquals(ctx.Env.Lookup(Var.Foo), _env.Lookup(Var.Bar)), Is.True);
         }
 
         [Test]
@@ -36,9 +36,9 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Foo, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Foo);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
         }
 
         [Test]
@@ -48,9 +48,9 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Bar, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Var.Bar);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Bar));
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.Bar));
         }
 
         [Test]
@@ -59,16 +59,16 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Foo, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, ClBool.False);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
+            Assert.That(ctx.Value, Is.EqualTo(ClCell.Nil));
         }
 
         [Test]
         public void EvalAssignment_ThrowException_WhenEnvironmentDoesNotContainBinding()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Value.Foo);
-            Assert.That(() => expr.Reduce(_context), Throws.InvalidOperationException);
+            Assert.That(() => expr.Reduce(_ctx), Throws.InvalidOperationException);
         }
     }
 }

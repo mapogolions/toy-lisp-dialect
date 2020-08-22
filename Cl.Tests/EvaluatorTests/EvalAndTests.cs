@@ -8,13 +8,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalAndTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -23,9 +23,9 @@ namespace Cl.Tests.EvaluatorTests
             var define = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, ClBool.False, define, ClBool.True);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(() => context.Env.Lookup(Var.Foo),
+            Assert.That(() => ctx.Env.Lookup(Var.Foo),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -33,8 +33,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAnd_ReturnLastItem_WhenEachItemIsTrue()
         {
             var expr = BuiltIn.ListOf(ClSymbol.And, ClBool.True, Value.Foo);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(Value.Foo));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(Value.Foo));
         }
 
         [Test]
@@ -42,8 +42,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAnd_ReturnFalsyItem_WhenAtLeastOneItemIsFalse(ClCell items, IClObj expected)
         {
             var expr = new ClCell(ClSymbol.And, items);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(expected));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(expected));
         }
 
         static object[] AtLeastOneItemIsFalseTestCases =
@@ -56,8 +56,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAnd_ReturnTrue_WhenTailIsEmptyList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.And);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(ClBool.True));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(ClBool.True));
         }
     }
 }

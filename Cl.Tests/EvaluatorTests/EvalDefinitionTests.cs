@@ -10,13 +10,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalDefinitionTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Bar, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Var.Bar);
 
-            Ignore(expr.Reduce(_context));
+            Ignore(expr.Reduce(_ctx));
 
             Assert.That(Object.ReferenceEquals(_env.Lookup(Var.Foo), _env.Lookup(Var.Bar)), Is.True);
         }
@@ -34,7 +34,7 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalDefinition_ThrowException_WhenRighSideVariableDoesNotExist()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Var.Bar);
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
         }
 
@@ -45,7 +45,7 @@ namespace Cl.Tests.EvaluatorTests
             var inEnv = new Env(outEnv);
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.One);
 
-            Ignore(expr.Reduce(_context.FromEnv(inEnv)));
+            Ignore(expr.Reduce(_ctx.FromEnv(inEnv)));
 
             Assert.That(inEnv.Lookup(Var.Foo), Is.EqualTo(Value.One));
             Assert.That(outEnv.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
@@ -57,25 +57,25 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Foo, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.Foo);
 
-            var context = expr.Reduce(_context);
+            var ctx = expr.Reduce(_ctx);
 
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.Foo));
         }
 
         [Test]
         public void EvalDefinition_ReturnNil_WhenOperationIsSuccessful()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, ClBool.False);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Value, Is.EqualTo(ClCell.Nil));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Value, Is.EqualTo(ClCell.Nil));
         }
 
         [Test]
         public void EvalDefinition_CreateNewBinding()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, ClBool.True);
-            var context = expr.Reduce(_context);
-            Assert.That(context.Env.Lookup(Var.Foo), Is.EqualTo(ClBool.True));
+            var ctx = expr.Reduce(_ctx);
+            Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(ClBool.True));
         }
     }
 }

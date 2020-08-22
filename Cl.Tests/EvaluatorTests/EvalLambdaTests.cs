@@ -10,13 +10,13 @@ namespace Cl.Tests.EvaluatorTests
     public class EvalLambdaTests
     {
         private IEnv _env;
-        private IContext _context;
+        private IContext _ctx;
 
         [SetUp]
         public void BeforeEach()
         {
             _env = new Env();
-            _context = new Context(_env);
+            _ctx = new Context(_env);
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
             var errorMessage = Errors.BuiltIn.UnsupportBinding;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -45,7 +45,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, body);
 
             var fn = expr
-                .Reduce(_context)
+                .Reduce(_ctx)
                 .Value
                 .Cast<ClFn>();
 
@@ -59,7 +59,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, body);
             var fn = expr
-                .Reduce(_context)
+                .Reduce(_ctx)
                 .Value
                 .Cast<ClFn>();
 
@@ -81,7 +81,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True, ClBool.False);
             var errorMessage = Errors.Eval.InvalidLambdaBodyFormat;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
@@ -90,7 +90,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True);
             var fn = expr
-                .Reduce(_context)
+                .Reduce(_ctx)
                 .Value
                 .Cast<ClFn>();
 
@@ -103,7 +103,7 @@ namespace Cl.Tests.EvaluatorTests
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
             var errorMessage = Errors.Eval.InvalidLambdaParametersFormat;
 
-            Assert.That(() => expr.Reduce(_context),
+            Assert.That(() => expr.Reduce(_ctx),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
     }
