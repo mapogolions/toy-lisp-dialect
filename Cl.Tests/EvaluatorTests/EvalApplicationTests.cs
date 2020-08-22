@@ -61,7 +61,7 @@ namespace Cl.Tests.EvaluatorTests
         }
 
         /**
-         * ((lambda () foo)
+         * ((lambda (foo) foo)
          *   (define foo "foo")) // side effect
          */
         [Test]
