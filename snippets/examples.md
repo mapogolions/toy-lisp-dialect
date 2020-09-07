@@ -1,4 +1,4 @@
-#### Lexical Environment
+#### lexical environment
 
 ```clojure
 (define f
@@ -11,7 +11,7 @@
 (h)
 ```
 
-#### Compound function body
+#### compound function body
 
 ```clojure
 (define f
