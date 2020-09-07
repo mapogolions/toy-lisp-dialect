@@ -23,7 +23,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadString_ReturnString(string input, string expected)
         {
             using var reader = new Reader(input);
-
             Assert.That(reader.ReadString()?.Value, Is.EqualTo(expected));
         }
 
@@ -39,7 +38,6 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("\"some");
             var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClString));
-
             Assert.That(() => reader.ReadString(),
                 Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
@@ -48,7 +46,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadString_ReturnNull_WhenSourceDoesNotStartWithDoubleQuotes()
         {
             using var reader = new Reader(" \"foo\"");
-
             Assert.That(reader.ReadString(), Is.Null);
         }
     }

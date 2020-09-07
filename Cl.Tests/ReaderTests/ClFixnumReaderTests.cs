@@ -22,7 +22,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadFixnum_CanNotBeAbleReadNegativeNum()
         {
             using var reader = new Reader("-120...");
-
             Assert.That(reader.ReadFixnum(), Is.Null);
         }
 
@@ -30,7 +29,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadFixnum_ReturnInteger_WhenDotAppears()
         {
             using var reader = new Reader("1.");
-
             Assert.That(reader.ReadFixnum()?.Value, Is.EqualTo(1));
         }
 
@@ -38,7 +36,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadFixnum_ReturnPositiveNum()
         {
             using var reader = new Reader("12");
-
             Assert.That(reader.ReadFixnum()?.Value, Is.EqualTo(12));
         }
 
@@ -46,7 +43,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadFixnum_ReturnNull_WhenSourceDoesNotStartWithDigit()
         {
             using var reader = new Reader(" 12");
-
             Assert.That(reader.ReadFixnum()?.Value, Is.Null);
         }
     }

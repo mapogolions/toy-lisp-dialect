@@ -103,7 +103,6 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("(");
             var errorMessage = Errors.Reader.ReadIllegalState;
-
             Assert.That(() => reader.ReadCell(),
                 Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
@@ -112,7 +111,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ReturnNull_WhenSourceStartsWithInvalidSymbol_ButContainsList()
         {
             using var reader = new Reader("  ()");
-
             Assert.That(reader.ReadCell(), Is.Null);
         }
 
@@ -120,7 +118,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ReturnEmptyList(string source)
         {
             using var reader = new Reader(source);
-
             Assert.That(reader.ReadCell(), Is.EqualTo(ClCell.Nil));
         }
 
@@ -136,7 +133,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ReturnFalse_WhenSourceDoesNotStartWithBracket()
         {
             using var reader = new Reader("should be bracket");
-
             Assert.That(reader.ReadCell(), Is.Null);
         }
 
@@ -144,7 +140,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ReturnFalse_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
-
             Assert.That(reader.ReadCell(), Is.Null);
         }
     }

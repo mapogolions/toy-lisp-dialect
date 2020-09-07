@@ -23,7 +23,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadBool_ReturnTheFalse()
         {
             using var reader = new Reader("#fi");
-
             Assert.That(reader.ReadBool()?.Value, Is.False);
         }
 
@@ -31,7 +30,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadBool_ReturnTheTrue()
         {
             using var reader = new Reader("#ti");
-
             Assert.That(reader.ReadBool()?.Value, Is.True);
         }
 
@@ -40,7 +38,6 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("#w");
             var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClBool));
-
             Assert.That(() => reader.ReadBool(),
                 Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
@@ -50,7 +47,6 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("#");
             var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClBool));
-
             Assert.That(() => reader.ReadBool(),
                 Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
         }
@@ -59,7 +55,6 @@ namespace Cl.Tests.ReaderTests
         public void ReadBool_ReturnFalse_WhenSourceDoesNotStartWithHash()
         {
             using var reader = new Reader(" #f");
-
             Assert.That(reader.ReadBool()?.Value, Is.Null);
         }
     }

@@ -54,9 +54,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnChar()
         {
             using var reader = new Reader("#\\N");
-
             var atom = reader.ReadExpression().TypeOf<ClChar>();
-
             Assert.That(atom?.Value, Is.EqualTo('N'));
         }
 
@@ -64,9 +62,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnString()
         {
             using var reader = new Reader("\"foo\"");
-
             var atom = reader.ReadExpression().TypeOf<ClString>();
-
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
 
@@ -74,9 +70,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnBool()
         {
             using var reader = new Reader("#t");
-
             var atom = reader.ReadExpression().TypeOf<ClBool>();
-
             Assert.That(atom?.Value, Is.EqualTo(true));
         }
 
@@ -84,9 +78,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnInteger()
         {
             using var reader = new Reader("12");
-
             var atom = reader.ReadExpression().TypeOf<ClFixnum>();
-
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
 
@@ -94,7 +86,6 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
         {
             using var reader = new Reader(source);
-
             Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
@@ -110,7 +101,6 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
         {
             using var reader = new Reader("11.");
-
             Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
@@ -118,7 +108,6 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenSourceContainsOnlySpaces()
         {
             using var reader = new Reader("   \t");
-
             Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
 
@@ -126,7 +115,6 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
-
             Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
         }
     }

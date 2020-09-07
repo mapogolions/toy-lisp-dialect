@@ -68,7 +68,6 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("(1.2 . 2 . #)");
             var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
-
             Assert.That(() => reader.ReadCell(),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
