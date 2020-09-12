@@ -46,7 +46,7 @@ x
     (list
         (char? #\a)
         (int? 12)
-        (float? 3.3)))
+        (double? 3.3)))
 x
 ```
 
