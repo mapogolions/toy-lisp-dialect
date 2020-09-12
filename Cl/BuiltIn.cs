@@ -85,6 +85,7 @@ namespace Cl
         public static ClBool IsCallable(params IClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
+        public static ClInt IntOfString(params IClObj[] obj) =>new ClInt(Convert.ToInt32(obj.Unpack<ClString>()));
 
         // Pervasives
         public static IEnv Env = new Env(
@@ -111,7 +112,8 @@ namespace Cl
             (new ClSymbol("false?"), new NativeFn(IsFalse)),
             (new ClSymbol("not"), new NativeFn(Not)),
             (new ClSymbol("list"), new NativeFn(ListOf)),
-            (new ClSymbol("cons"), new NativeFn(Cons))
+            (new ClSymbol("cons"), new NativeFn(Cons)),
+            (new ClSymbol("int_of_string"), new NativeFn(IntOfString))
         );
 
 

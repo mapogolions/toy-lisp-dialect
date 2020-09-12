@@ -10,7 +10,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadDottedCell_TailCanBeFlattenList()
         {
-            using var reader = new Reader("(1 . (\"foo\" #\\w ))");
+            using var reader = new Reader("(1 . ('foo' #\\w ))");
 
             var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClInt>();
@@ -26,7 +26,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadDottedCell_CanRepresentTraditionalImmutableLinkedList()
         {
-            using var reader = new Reader("(1 . (\"foo\" . (#\\w . ())))");
+            using var reader = new Reader("(1 . ('foo' . (#\\w . ())))");
 
             var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClInt>();

@@ -140,13 +140,13 @@ namespace Cl
 
         public ClString ReadString()
         {
-            if (!_source.SkipMatched("\"")) return null;
+            if (!_source.SkipMatched("'")) return null;
             string loop(string acc)
             {
                 if (_source.Eof())
                     throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClString)));
                 var ch = (char) _source.Read();
-                if (ch == '"') return acc;
+                if (ch == '\'') return acc;
                 return loop($"{acc}{ch}");
             }
             return new ClString(loop(string.Empty));

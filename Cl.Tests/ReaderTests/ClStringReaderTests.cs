@@ -11,7 +11,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("\"foo\"bar");
+            var source = new FilteredSource("'foo'bar");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadString());
@@ -28,15 +28,15 @@ namespace Cl.Tests.ReaderTests
 
         static object[] ValidStringTestCases =
             {
-                new object[] { "\"foo\"", "foo" },
-                new object[] { "\"\"", string.Empty },
-                new object[] { "\"foo\"bar", "foo" }
+                new object[] { "'foo'", "foo" },
+                new object[] { "''", string.Empty },
+                new object[] { "'foo'bar", "foo" }
             };
 
         [Test]
         public void ReadString_ThrowException_DoubleQuotesAreUnbalanced()
         {
-            using var reader = new Reader("\"some");
+            using var reader = new Reader("'some");
             var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClString));
             Assert.That(() => reader.ReadString(),
                 Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
@@ -45,7 +45,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_ReturnNull_WhenSourceDoesNotStartWithDoubleQuotes()
         {
-            using var reader = new Reader(" \"foo\"");
+            using var reader = new Reader(" 'foo'");
             Assert.That(reader.ReadString(), Is.Null);
         }
     }

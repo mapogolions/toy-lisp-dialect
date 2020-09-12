@@ -13,7 +13,7 @@ namespace Cl.Tests
         public void ReadExpression_Treat_WhitespacesBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#t"; // ClBool.True
-            var endsWith = $"\t \"bar\";comment\t{Environment.NewLine});comment\t"; // ClString("bar")
+            var endsWith = $"\t 'bar';comment\t{Environment.NewLine});comment\t"; // ClString("bar")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
             var cell = reader.ReadExpression().TypeOf<ClCell>();
@@ -28,7 +28,7 @@ namespace Cl.Tests
         public void ReadExpression_Treat_CommentsBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
-            var endsWith = $";comment{Environment.NewLine}\"foo\";comment\t{Environment.NewLine});comment\t"; // ClString("foo")
+            var endsWith = $";comment{Environment.NewLine}'foo';comment\t{Environment.NewLine});comment\t"; // ClString("foo")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
             var cell = reader.ReadExpression().TypeOf<ClCell>();
@@ -61,7 +61,7 @@ namespace Cl.Tests
         [Test]
         public void ReadExpression_ReturnString()
         {
-            using var reader = new Reader("\"foo\"");
+            using var reader = new Reader("'foo'");
             var atom = reader.ReadExpression().TypeOf<ClString>();
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
