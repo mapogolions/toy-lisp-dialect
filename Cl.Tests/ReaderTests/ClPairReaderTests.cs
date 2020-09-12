@@ -17,7 +17,7 @@ namespace Cl.Tests.ReaderTests
             var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClBool>();
             var second = BuiltIn.Second(cell).TypeOf<ClBool>();
-            var third = BuiltIn.Third(cell).TypeOf<ClFixnum>();
+            var third = BuiltIn.Third(cell).TypeOf<ClInt>();
             var fourth = BuiltIn.Fourth(cell).TypeOf<ClChar>();
 
             Assert.That(first?.Value, Is.False);
@@ -80,7 +80,7 @@ namespace Cl.Tests.ReaderTests
 
             var cell = reader.ReadCell();
             var first = BuiltIn.First(cell).TypeOf<ClFloat>();
-            var second = BuiltIn.Second(cell).TypeOf<ClFixnum>();
+            var second = BuiltIn.Second(cell).TypeOf<ClInt>();
 
             Assert.That(first?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
             Assert.That(second?.Value, Is.EqualTo(2));
@@ -92,7 +92,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1)");
 
             var cell = reader.ReadCell();
-            var first = cell.Car.TypeOf<ClFixnum>();
+            var first = cell.Car.TypeOf<ClInt>();
 
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(cell.Cdr, Is.EqualTo(ClCell.Nil));

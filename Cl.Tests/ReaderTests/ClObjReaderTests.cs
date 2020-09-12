@@ -45,7 +45,7 @@ namespace Cl.Tests
             var input = $";before{Environment.NewLine}112;after";
             using var reader = new Reader(input);
 
-            var atom = reader.ReadExpression().TypeOf<ClFixnum>();
+            var atom = reader.ReadExpression().TypeOf<ClInt>();
 
             Assert.That(atom?.Value, Is.EqualTo(112));
         }
@@ -78,7 +78,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnInteger()
         {
             using var reader = new Reader("12");
-            var atom = reader.ReadExpression().TypeOf<ClFixnum>();
+            var atom = reader.ReadExpression().TypeOf<ClInt>();
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
 

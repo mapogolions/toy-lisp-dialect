@@ -119,11 +119,11 @@ namespace Cl
             return new ClFloat(number);
         }
 
-        public ClFixnum ReadFixnum()
+        public ClInt ReadFixnum()
         {
             if (!TryReadNumbersInRow(out var nums)) return null;
             if (!int.TryParse(nums, out var integer)) return null;
-            return new ClFixnum(integer);
+            return new ClInt(integer);
         }
 
         private bool TryReadNumbersInRow(out string nums)

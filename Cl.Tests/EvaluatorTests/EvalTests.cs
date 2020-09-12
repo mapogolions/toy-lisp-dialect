@@ -74,7 +74,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void Eval_ReturnUnreducedExpression_WhenItIsQuoted()
         {
-            var cell = new ClCell(new ClFixnum(1), new ClFixnum(2));
+            var cell = new ClCell(new ClInt(1), new ClInt(2));
             var expr = BuiltIn.Quote(cell);
 
             var ctx = expr.Reduce(_ctx);
@@ -109,7 +109,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             yield return ClBool.True;
             yield return ClBool.False;
-            yield return new ClFixnum(10);
+            yield return new ClInt(10);
             yield return new ClFloat(10.2);
             yield return new ClChar('a');
         }

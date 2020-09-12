@@ -71,7 +71,7 @@ namespace Cl.Tests.EvaluatorTests
 
         static IEnumerable<IClObj> TruthyTestCases()
         {
-            yield return new ClFixnum(0);
+            yield return new ClInt(0);
             yield return new ClFloat(0.0);
             yield return new ClString(string.Empty);
             yield return ClBool.True;

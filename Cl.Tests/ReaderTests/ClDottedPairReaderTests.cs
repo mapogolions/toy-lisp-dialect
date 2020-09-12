@@ -13,7 +13,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1 . (\"foo\" #\\w ))");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClFixnum>();
+            var first = BuiltIn.First(cell).TypeOf<ClInt>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
             var third = BuiltIn.Third(cell).TypeOf<ClChar>();
 
@@ -29,7 +29,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1 . (\"foo\" . (#\\w . ())))");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClFixnum>();
+            var first = BuiltIn.First(cell).TypeOf<ClInt>();
             var second = BuiltIn.Second(cell).TypeOf<ClString>();
             var third = BuiltIn.Third(cell).TypeOf<ClChar>();
 
@@ -79,7 +79,7 @@ namespace Cl.Tests.ReaderTests
 
             var cell = reader.ReadCell();
             var car = cell.Car.TypeOf<ClFloat>();
-            var cdr = cell.Cdr.TypeOf<ClFixnum>();
+            var cdr = cell.Cdr.TypeOf<ClInt>();
 
             Assert.That(car?.Value, Is.EqualTo(expectedCar).Within(double.Epsilon));
             Assert.That(cdr?.Value, Is.EqualTo(expectedCdr));

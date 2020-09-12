@@ -78,11 +78,13 @@ namespace Cl
 
         public static ClBool IsString(params IClObj[] obj) => HasType<ClString>(obj);
         public static ClBool IsSymbol(params IClObj[] obj) => HasType<ClSymbol>(obj);
-        public static ClBool IsInteger(params IClObj[] obj) => HasType<ClFixnum>(obj);
+        public static ClBool IsInteger(params IClObj[] obj) => HasType<ClInt>(obj);
         public static ClBool IsFloat(params IClObj[] obj) => HasType<ClFloat>(obj);
         public static ClBool IsChar(params IClObj[] obj) => HasType<ClChar>(obj);
         public static ClBool IsPair(params IClObj[] obj) => HasType<ClCell>(obj);
         public static ClBool IsCallable(params IClObj[] obj) => HasType<ClCallable>(obj);
+
+        // Converts
 
         // Pervasives
         public static IEnv Env = new Env(
@@ -111,5 +113,13 @@ namespace Cl
             (new ClSymbol("list"), new NativeFn(ListOf)),
             (new ClSymbol("cons"), new NativeFn(Cons))
         );
+
+
+    //     ("char->integer", char_to_integer_proc);
+    //  ("integer->char", integer_to_char_proc);
+    //  ("number->string", number_to_string_proc);
+    //  ("string->number", string_to_symbol_proc);
+    //  ("symbol->string", symbol_to_string_proc);
+    //  ("string->symbol", string_to_symbol_proc);
     }
 }

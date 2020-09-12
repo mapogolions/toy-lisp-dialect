@@ -13,6 +13,6 @@ namespace Cl.Tests
     {
         internal static ClString Foo = new ClString("foo");
         internal static ClString Bar = new ClString("bar");
-        internal static ClFixnum One = new ClFixnum(1);
+        internal static ClInt One = new ClInt(1);
     }
 }
