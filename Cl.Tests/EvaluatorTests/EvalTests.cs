@@ -110,7 +110,7 @@ namespace Cl.Tests.EvaluatorTests
             yield return ClBool.True;
             yield return ClBool.False;
             yield return new ClInt(10);
-            yield return new ClFloat(10.2);
+            yield return new ClDouble(10.2);
             yield return new ClChar('a');
         }
     }

@@ -32,7 +32,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1.34\t  #\\a)");
             var cell = reader.ReadCell();
 
-            var first = BuiltIn.First(cell).TypeOf<ClFloat>();
+            var first = BuiltIn.First(cell).TypeOf<ClDouble>();
             var second = BuiltIn.Second(cell).TypeOf<ClChar>();
 
             Assert.That(first?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
@@ -79,7 +79,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1.2 2)");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClFloat>();
+            var first = BuiltIn.First(cell).TypeOf<ClDouble>();
             var second = BuiltIn.Second(cell).TypeOf<ClInt>();
 
             Assert.That(first?.Value, Is.EqualTo(1.2).Within(double.Epsilon));

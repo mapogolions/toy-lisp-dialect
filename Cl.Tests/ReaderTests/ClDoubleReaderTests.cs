@@ -6,54 +6,54 @@ using static Cl.Extensions.FpUniverse;
 namespace Cl.Tests.ReaderTests
 {
     [TestFixture]
-    public class ClFloatReaderTests
+    public class ClDoubleReaderTests
     {
         [Test]
-        public void ReadFloat_SkipOnlyPartOfSource()
+        public void ReadDouble_SkipOnlyPartOfSource()
         {
             var source = new FilteredSource("120.0rest");
             using var reader = new Reader(source);
 
-            Ignore(reader.ReadFloat());
+            Ignore(reader.ReadDouble());
 
             Assert.That(source.ToString(), Is.EqualTo("rest"));
         }
 
         [Test]
-        public void ReadFloat_CanNotBeAbleReadNegativeNum()
+        public void ReadDouble_CanNotBeAbleReadNegativeNum()
         {
             using var reader = new Reader("-120.0");
-            Assert.That(reader.ReadFloat(), Is.Null);
+            Assert.That(reader.ReadDouble(), Is.Null);
         }
 
         [Test]
-        public void ReadFloat_ReturnFloatingPointNumber()
+        public void ReadDouble_ReturnFloatingPointNumber()
         {
             using var reader = new Reader("0.45rest");
-            Assert.That(reader.ReadFloat()?.Value, Is.EqualTo(0.45).Within(double.Epsilon));
+            Assert.That(reader.ReadDouble()?.Value, Is.EqualTo(0.45).Within(double.Epsilon));
         }
 
         [Test]
-        public void ReadFloat_ThrowException_WhenAfterDotInvalidSymbol()
+        public void ReadDouble_ThrowException_WhenAfterDotInvalidSymbol()
         {
             using var reader = new Reader("0. ");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClFloat));
-            Assert.That(() => reader.ReadFloat(),
+            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClDouble));
+            Assert.That(() => reader.ReadDouble(),
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
         [Test]
-        public void ReadFloat_ReturnNull_WhenSourceContainsInteger()
+        public void ReadDouble_ReturnNull_WhenSourceContainsInteger()
         {
             using var reader = new Reader("23");
-            Assert.That(reader.ReadFloat(), Is.Null);
+            Assert.That(reader.ReadDouble(), Is.Null);
         }
 
          [Test]
-        public void ReadFloat_ReturnNull_WhenSourceDoesNotStartWithDigit()
+        public void ReadDouble_ReturnNull_WhenSourceDoesNotStartWithDigit()
         {
             using var reader = new Reader(" 1.12");
-            Assert.That(reader.ReadFloat()?.Value, Is.Null);
+            Assert.That(reader.ReadDouble()?.Value, Is.Null);
         }
     }
 }

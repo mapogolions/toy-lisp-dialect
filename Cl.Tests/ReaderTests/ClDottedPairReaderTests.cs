@@ -78,7 +78,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(input);
 
             var cell = reader.ReadCell();
-            var car = cell.Car.TypeOf<ClFloat>();
+            var car = cell.Car.TypeOf<ClDouble>();
             var cdr = cell.Cdr.TypeOf<ClInt>();
 
             Assert.That(car?.Value, Is.EqualTo(expectedCar).Within(double.Epsilon));

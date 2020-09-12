@@ -39,7 +39,7 @@ namespace Cl
             if (TryReadExpression(ReadChar, out var ast)) return ast;
             if (TryReadExpression(ReadBool, out ast)) return ast;
             if (TryReadExpression(ReadString, out ast)) return ast;
-            if (TryReadExpression(ReadFloat, out ast)) return ast;
+            if (TryReadExpression(ReadDouble, out ast)) return ast;
             if (TryReadExpression(ReadFixnum, out ast)) return ast;
             if (TryReadExpression(ReadCell, out ast)) return ast;
             if (TryReadExpression(ReadSymbol, out ast)) return ast;
@@ -104,7 +104,7 @@ namespace Cl
             return new ClCell(car, ReadList(wasDelimiter));
         }
 
-        public ClFloat ReadFloat()
+        public ClDouble ReadDouble()
         {
             if (!TryReadNumbersInRow(out var significand)) return null;
             if (!_source.SkipMatched("."))
@@ -113,10 +113,10 @@ namespace Cl
                 return null;
             }
             if (!TryReadNumbersInRow(out var mantissa))
-                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClFloat)));
+                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClDouble)));
             var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float,
                 CultureInfo.InvariantCulture);
-            return new ClFloat(number);
+            return new ClDouble(number);
         }
 
         public ClInt ReadFixnum()

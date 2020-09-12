@@ -79,13 +79,15 @@ namespace Cl
         public static ClBool IsString(params IClObj[] obj) => HasType<ClString>(obj);
         public static ClBool IsSymbol(params IClObj[] obj) => HasType<ClSymbol>(obj);
         public static ClBool IsInteger(params IClObj[] obj) => HasType<ClInt>(obj);
-        public static ClBool IsFloat(params IClObj[] obj) => HasType<ClFloat>(obj);
+        public static ClBool IsDouble(params IClObj[] obj) => HasType<ClDouble>(obj);
         public static ClBool IsChar(params IClObj[] obj) => HasType<ClChar>(obj);
         public static ClBool IsPair(params IClObj[] obj) => HasType<ClCell>(obj);
         public static ClBool IsCallable(params IClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
-        public static ClInt IntOfString(params IClObj[] obj) =>new ClInt(Convert.ToInt32(obj.Unpack<ClString>()));
+        public static ClInt IntOfString(params IClObj[] obj) => (ClInt) obj.Unpack<ClString>();
+        public static ClDouble DoubleOfString(params IClObj[] obj) => (ClDouble) obj.Unpack<ClString>();
+        public static ClInt IntOfChar(params IClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
 
         // Pervasives
         public static IEnv Env = new Env(
@@ -93,7 +95,7 @@ namespace Cl
             (new ClSymbol("string?"), new NativeFn(IsString)),
             (new ClSymbol("symbol?"), new NativeFn(IsSymbol)),
             (new ClSymbol("int?"), new NativeFn(IsInteger)),
-            (new ClSymbol("float?"), new NativeFn(IsFloat)),
+            (new ClSymbol("double?"), new NativeFn(IsDouble)),
             (new ClSymbol("char?"), new NativeFn(IsChar)),
             (new ClSymbol("callable?"), new NativeFn(IsCallable)),
             (new ClSymbol("head"), new NativeFn(Head)),
@@ -113,7 +115,9 @@ namespace Cl
             (new ClSymbol("not"), new NativeFn(Not)),
             (new ClSymbol("list"), new NativeFn(ListOf)),
             (new ClSymbol("cons"), new NativeFn(Cons)),
-            (new ClSymbol("int_of_string"), new NativeFn(IntOfString))
+            (new ClSymbol("int-of-string"), new NativeFn(IntOfString)),
+            (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
+            (new ClSymbol("double-of-string"), new NativeFn(DoubleOfString))
         );
 
 
