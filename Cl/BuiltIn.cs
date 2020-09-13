@@ -92,6 +92,15 @@ namespace Cl
         public static ClInt IntOfChar(params IClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
         public static ClChar CharOfInt(params IClObj[] obj) => (ClChar) obj.Unpack<ClInt>();
 
+        // Arithmetics
+        public static IClObj UnaryMinus(params IClObj[] obj) =>
+            obj.Unpack<IClObj>() switch
+            {
+                ClInt fixnum => -fixnum,
+                ClDouble floatingPoint => -floatingPoint,
+                _ => throw new InvalidOperationException()
+            };
+
         // Pervasives
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
@@ -123,7 +132,8 @@ namespace Cl
             (new ClSymbol("string-of-int"), new NativeFn(StringOfInt)),
             (new ClSymbol("string-of-double"), new NativeFn(StringOfDouble)),
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
-            (new ClSymbol("char-of-int"), new NativeFn(CharOfInt))
+            (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
+            (new ClSymbol("minus"), new NativeFn(UnaryMinus))
         );
     }
 }
