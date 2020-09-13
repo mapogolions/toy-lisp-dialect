@@ -8,7 +8,7 @@ namespace Cl
         {
 
             var snippet = @"
-                (double-of-string '12')
+                (char-of-int 65)
                  ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());

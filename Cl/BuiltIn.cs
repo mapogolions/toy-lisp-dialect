@@ -87,7 +87,10 @@ namespace Cl
         // Converts
         public static ClInt IntOfString(params IClObj[] obj) => (ClInt) obj.Unpack<ClString>();
         public static ClDouble DoubleOfString(params IClObj[] obj) => (ClDouble) obj.Unpack<ClString>();
+        public static ClString StringOfInt(params IClObj[] obj) => (ClString) obj.Unpack<ClInt>();
+        public static ClString StringOfDouble(params IClObj[] obj) => (ClString) obj.Unpack<ClDouble>();
         public static ClInt IntOfChar(params IClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
+        public static ClChar CharOfInt(params IClObj[] obj) => (ClChar) obj.Unpack<ClInt>();
 
         // Pervasives
         public static IEnv Env = new Env(
@@ -116,16 +119,11 @@ namespace Cl
             (new ClSymbol("list"), new NativeFn(ListOf)),
             (new ClSymbol("cons"), new NativeFn(Cons)),
             (new ClSymbol("int-of-string"), new NativeFn(IntOfString)),
+            (new ClSymbol("double-of-string"), new NativeFn(DoubleOfString)),
+            (new ClSymbol("string-of-int"), new NativeFn(StringOfInt)),
+            (new ClSymbol("string-of-double"), new NativeFn(StringOfDouble)),
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
-            (new ClSymbol("double-of-string"), new NativeFn(DoubleOfString))
+            (new ClSymbol("char-of-int"), new NativeFn(CharOfInt))
         );
-
-
-    //     ("char->integer", char_to_integer_proc);
-    //  ("integer->char", integer_to_char_proc);
-    //  ("number->string", number_to_string_proc);
-    //  ("string->number", string_to_symbol_proc);
-    //  ("symbol->string", symbol_to_string_proc);
-    //  ("string->symbol", string_to_symbol_proc);
     }
 }
