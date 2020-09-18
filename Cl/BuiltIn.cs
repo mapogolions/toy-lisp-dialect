@@ -101,6 +101,46 @@ namespace Cl
                 _ => throw new InvalidOperationException()
             };
 
+        public static IClObj Sum(params IClObj[] obj)
+        {
+            IClObj acc = new ClInt(0);
+            foreach (var el in obj)
+            {
+                if (el is ClInt fixnum)
+                {
+                    acc = fixnum + acc;
+                    continue;
+                }
+                if (el is ClDouble floatingPoint)
+                {
+                    acc = floatingPoint + acc;
+                    continue;
+                }
+                throw new InvalidOperationException();
+            }
+            return acc;
+        }
+
+        public static IClObj Product(params IClObj[] obj)
+        {
+            IClObj acc = new ClInt(0);
+            foreach (var el in obj)
+            {
+                if (el is ClInt fixnum)
+                {
+                    acc = fixnum * acc;
+                    continue;
+                }
+                if (el is ClDouble floatingPoint)
+                {
+                    acc = floatingPoint * acc;
+                    continue;
+                }
+                throw new InvalidOperationException();
+            }
+            return acc;
+        }
+
         // Pervasives
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
@@ -133,7 +173,8 @@ namespace Cl
             (new ClSymbol("string-of-double"), new NativeFn(StringOfDouble)),
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
             (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
-            (new ClSymbol("-"), new NativeFn(UnaryMinus))
+            (new ClSymbol("-"), new NativeFn(UnaryMinus)),
+            (new ClSymbol("+"), new NativeFn(Sum))
         );
     }
 }
