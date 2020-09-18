@@ -110,3 +110,8 @@ x
 ;; the same as
 (list 1 2 3)
 ```
+
+#### there are no negative numbers, but there is a special function
+```clojure
+(- 10)
+```
