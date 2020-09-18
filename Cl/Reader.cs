@@ -55,7 +55,7 @@ namespace Cl
         public ClSymbol ReadSymbol()
         {
             if (_source.Eof()) return null;
-            if (TryCheckBuiltInFunction(out var fun)) return new ClSymbol(fun);
+            if (TryCheckSpecialBuiltInFunction(out var fun)) return new ClSymbol(fun);
             var ch = (char) _source.Peek();
             if (!char.IsLetter(ch)) return null;
             string loop(string acc)
@@ -181,7 +181,7 @@ namespace Cl
                 ["space"] = ' '
             };
 
-        public bool TryCheckBuiltInFunction(out string symbol)
+        public bool TryCheckSpecialBuiltInFunction(out string symbol)
         {
             symbol = string.Empty;
             var builinFuncitons = new [] { "+", "-", "*", "/" };
