@@ -8,7 +8,7 @@ namespace Cl
         {
 
             var snippet = @"
-                (minus 1)
+                (- (- 1))
                  ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());

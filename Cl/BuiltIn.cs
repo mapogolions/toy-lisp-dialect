@@ -133,7 +133,7 @@ namespace Cl
             (new ClSymbol("string-of-double"), new NativeFn(StringOfDouble)),
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
             (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
-            (new ClSymbol("minus"), new NativeFn(UnaryMinus))
+            (new ClSymbol("-"), new NativeFn(UnaryMinus))
         );
     }
 }

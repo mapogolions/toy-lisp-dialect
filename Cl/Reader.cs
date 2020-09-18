@@ -55,6 +55,7 @@ namespace Cl
         public ClSymbol ReadSymbol()
         {
             if (_source.Eof()) return null;
+            if (TryCheckBuiltInFunction(out var fun)) return new ClSymbol(fun);
             var ch = (char) _source.Peek();
             if (!char.IsLetter(ch)) return null;
             string loop(string acc)
@@ -173,12 +174,25 @@ namespace Cl
             return new ClChar((char) _source.Read());
         }
 
-        public IDictionary<string, char> SpecialChars = new Dictionary<string, char>
+        private static IDictionary<string, char> SpecialChars = new Dictionary<string, char>
             {
                 ["newline"] = '\n',
                 ["tab"] = '\t',
                 ["space"] = ' '
             };
+
+        public bool TryCheckBuiltInFunction(out string symbol)
+        {
+            symbol = string.Empty;
+            var builinFuncitons = new [] { "+", "-", "*", "/" };
+            foreach (var fun in builinFuncitons)
+            {
+                if (!_source.SkipMatched(fun)) continue;
+                symbol = fun;
+                return true;
+            }
+            return false;
+        }
 
         public void Dispose()
         {
