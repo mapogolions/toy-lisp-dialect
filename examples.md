@@ -120,3 +120,12 @@ x
 ```clojure
 (+ 1 2 3 4 (- 2.5))
 ```
+
+### arithmetic operations
+```clojure
+(list
+    (+ 1 2 3 4 (- 2.5))
+    (* 1 2 3 4)
+    (+)
+    (*))
+```
