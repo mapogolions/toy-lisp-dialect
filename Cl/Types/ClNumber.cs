@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+using System;
 
 namespace Cl.Types
 {
@@ -7,5 +7,5 @@ namespace Cl.Types
         public ClNumber(T number) : base(number) { }
 
         public static explicit operator ClString(ClNumber<T> obj) => new ClString(obj.Value.ToString());
-    }
+     }
 }

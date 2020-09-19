@@ -101,45 +101,11 @@ namespace Cl
                 _ => throw new InvalidOperationException()
             };
 
-        public static ClObj Sum(params ClObj[] obj)
-        {
-            ClObj acc = new ClInt(0);
-            foreach (var el in obj)
-            {
-                if (el is ClInt fixnum)
-                {
-                    acc = fixnum + acc;
-                    continue;
-                }
-                if (el is ClDouble floatingPoint)
-                {
-                    acc = floatingPoint + acc;
-                    continue;
-                }
-                throw new InvalidOperationException();
-            }
-            return acc;
-        }
+        public static ClObj Sum(params ClObj[] obj) =>
+            obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(0), (acc, seed) => acc + seed);
 
-        public static ClObj Product(params ClObj[] obj)
-        {
-            ClObj acc = new ClInt(0);
-            foreach (var el in obj)
-            {
-                if (el is ClInt fixnum)
-                {
-                    acc = fixnum * acc;
-                    continue;
-                }
-                if (el is ClDouble floatingPoint)
-                {
-                    acc = floatingPoint * acc;
-                    continue;
-                }
-                throw new InvalidOperationException();
-            }
-            return acc;
-        }
+        public static ClObj Product(params ClObj[] obj) =>
+            obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(1), (acc, seed) => acc * seed);
 
         // Pervasives
         public static IEnv Env = new Env(
@@ -174,7 +140,8 @@ namespace Cl
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
             (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
             (new ClSymbol("-"), new NativeFn(UnaryMinus)),
-            (new ClSymbol("+"), new NativeFn(Sum))
+            (new ClSymbol("+"), new NativeFn(Sum)),
+            (new ClSymbol("*"), new NativeFn(Product))
         );
     }
 }
