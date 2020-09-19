@@ -5,7 +5,7 @@ namespace Cl.SpecialForms
 {
     internal class DefunSpecialForm : TaggedSpecialForm
     {
-        internal DefunSpecialForm(IClObj cdr) : base(ClSymbol.Defun, cdr) { }
+        internal DefunSpecialForm(ClObj cdr) : base(ClSymbol.Defun, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {

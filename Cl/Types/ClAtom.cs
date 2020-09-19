@@ -3,7 +3,7 @@ using Cl.Contracts;
 
 namespace Cl.Types
 {
-    public abstract class ClAtom<T> : IClObj, IEquatable<ClAtom<T>>
+    public abstract class ClAtom<T> : ClObj, IEquatable<ClAtom<T>>
     {
         public ClAtom(T value) => Value = value;
 
@@ -20,7 +20,5 @@ namespace Cl.Types
         public override int GetHashCode() => Value.GetHashCode();
 
         public override string ToString() => Value.ToString();
-
-        public virtual IContext Reduce(IContext ctx) => ctx.FromResult(this);
     }
 }

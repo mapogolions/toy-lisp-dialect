@@ -8,14 +8,14 @@ namespace Cl.Contracts
      public class Env : IEnv
     {
         private readonly IEnv _parent;
-        private readonly IDictionary<ClSymbol, IClObj> _bindings = new Dictionary<ClSymbol, IClObj>();
+        private readonly IDictionary<ClSymbol, ClObj> _bindings = new Dictionary<ClSymbol, ClObj>();
 
         public Env(IEnv parent = null)
         {
             _parent = parent;
         }
 
-        public Env(params (ClSymbol, IClObj)[] pairs)
+        public Env(params (ClSymbol, ClObj)[] pairs)
         {
             foreach (var pair in pairs)
             {
@@ -23,13 +23,13 @@ namespace Cl.Contracts
             }
         }
 
-        public bool Bind(ClSymbol identifier, IClObj obj)
+        public bool Bind(ClSymbol identifier, ClObj obj)
         {
             _bindings[identifier] = obj;
             return true;
         }
 
-        public IClObj Lookup(ClSymbol identifier)
+        public ClObj Lookup(ClSymbol identifier)
         {
             if (_bindings.TryGetValue(identifier, out var obj))
                 return obj;
@@ -39,7 +39,7 @@ namespace Cl.Contracts
             return result;
         }
 
-        public bool Assign(ClSymbol identifier, IClObj obj)
+        public bool Assign(ClSymbol identifier, ClObj obj)
         {
             if (_bindings.ContainsKey(identifier))
                 return Bind(identifier, obj);
@@ -48,7 +48,7 @@ namespace Cl.Contracts
             throw new InvalidOperationException(Errors.UnboundVariable(identifier));
         }
 
-        public bool Bind(IEnumerable<IClObj> identifiers, IEnumerable<IClObj> values)
+        public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
         {
             var pairs = identifiers.ZipIfBalanced(values);
             pairs.ForEach(pair => Bind(pair.First as ClSymbol, pair.Second));

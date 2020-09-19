@@ -7,11 +7,11 @@ namespace Cl.SpecialForms
 {
     internal class CondSpecialForm : TaggedSpecialForm
     {
-        internal CondSpecialForm(IClObj cdr) : base(ClSymbol.Cond, cdr) { }
+        internal CondSpecialForm(ClObj cdr) : base(ClSymbol.Cond, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
-            static IClObj Transform(IClObj clauses)
+            static ClObj Transform(ClObj clauses)
             {
                 if (clauses == ClCell.Nil) return ClBool.False;
                 var clause = BuiltIn.First(clauses).CastOrThrow<ClCell>(Errors.BuiltIn.ClauseMustBeCell);

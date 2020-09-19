@@ -6,7 +6,7 @@ namespace Cl.SpecialForms
 {
     internal class SetSpecialForm : TaggedSpecialForm
     {
-        internal SetSpecialForm(IClObj cdr) : base(ClSymbol.Set, cdr) { }
+        internal SetSpecialForm(ClObj cdr) : base(ClSymbol.Set, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {

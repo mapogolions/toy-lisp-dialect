@@ -39,7 +39,7 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsFalseTestCases))]
-        public void EvalAnd_ReturnFalsyItem_WhenAtLeastOneItemIsFalse(ClCell items, IClObj expected)
+        public void EvalAnd_ReturnFalsyItem_WhenAtLeastOneItemIsFalse(ClCell items, ClObj expected)
         {
             var expr = new ClCell(ClSymbol.And, items);
             var ctx = expr.Reduce(_ctx);

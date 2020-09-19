@@ -32,7 +32,7 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(EachItemIsFalseTestCases))]
-        public void EvalOr_ReturnLastItem_WhenEachItemIsFalse(ClCell items, IClObj expected)
+        public void EvalOr_ReturnLastItem_WhenEachItemIsFalse(ClCell items, ClObj expected)
         {
             var expr = new ClCell(ClSymbol.Or, items);
             var ctx = expr.Reduce(_ctx);
@@ -48,7 +48,7 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(AtLeastOneItemIsTrueTestCases))]
-        public void EvalOr_ReturnTruthyItem_WhenAtLeastOneItemIsTrue(ClCell items, IClObj expected)
+        public void EvalOr_ReturnTruthyItem_WhenAtLeastOneItemIsTrue(ClCell items, ClObj expected)
         {
             var expr = new ClCell(ClSymbol.Or, items);
             var ctx = expr.Reduce(_ctx);

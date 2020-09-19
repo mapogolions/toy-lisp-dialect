@@ -5,7 +5,7 @@ namespace Cl.Extensions
 {
     public static class ArrayOps
     {
-        public static T Unpack<T>(this IClObj[] @this)
+        public static T Unpack<T>(this ClObj[] @this)
         {
             if (@this.Length != 1)
                 throw new InvalidOperationException("Arity exception");
@@ -14,7 +14,7 @@ namespace Cl.Extensions
             return t;
         }
 
-        public static (T1, T2) Unpack<T1, T2>(this IClObj[] @this)
+        public static (T1, T2) Unpack<T1, T2>(this ClObj[] @this)
         {
             if (@this.Length != 2)
                 throw new InvalidOperationException("Arity exception");
@@ -24,7 +24,7 @@ namespace Cl.Extensions
             return (t1, t2);
         }
 
-        public static (T1, T2, T3) Unpack<T1, T2, T3>(this IClObj[] @this)
+        public static (T1, T2, T3) Unpack<T1, T2, T3>(this ClObj[] @this)
         {
             if (@this.Length != 3)
                 throw new InvalidOperationException("Arity exception");
@@ -34,7 +34,7 @@ namespace Cl.Extensions
             return (t1, t2, t3);
         }
 
-        public static (T1, T2, T3, T4) Unpack<T1, T2, T3, T4>(this IClObj[] @this)
+        public static (T1, T2, T3, T4) Unpack<T1, T2, T3, T4>(this ClObj[] @this)
         {
             if (@this.Length != 4)
                 throw new InvalidOperationException("Arity exception");

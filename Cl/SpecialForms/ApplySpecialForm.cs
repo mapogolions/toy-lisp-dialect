@@ -9,7 +9,7 @@ namespace Cl.SpecialForms
 {
     internal class ApplySpecialForm : ClCell
     {
-        internal ApplySpecialForm(ClCallable car, IClObj cdr) : base(car, cdr) { }
+        internal ApplySpecialForm(ClCallable car, ClObj cdr) : base(car, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
@@ -25,11 +25,11 @@ namespace Cl.SpecialForms
             return ctx.FromResult(result);
         }
 
-        private (IEnumerable<IClObj>, IEnv) EvalArgs(IContext ctx)
+        private (IEnumerable<ClObj>, IEnv) EvalArgs(IContext ctx)
         {
             var obj = Cdr.CastOrThrow<ClCell>(Errors.Eval.InvalidFunctionCall);
             var (reversedArgs, env) = BuiltIn.Seq(obj)
-                .Aggregate<IClObj, IContext>(ctx.FromResult(ClCell.Nil),
+                .Aggregate<ClObj, IContext>(ctx.FromResult(ClCell.Nil),
                     (ctx, expr) => {
                         var acc = ctx.Value;
                         var (obj, env) = expr.Reduce(ctx);

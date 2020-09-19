@@ -4,7 +4,7 @@ namespace Cl.Types
 {
     public class ClFn : ClCallable
     {
-        public ClFn(ClCell varargs, IClObj body, IEnv lexicalEnv)
+        public ClFn(ClCell varargs, ClObj body, IEnv lexicalEnv)
         {
             Varargs = varargs;
             Body = body;
@@ -12,7 +12,7 @@ namespace Cl.Types
         }
 
         public ClCell Varargs { get; }
-        public IClObj Body { get; }
+        public ClObj Body { get; }
         public IEnv LexicalEnv { get; }
 
         public override string ToString() => "#<procedure>";

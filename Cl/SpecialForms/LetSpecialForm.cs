@@ -9,7 +9,7 @@ namespace Cl.SpecialForms
 {
     internal class LetSpecialForm : TaggedSpecialForm
     {
-        internal LetSpecialForm(IClObj cdr) : base(ClSymbol.Let, cdr) { }
+        internal LetSpecialForm(ClObj cdr) : base(ClSymbol.Let, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
@@ -23,7 +23,7 @@ namespace Cl.SpecialForms
             return BuiltIn.ListOf(lambda).Reduce(ctx);
         }
 
-        private IEnumerable<IClObj> VariableDefinitionExpressions()
+        private IEnumerable<ClObj> VariableDefinitionExpressions()
         {
             var pairs = BuiltIn.Head(Cdr).Cast<ClCell>();
             var bindings = BuiltIn.Seq(pairs)

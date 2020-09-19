@@ -21,7 +21,7 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(InvalidParameterTestCases))]
-        public void EvalLambda_ThrowException_WhenAtLeastOneParameterIsNotSymbolPrimitive(IClObj parameter)
+        public void EvalLambda_ThrowException_WhenAtLeastOneParameterIsNotSymbolPrimitive(ClObj parameter)
         {
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
@@ -31,7 +31,7 @@ namespace Cl.Tests.EvaluatorTests
                 Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
         }
 
-        static IEnumerable<IClObj> InvalidParameterTestCases()
+        static IEnumerable<ClObj> InvalidParameterTestCases()
         {
             yield return Value.One;
             yield return Value.Foo;
@@ -55,7 +55,7 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(BodyExpressionTestCases))]
-        public void EvalLambda_BodyCanBeAnyExpression(IClObj body)
+        public void EvalLambda_BodyCanBeAnyExpression(ClObj body)
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, body);
             var fn = expr
@@ -66,7 +66,7 @@ namespace Cl.Tests.EvaluatorTests
             Assert.That(fn.Body, Is.EqualTo(body));
         }
 
-        static IEnumerable<IClObj> BodyExpressionTestCases()
+        static IEnumerable<ClObj> BodyExpressionTestCases()
         {
             yield return Value.One;
             yield return Value.Foo;

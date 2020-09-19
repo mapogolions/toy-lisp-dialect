@@ -8,7 +8,7 @@ namespace Cl.SpecialForms
 {
     internal class LambdaSpecialForm : TaggedSpecialForm
     {
-        internal LambdaSpecialForm(IClObj cdr) : base(ClSymbol.Lambda, cdr) { }
+        internal LambdaSpecialForm(ClObj cdr) : base(ClSymbol.Lambda, cdr) { }
 
         public override IContext Reduce(IContext context)
         {

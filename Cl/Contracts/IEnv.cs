@@ -5,9 +5,9 @@ namespace Cl.Contracts
 {
     public interface IEnv
     {
-        bool Bind(ClSymbol identifier, IClObj obj);
-        bool Bind(IEnumerable<IClObj> identifiers, IEnumerable<IClObj> values);
-        IClObj Lookup(ClSymbol indentifier);
-        bool Assign(ClSymbol identifier, IClObj obj);
+        bool Bind(ClSymbol identifier, ClObj obj);
+        bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values);
+        ClObj Lookup(ClSymbol indentifier);
+        bool Assign(ClSymbol identifier, ClObj obj);
     }
 }

@@ -6,10 +6,10 @@ namespace Cl.SpecialForms
 {
     internal class AndSpecialForm : TaggedSpecialForm
     {
-        internal AndSpecialForm(IClObj cdr) : base(ClSymbol.And, cdr) { }
+        internal AndSpecialForm(ClObj cdr) : base(ClSymbol.And, cdr) { }
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
-            .AggregateWhile<IClObj, IContext>(
+            .AggregateWhile<ClObj, IContext>(
                 ctx.FromResult(ClBool.True),
                 (ctx, expr) => expr.Reduce(ctx),
                 ctx => ctx.Value != ClCell.Nil && ctx.Value != ClBool.False);

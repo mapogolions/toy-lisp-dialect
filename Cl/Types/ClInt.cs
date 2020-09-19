@@ -9,7 +9,7 @@ namespace Cl.Types
         public static explicit operator ClChar(ClInt obj) => new ClChar((char) obj.Value);
         public static ClInt operator -(ClInt obj) => new ClInt(-obj.Value);
 
-        public static IClObj operator +(ClInt @this, IClObj that) =>
+        public static ClObj operator +(ClInt @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClInt(@this.Value + fixnum.Value),
@@ -17,7 +17,7 @@ namespace Cl.Types
                 _ => throw new InvalidOperationException()
             };
 
-        public static IClObj operator *(ClInt @this, IClObj that) =>
+        public static ClObj operator *(ClInt @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClInt(@this.Value * fixnum.Value),
@@ -25,7 +25,7 @@ namespace Cl.Types
                 _ => throw new InvalidOperationException()
             };
 
-        public static IClObj operator / (ClInt @this, IClObj that) =>
+        public static ClObj operator / (ClInt @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClInt(@this.Value / fixnum.Value),

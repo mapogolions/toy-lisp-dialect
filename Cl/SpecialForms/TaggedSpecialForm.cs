@@ -6,7 +6,7 @@ namespace Cl.SpecialForms
 {
     internal class TaggedSpecialForm : ClCell
     {
-        internal TaggedSpecialForm(ClSymbol tag, IClObj cdr) : base(tag, cdr) { }
+        internal TaggedSpecialForm(ClSymbol tag, ClObj cdr) : base(tag, cdr) { }
 
         public ClSymbol Tag => Car as ClSymbol;
 

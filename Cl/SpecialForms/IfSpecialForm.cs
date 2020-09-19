@@ -5,7 +5,7 @@ namespace Cl.SpecialForms
 {
     internal class IfSpecialForm : TaggedSpecialForm
     {
-        internal IfSpecialForm(IClObj cdr) : base(ClSymbol.Set, cdr) { }
+        internal IfSpecialForm(ClObj cdr) : base(ClSymbol.Set, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {

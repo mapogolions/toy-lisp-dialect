@@ -22,9 +22,9 @@ namespace Cl
         {
         }
 
-        public IEnumerable<IClObj> Read()
+        public IEnumerable<ClObj> Read()
         {
-            var items = new List<IClObj>();
+            var items = new List<ClObj>();
             while (!_source.Eof())
             {
                 items.Add(ReadExpression());
@@ -33,7 +33,7 @@ namespace Cl
             return items;
         }
 
-        public IClObj ReadExpression()
+        public ClObj ReadExpression()
         {
             _source.SkipWhitespacesAndComments();
             if (TryReadExpression(ReadChar, out var ast)) return ast;
@@ -46,7 +46,7 @@ namespace Cl
             throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
         }
 
-        public bool TryReadExpression(Func<IClObj> fn, out IClObj ast)
+        public bool TryReadExpression(Func<ClObj> fn, out ClObj ast)
         {
             ast = fn();
             return ast != null;

@@ -99,13 +99,13 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(SelfEvaluatingTestCases))]
-        public void Eval_SelfEvaluatingExpression(IClObj expr)
+        public void Eval_SelfEvaluatingExpression(ClObj expr)
         {
             var ctx = expr.Reduce(_ctx);
             Assert.That(ctx.Value, Is.EqualTo(expr));
         }
 
-        static IEnumerable<IClObj> SelfEvaluatingTestCases()
+        static IEnumerable<ClObj> SelfEvaluatingTestCases()
         {
             yield return ClBool.True;
             yield return ClBool.False;

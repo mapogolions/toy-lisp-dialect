@@ -5,11 +5,11 @@ namespace Cl.Contracts
     public interface IContext
     {
         IEnv Env { get; }
-        IClObj Value { get; }
+        ClObj Value { get; }
 
-        IContext FromResult(IClObj result);
+        IContext FromResult(ClObj result);
         IContext FromEnv(IEnv env);
 
-        void Deconstruct(out IClObj result, out IEnv env);
+        void Deconstruct(out ClObj result, out IEnv env);
     }
 }

@@ -7,7 +7,7 @@ namespace Cl.Types
         public ClDouble(double number) : base(number) { }
 
         public static ClDouble operator -(ClDouble obj) => new ClDouble(-obj.Value);
-        public static IClObj operator +(ClDouble @this, IClObj that) =>
+        public static ClObj operator +(ClDouble @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClDouble(@this.Value + fixnum.Value),
@@ -15,7 +15,7 @@ namespace Cl.Types
                 _ => throw new InvalidOperationException()
             };
 
-        public static IClObj operator *(ClDouble @this, IClObj that) =>
+        public static ClObj operator *(ClDouble @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClDouble(@this.Value * fixnum.Value),
@@ -23,7 +23,7 @@ namespace Cl.Types
                 _ => throw new InvalidOperationException()
             };
 
-        public static IClObj operator /(ClDouble @this, IClObj that) =>
+        public static ClObj operator /(ClDouble @this, ClObj that) =>
             that switch
             {
                 ClInt fixnum => new ClDouble(@this.Value / fixnum.Value),

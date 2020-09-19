@@ -9,33 +9,33 @@ namespace Cl
 {
     public static class BuiltIn
     {
-        public static IContext Eval(IEnumerable<IClObj> expressions) => expressions
-            .Aggregate<IClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
+        public static IContext Eval(IEnumerable<ClObj> expressions) => expressions
+            .Aggregate<ClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
 
-        public static IClObj Car(params IClObj[] obj) => obj.Unpack<ClCell>().Car;
-        public static IClObj Cdr(params IClObj[] obj) => obj.Unpack<ClCell>().Cdr;
+        public static ClObj Car(params ClObj[] obj) => obj.Unpack<ClCell>().Car;
+        public static ClObj Cdr(params ClObj[] obj) => obj.Unpack<ClCell>().Cdr;
 
-        public static IClObj Cadr(params IClObj[] obj) => Car(Cdr(obj));
-        public static IClObj Cddr(params IClObj[] obj) => Cdr(Cdr(obj));
-        public static IClObj Caddr(params IClObj[] obj) => Car(Cddr(obj));
-        public static IClObj Cdddr(params IClObj[] obj) => Cdr(Cddr(obj));
-        public static IClObj Cadddr(params IClObj[] obj) => Car(Cdddr(obj));
-        public static ParamsFunc<IClObj, IClObj> Head = Car;
-        public static ParamsFunc<IClObj, IClObj> Tail = Cdr;
+        public static ClObj Cadr(params ClObj[] obj) => Car(Cdr(obj));
+        public static ClObj Cddr(params ClObj[] obj) => Cdr(Cdr(obj));
+        public static ClObj Caddr(params ClObj[] obj) => Car(Cddr(obj));
+        public static ClObj Cdddr(params ClObj[] obj) => Cdr(Cddr(obj));
+        public static ClObj Cadddr(params ClObj[] obj) => Car(Cdddr(obj));
+        public static ParamsFunc<ClObj, ClObj> Head = Car;
+        public static ParamsFunc<ClObj, ClObj> Tail = Cdr;
 
-        public static ParamsFunc<IClObj, IClObj> First = Car;
-        public static ParamsFunc<IClObj, IClObj> Second = Cadr;
-        public static ParamsFunc<IClObj, IClObj> Third = Caddr;
-        public static ParamsFunc<IClObj, IClObj> Fourth = Cadddr;
-        public static ClBool IsTrue(params IClObj[] obj)
+        public static ParamsFunc<ClObj, ClObj> First = Car;
+        public static ParamsFunc<ClObj, ClObj> Second = Cadr;
+        public static ParamsFunc<ClObj, ClObj> Third = Caddr;
+        public static ParamsFunc<ClObj, ClObj> Fourth = Cadddr;
+        public static ClBool IsTrue(params ClObj[] obj)
         {
-            var value = obj.Unpack<IClObj>();
+            var value = obj.Unpack<ClObj>();
             return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
-        public static ClBool IsFalse(params IClObj[] obj) => Not(IsTrue(obj));
-        public static ClBool Not(params IClObj[] obj) => ClBool.Of((!obj.Unpack<ClBool>().Value));
+        public static ClBool IsFalse(params ClObj[] obj) => Not(IsTrue(obj));
+        public static ClBool Not(params ClObj[] obj) => ClBool.Of((!obj.Unpack<ClBool>().Value));
 
-        public static ClCell ListOf(params IClObj[] items)
+        public static ClCell ListOf(params ClObj[] items)
         {
             ClCell cell = ClCell.Nil;
             for (var i = items.Length - 1; i >= 0; i--)
@@ -45,15 +45,15 @@ namespace Cl
             return cell;
         }
 
-        public static ClCell Cons(params IClObj[] obj)
+        public static ClCell Cons(params ClObj[] obj)
         {
-            var (head, tail) = obj.Unpack<IClObj, IClObj>();
+            var (head, tail) = obj.Unpack<ClObj, ClObj>();
             return new ClCell(head, tail);
         }
 
-        public static ClCell ListOf(IEnumerable<IClObj> items) => ListOf(items.ToArray());
+        public static ClCell ListOf(IEnumerable<ClObj> items) => ListOf(items.ToArray());
 
-        public static IEnumerable<IClObj> Seq(IClObj obj)
+        public static IEnumerable<ClObj> Seq(ClObj obj)
         {
             var cell = obj.TypeOf<ClCell>();
             if (cell is null) throw new InvalidOperationException();
@@ -69,41 +69,41 @@ namespace Cl
             yield return tail;
         }
 
-        public static IClObj Quote(IClObj obj) => new ClCell(ClSymbol.Quote, obj);
+        public static ClObj Quote(ClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(params IClObj[] obj) => ClBool.Of(obj.Unpack<IClObj>() == ClCell.Nil);
-        public static ClBool HasType<T>(params IClObj[] obj) where T : IClObj  =>
-            ClBool.Of(obj.Unpack<IClObj>().TypeOf<T>() != null);
+        public static ClBool IsNull(params ClObj[] obj) => ClBool.Of(obj.Unpack<ClObj>() == ClCell.Nil);
+        public static ClBool HasType<T>(params ClObj[] obj) where T : ClObj  =>
+            ClBool.Of(obj.Unpack<ClObj>().TypeOf<T>() != null);
 
-        public static ClBool IsString(params IClObj[] obj) => HasType<ClString>(obj);
-        public static ClBool IsSymbol(params IClObj[] obj) => HasType<ClSymbol>(obj);
-        public static ClBool IsInteger(params IClObj[] obj) => HasType<ClInt>(obj);
-        public static ClBool IsDouble(params IClObj[] obj) => HasType<ClDouble>(obj);
-        public static ClBool IsChar(params IClObj[] obj) => HasType<ClChar>(obj);
-        public static ClBool IsPair(params IClObj[] obj) => HasType<ClCell>(obj);
-        public static ClBool IsCallable(params IClObj[] obj) => HasType<ClCallable>(obj);
+        public static ClBool IsString(params ClObj[] obj) => HasType<ClString>(obj);
+        public static ClBool IsSymbol(params ClObj[] obj) => HasType<ClSymbol>(obj);
+        public static ClBool IsInteger(params ClObj[] obj) => HasType<ClInt>(obj);
+        public static ClBool IsDouble(params ClObj[] obj) => HasType<ClDouble>(obj);
+        public static ClBool IsChar(params ClObj[] obj) => HasType<ClChar>(obj);
+        public static ClBool IsPair(params ClObj[] obj) => HasType<ClCell>(obj);
+        public static ClBool IsCallable(params ClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
-        public static ClInt IntOfString(params IClObj[] obj) => (ClInt) obj.Unpack<ClString>();
-        public static ClDouble DoubleOfString(params IClObj[] obj) => (ClDouble) obj.Unpack<ClString>();
-        public static ClString StringOfInt(params IClObj[] obj) => (ClString) obj.Unpack<ClInt>();
-        public static ClString StringOfDouble(params IClObj[] obj) => (ClString) obj.Unpack<ClDouble>();
-        public static ClInt IntOfChar(params IClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
-        public static ClChar CharOfInt(params IClObj[] obj) => (ClChar) obj.Unpack<ClInt>();
+        public static ClInt IntOfString(params ClObj[] obj) => (ClInt) obj.Unpack<ClString>();
+        public static ClDouble DoubleOfString(params ClObj[] obj) => (ClDouble) obj.Unpack<ClString>();
+        public static ClString StringOfInt(params ClObj[] obj) => (ClString) obj.Unpack<ClInt>();
+        public static ClString StringOfDouble(params ClObj[] obj) => (ClString) obj.Unpack<ClDouble>();
+        public static ClInt IntOfChar(params ClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
+        public static ClChar CharOfInt(params ClObj[] obj) => (ClChar) obj.Unpack<ClInt>();
 
         // Arithmetics
-        public static IClObj UnaryMinus(params IClObj[] obj) =>
-            obj.Unpack<IClObj>() switch
+        public static ClObj UnaryMinus(params ClObj[] obj) =>
+            obj.Unpack<ClObj>() switch
             {
                 ClInt fixnum => -fixnum,
                 ClDouble floatingPoint => -floatingPoint,
                 _ => throw new InvalidOperationException()
             };
 
-        public static IClObj Sum(params IClObj[] obj)
+        public static ClObj Sum(params ClObj[] obj)
         {
-            IClObj acc = new ClInt(0);
+            ClObj acc = new ClInt(0);
             foreach (var el in obj)
             {
                 if (el is ClInt fixnum)
@@ -121,9 +121,9 @@ namespace Cl
             return acc;
         }
 
-        public static IClObj Product(params IClObj[] obj)
+        public static ClObj Product(params ClObj[] obj)
         {
-            IClObj acc = new ClInt(0);
+            ClObj acc = new ClInt(0);
             foreach (var el in obj)
             {
                 if (el is ClInt fixnum)

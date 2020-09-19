@@ -47,14 +47,14 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(FalsyTestCases))]
-        public void EvalIf_EvalElseBranch_WhenConditionIsFalse(IClObj predicate)
+        public void EvalIf_EvalElseBranch_WhenConditionIsFalse(ClObj predicate)
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, ClBool.False, Value.One);
             var ctx = expr.Reduce(_ctx);
             Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
-        static IEnumerable<IClObj> FalsyTestCases()
+        static IEnumerable<ClObj> FalsyTestCases()
         {
             yield return ClBool.False;
             yield return ClCell.Nil;
@@ -62,14 +62,14 @@ namespace Cl.Tests.EvaluatorTests
 
         [Test]
         [TestCaseSource(nameof(TruthyTestCases))]
-        public void EvalIf_EvalThenBranch_WhenConditionIsTrue(IClObj predicate)
+        public void EvalIf_EvalThenBranch_WhenConditionIsTrue(ClObj predicate)
         {
             var expr = BuiltIn.ListOf(ClSymbol.If, predicate, Value.One, ClBool.False);
             var ctx = expr.Reduce(_ctx);
             Assert.That(ctx.Value, Is.EqualTo(Value.One));
         }
 
-        static IEnumerable<IClObj> TruthyTestCases()
+        static IEnumerable<ClObj> TruthyTestCases()
         {
             yield return new ClInt(0);
             yield return new ClDouble(0.0);

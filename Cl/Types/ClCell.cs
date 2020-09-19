@@ -4,20 +4,20 @@ using Cl.SpecialForms;
 
 namespace Cl.Types
 {
-    public class ClCell : IClObj
+    public class ClCell : ClObj
     {
         public static ClCell Nil = new Nothing(null, null);
 
-        public ClCell(IClObj car, IClObj cdr)
+        public ClCell(ClObj car, ClObj cdr)
         {
             Car = car;
             Cdr = cdr;
         }
 
-        public virtual IClObj Car { get; }
-        public virtual IClObj Cdr { get; }
+        public virtual ClObj Car { get; }
+        public virtual ClObj Cdr { get; }
 
-        public virtual IContext Reduce(IContext ctx)
+        public override IContext Reduce(IContext ctx)
         {
             if (Car is ClSymbol tag)
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
@@ -31,10 +31,10 @@ namespace Cl.Types
 
         private class Nothing : ClCell
         {
-            internal Nothing(IClObj car, IClObj cdr) : base(car, cdr) { }
+            internal Nothing(ClObj car, ClObj cdr) : base(car, cdr) { }
 
-            public override IClObj Car => throw new InvalidOperationException();
-            public override IClObj Cdr => throw new InvalidOperationException();
+            public override ClObj Car => throw new InvalidOperationException();
+            public override ClObj Cdr => throw new InvalidOperationException();
             public override string ToString() => "nil";
             public override IContext Reduce(IContext ctx) => ctx.FromResult(this);
         }
