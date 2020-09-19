@@ -129,3 +129,13 @@ x
     (+)
     (*))
 ```
+### simple map
+```clojure
+(defun plus-one (x)
+    (+ x 1))
+
+(defun map (number fn)
+    (fn number))
+
+(map 10 plus-one)
+```
