@@ -1,5 +1,5 @@
-### `dotnet run --project Cl/Cl.csproj`
+#### Status: in progress
 
-#### to be continued ...
+#### Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
 
 [Examples](./examples.md)
