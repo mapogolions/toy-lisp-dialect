@@ -8,15 +8,8 @@ namespace Cl
         {
 
             var snippet = @"
-                (defun plus-n (n)
-                    (lambda (number)
-                        (+ number n)))
-
-                (defun map (number fn)
-                    (fn number))
-
-                (map 10 (plus-n 1))
-                 ";
+                (filter (list 1 2) (lambda (x) #f))
+            ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());
             Console.WriteLine(result);

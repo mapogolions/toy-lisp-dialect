@@ -16,7 +16,7 @@ namespace Cl.SpecialForms
             var (args, env) = EvalArgs(ctx);
             if (Car is NativeFn nativeFn)
             {
-                var value = nativeFn.Call(args.ToArray());
+                var value = nativeFn.Apply(args.ToArray());
                 return new Context(value, env);
             }
             var fn = (ClFn) Car;

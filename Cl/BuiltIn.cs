@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cl.Extensions;
 using Cl.Types;
 using Cl.Contracts;
+using Cl.SpecialForms;
 
 namespace Cl
 {
@@ -107,6 +108,51 @@ namespace Cl
         public static ClObj Product(params ClObj[] obj) =>
             obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(1), (acc, seed) => acc * seed);
 
+        public static ClObj Divide(params ClObj[] obj)
+        {
+            (ClObj numerator, ClObj denominator) = obj.Unpack<ClObj, ClObj>();
+            return numerator / denominator;
+        }
+
+        // String functions
+        public static ClString Repeat(params ClObj[] obj)
+        {
+            (ClInt count, ClString source) = obj.Unpack<ClInt, ClString>();
+            return new ClString(string.Concat(Enumerable.Repeat(source.Value, count.Value)));
+        }
+
+        public static ClString Upper(params ClObj[] obj)
+        {
+            var source = obj.Unpack<ClString>();
+            return new ClString(source.Value.ToUpper());
+        }
+
+        public static ClString Lower(params ClObj[] obj)
+        {
+            var source = obj.Unpack<ClString>();
+            return new ClString(source.Value.ToLower());
+        }
+
+        public static ClObj Map(params ClObj[] obj)
+        {
+            (ClCell coll, ClCallable callable) = obj.Unpack<ClCell, ClCallable>();
+            var ctx = new Context(Env);
+            return Seq(coll).Select(x => {
+                    var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
+                    return result;
+                }).ListOf();
+        }
+
+        public static ClObj Filter(params ClObj[] obj)
+        {
+            (ClCell coll, ClCallable callable) = obj.Unpack<ClCell, ClCallable>();
+            var ctx = new Context(Env);
+            return Seq(coll).Where(x => {
+                    var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
+                    return result is ClBool flag && flag.Value is true;
+                }).ListOf();
+        }
+
         // Pervasives
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
@@ -141,7 +187,15 @@ namespace Cl
             (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
             (new ClSymbol("-"), new NativeFn(UnaryMinus)),
             (new ClSymbol("+"), new NativeFn(Sum)),
-            (new ClSymbol("*"), new NativeFn(Product))
+            (new ClSymbol("*"), new NativeFn(Product)),
+            (new ClSymbol("/"), new NativeFn(Divide)),
+            (new ClSymbol("repeat"), new NativeFn(Repeat)),
+            (new ClSymbol("upper"), new NativeFn(Upper)),
+            (new ClSymbol("lower"), new NativeFn(Lower)),
+            (new ClSymbol("map"), new NativeFn(Map)),
+            (new ClSymbol("filter"), new NativeFn(Filter))
+            // (new ClSymbol("mod"), new NativeFn(Mod)),
+            // (new ClSymbol("rem"), new NativeFn(Rem))
         );
     }
 }

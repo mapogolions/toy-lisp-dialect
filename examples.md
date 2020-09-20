@@ -116,20 +116,22 @@ x
 (- 10)
 ```
 
-### sum
+#### sum
 ```clojure
 (+ 1 2 3 4 (- 2.5))
 ```
 
-### arithmetic operations
+#### arithmetic operations
 ```clojure
 (list
     (+ 1 2 3 4 (- 2.5))
     (* 1 2 3 4)
     (+)
-    (*))
+    (*)
+    (/ 10 2.5))
 ```
-### simple map
+
+#### simple map
 ```clojure
 (defun plus-n (n)
     (lambda (number)
@@ -139,4 +141,14 @@ x
     (fn number))
 
 (map 10 (plus-n 1))
+```
+
+### builtin map
+```clojure
+(map
+    (list 'foo' 'bar' 'baz')
+        (lambda (x) (repeat 2 x)))
+
+(map
+    (list 'foo' 'bar' 'baz') upper)
 ```

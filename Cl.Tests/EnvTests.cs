@@ -25,7 +25,7 @@ namespace Cl.Tests
             var nativeFn = env.Lookup(new ClSymbol("head")).Cast<NativeFn>();
             var args = BuiltIn.ListOf(ClBool.True, ClBool.False);
 
-            Assert.That(nativeFn.Call(args), Is.EqualTo(ClBool.True));
+            Assert.That(nativeFn.Apply(args), Is.EqualTo(ClBool.True));
         }
 
         [Test]
