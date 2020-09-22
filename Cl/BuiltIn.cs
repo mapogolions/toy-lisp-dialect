@@ -153,6 +153,12 @@ namespace Cl
                 }).ListOf();
         }
 
+        public static ClObj Echo(params ClObj[] obj)
+        {
+            Console.WriteLine(obj.Unpack<ClObj>());
+            return ClCell.Nil;
+        }
+
         // Pervasives
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
@@ -193,7 +199,8 @@ namespace Cl
             (new ClSymbol("upper"), new NativeFn(Upper)),
             (new ClSymbol("lower"), new NativeFn(Lower)),
             (new ClSymbol("map"), new NativeFn(Map)),
-            (new ClSymbol("filter"), new NativeFn(Filter))
+            (new ClSymbol("filter"), new NativeFn(Filter)),
+            (new ClSymbol("echo"), new NativeFn(Echo))
             // (new ClSymbol("mod"), new NativeFn(Mod)),
             // (new ClSymbol("rem"), new NativeFn(Rem))
         );

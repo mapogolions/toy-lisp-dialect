@@ -71,7 +71,7 @@ x
 (define x
     (cond
         (#f 10)
-        ((list) 11)
+        (nil 11)
         (else 0)))
 
 (define y
@@ -143,7 +143,7 @@ x
 (map 10 (plus-n 1))
 ```
 
-### builtin map
+#### builtin map
 ```clojure
 (map
     (list 'foo' 'bar' 'baz')
@@ -151,4 +151,11 @@ x
 
 (map
     (list 'foo' 'bar' 'baz') upper)
+```
+
+
+#### echo
+```clojure
+(echo
+    (map (list 1 2) (lambda (x) (+ x 1))))
 ```
