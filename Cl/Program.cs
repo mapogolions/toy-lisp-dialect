@@ -8,8 +8,8 @@ namespace Cl
         {
 
             var snippet = @"
-                (echo
-                    (map (list 1 2) (lambda (x) (+ x 1))))
+                (println 10 11)
+                (print 10 11)
             ";
             using var reader = new Reader(snippet);
             var (result, _) = BuiltIn.Eval(reader.Read());

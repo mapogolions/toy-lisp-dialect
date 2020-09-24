@@ -154,8 +154,8 @@ x
 ```
 
 
-#### echo
+#### print(ln)
 ```clojure
-(echo
-    (map (list 1 2) (lambda (x) (+ x 1))))
+(println 10 11)
+(print 10 11)
 ```

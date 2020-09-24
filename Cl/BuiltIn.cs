@@ -153,9 +153,15 @@ namespace Cl
                 }).ListOf();
         }
 
-        public static ClObj Echo(params ClObj[] obj)
+        public static ClObj Println(params ClObj[] obj)
         {
-            Console.WriteLine(obj.Unpack<ClObj>());
+            obj.ToList().ForEach(x => Console.WriteLine(x));
+            return ClCell.Nil;
+        }
+
+        public static ClObj Print(params ClObj[] obj)
+        {
+            obj.ToList().ForEach(x => Console.Write(x));
             return ClCell.Nil;
         }
 
@@ -200,7 +206,8 @@ namespace Cl
             (new ClSymbol("lower"), new NativeFn(Lower)),
             (new ClSymbol("map"), new NativeFn(Map)),
             (new ClSymbol("filter"), new NativeFn(Filter)),
-            (new ClSymbol("echo"), new NativeFn(Echo))
+            (new ClSymbol("println"), new NativeFn(Println)),
+            (new ClSymbol("print"), new NativeFn(Print))
             // (new ClSymbol("mod"), new NativeFn(Mod)),
             // (new ClSymbol("rem"), new NativeFn(Rem))
         );
