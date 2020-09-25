@@ -7,7 +7,7 @@
 #### How to use
 ```sh
 > dotnet test // run tests
-> dotnet run --project Cl/Cl.proj
+> dotnet run --project <project-name>
 ```
 
 [Examples](./examples.md)
