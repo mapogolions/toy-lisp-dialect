@@ -18,9 +18,7 @@ namespace Cl
             _source = source;
         }
 
-        public Reader(string source) : this(new FilteredSource(source))
-        {
-        }
+        public Reader(string source) : this(new FilteredSource(source)) { }
 
         public IEnumerable<ClObj> Read()
         {

@@ -10,8 +10,9 @@ namespace Cl
 {
     public static class BuiltIn
     {
-        public static IContext Eval(IEnumerable<ClObj> expressions) => expressions
-            .Aggregate<ClObj, IContext>(new Context(Env), (ctx, expr) => expr.Reduce(ctx));
+        public static IContext Eval(IEnumerable<ClObj> expressions, IContext ctx) => expressions
+            .Aggregate<ClObj, IContext>(ctx, (ctx, expr) => expr.Reduce(ctx));
+        public static IContext Eval(IEnumerable<ClObj> expressions) => Eval(expressions, new Context(Env));
 
         public static ClObj Car(params ClObj[] obj) => obj.Unpack<ClCell>().Car;
         public static ClObj Cdr(params ClObj[] obj) => obj.Unpack<ClCell>().Cdr;
