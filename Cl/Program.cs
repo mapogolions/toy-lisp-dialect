@@ -1,4 +1,4 @@
-﻿using Cl.Contracts;
+﻿using Cl.DefaultContracts;
 
 namespace Cl
 {

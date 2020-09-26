@@ -8,7 +8,7 @@ using static Cl.Extensions.FpUniverse;
 using System.Globalization;
 using Cl.Contracts;
 
-namespace Cl
+namespace Cl.DefaultContracts
 {
     public class Reader : IReader
     {

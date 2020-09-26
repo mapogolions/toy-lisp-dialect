@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Cl.Contracts;
 using Cl.Extensions;
 using Cl.Types;
 
-namespace Cl.Contracts
+namespace Cl.DefaultContracts
 {
      public class Env : IEnv
     {

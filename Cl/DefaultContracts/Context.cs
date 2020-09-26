@@ -1,6 +1,7 @@
+using Cl.Contracts;
 using Cl.Types;
 
-namespace Cl.Contracts
+namespace Cl.DefaultContracts
 {
     public class Context : IContext
     {
