@@ -8,15 +8,19 @@ namespace Cl
     public class Repl
     {
         private readonly string _sign;
-        public Repl(string sing) => _sign = sing;
+        private readonly Func<string, IReader> _readerFactory;
+        public Repl(string sing, Func<string, IReader> readerFactory)
+        {
+            _sign = sing;
+            _readerFactory = readerFactory;
+        }
 
         public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _sign.Length))}";
         public string MultiLineInput => $"{Indent}|";
         public string ResultLine => $"{Indent}|> ";
 
-        public void Start()
+        public void Start(IContext ctx)
         {
-            IContext ctx = new Context(BuiltIn.Env);
             var snippet = new StringBuilder();
             Console.Write($"{_sign} ");
             while (true)
@@ -27,7 +31,7 @@ namespace Cl
                     snippet.Append(line);
                     if (string.IsNullOrEmpty(line))
                     {
-                        using var reader = new Reader(snippet.ToString());
+                        using var reader = _readerFactory(snippet.ToString());
                         snippet.Clear();
                         ctx = BuiltIn.Eval(reader.Read(), ctx);
                         Console.Write($"{ResultLine}{ctx.Value}{Environment.NewLine}{_sign} ");

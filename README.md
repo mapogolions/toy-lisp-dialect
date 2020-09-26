@@ -1,4 +1,4 @@
-## Toy dialect of LISP
+## Toy LISP dialect
 
 #### Status: in progress
 

@@ -6,10 +6,11 @@ using Cl.Types;
 using Cl.Extensions;
 using static Cl.Extensions.FpUniverse;
 using System.Globalization;
+using Cl.Contracts;
 
 namespace Cl
 {
-    public class Reader : IDisposable
+    public class Reader : IReader
     {
         private readonly IFilteredSource _source;
 
