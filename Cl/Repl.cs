@@ -12,7 +12,7 @@ namespace Cl
 
         public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _sign.Length))}";
         public string MultiLineInput => $"{Indent}|";
-        public string ResultLine => $"{Indent}> ";
+        public string ResultLine => $"{Indent}|> ";
 
         public void Start()
         {
@@ -27,20 +27,18 @@ namespace Cl
                     snippet.Append(line);
                     if (string.IsNullOrEmpty(line))
                     {
-                        Console.Write(ResultLine);
                         using var reader = new Reader(snippet.ToString());
                         snippet.Clear();
                         ctx = BuiltIn.Eval(reader.Read(), ctx);
-                        Console.WriteLine(ctx.Value);
-                        Console.Write($"{_sign} ");
+                        Console.Write($"{ResultLine}{ctx.Value}{Environment.NewLine}{_sign} ");
                         continue;
                     }
                     Console.Write(MultiLineInput);
-
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    snippet.Clear();
+                    Console.Write($"{ex.Message}{Environment.NewLine}{_sign} ");
                 }
             }
         }
