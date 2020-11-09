@@ -209,8 +209,6 @@ namespace Cl
             (new ClSymbol("filter"), new NativeFn(Filter)),
             (new ClSymbol("println"), new NativeFn(Println)),
             (new ClSymbol("print"), new NativeFn(Print))
-            // (new ClSymbol("mod"), new NativeFn(Mod)),
-            // (new ClSymbol("rem"), new NativeFn(Rem))
         );
     }
 }
