@@ -1,7 +1,6 @@
 using Cl.Types;
 using NUnit.Framework;
 using Cl.Extensions;
-using Cl.DefaultContracts;
 
 namespace Cl.Tests
 {

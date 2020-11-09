@@ -3,7 +3,6 @@ using NUnit.Framework;
 using System;
 using Cl.Types;
 using Cl.Extensions;
-using Cl.DefaultContracts;
 
 namespace Cl.Tests
 {

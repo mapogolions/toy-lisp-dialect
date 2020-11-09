@@ -1,11 +1,9 @@
-﻿using Cl.DefaultContracts;
-
-namespace Cl
+﻿namespace Cl
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args) =>
-            new Repl(">>>", snippet => new Reader(snippet))
+        internal static void Main() =>
+            new Repl(">>>", s => new Reader(s))
                 .Start(new Context(BuiltIn.Env));
     }
 }

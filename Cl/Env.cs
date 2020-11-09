@@ -4,7 +4,7 @@ using Cl.Contracts;
 using Cl.Extensions;
 using Cl.Types;
 
-namespace Cl.DefaultContracts
+namespace Cl
 {
      public class Env : IEnv
     {

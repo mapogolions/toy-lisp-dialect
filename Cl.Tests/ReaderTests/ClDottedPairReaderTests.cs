@@ -1,4 +1,3 @@
-using Cl.DefaultContracts;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;

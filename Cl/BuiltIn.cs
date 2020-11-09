@@ -5,7 +5,6 @@ using Cl.Extensions;
 using Cl.Types;
 using Cl.Contracts;
 using Cl.SpecialForms;
-using Cl.DefaultContracts;
 
 namespace Cl
 {
