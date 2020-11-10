@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using Cl.Types;
+using System.Collections.Generic;
 
 namespace Cl.Extensions
 {
-    public static class IEnumerableOps
+    public static class EnumerableOps
     {
         public static ClCell ListOf(this IEnumerable<ClObj> @this) => BuiltIn.ListOf(@this);
 

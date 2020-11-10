@@ -4,7 +4,7 @@ using System;
 using Cl.Input;
 using Cl.Types;
 using Cl.Extensions;
-using static Cl.Extensions.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 using System.Globalization;
 using Cl.Contracts;
 

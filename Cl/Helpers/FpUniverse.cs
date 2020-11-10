@@ -1,4 +1,4 @@
-namespace Cl.Extensions
+namespace Cl.Helpers
 {
     public static class FpUniverse
     {

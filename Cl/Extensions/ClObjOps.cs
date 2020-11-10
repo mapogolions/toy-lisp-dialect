@@ -3,7 +3,7 @@ using Cl.Types;
 
 namespace Cl.Extensions
 {
-    public static class IClObjOps
+    public static class ClObjOps
     {
         public static bool IsSelfEvaluating(this ClObj @this)
         {

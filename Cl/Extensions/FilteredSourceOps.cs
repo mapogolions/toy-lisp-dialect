@@ -1,9 +1,9 @@
 using Cl.Input;
-using static Cl.Extensions.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Extensions
 {
-    public static class IFilteredSourceOps
+    public static class FilteredSourceOps
     {
         public static bool SkipWhitespacesAndComments(this IFilteredSource @this,
             string startsWith = ";", bool atLeastOne = false)

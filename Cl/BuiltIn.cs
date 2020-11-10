@@ -5,6 +5,7 @@ using Cl.Extensions;
 using Cl.Types;
 using Cl.Contracts;
 using Cl.SpecialForms;
+using Cl.Helpers;
 
 namespace Cl
 {
@@ -14,8 +15,8 @@ namespace Cl
             .Aggregate<ClObj, IContext>(ctx, (ctx, expr) => expr.Reduce(ctx));
         public static IContext Eval(IEnumerable<ClObj> expressions) => Eval(expressions, new Context(Env));
 
-        public static ClObj Car(params ClObj[] obj) => obj.Unpack<ClCell>().Car;
-        public static ClObj Cdr(params ClObj[] obj) => obj.Unpack<ClCell>().Cdr;
+        public static ClObj Car(params ClObj[] obj) => ArrayHelpers.Unpack<ClCell>(obj).Car;
+        public static ClObj Cdr(params ClObj[] obj) => ArrayHelpers.Unpack<ClCell>(obj).Cdr;
 
         public static ClObj Cadr(params ClObj[] obj) => Car(Cdr(obj));
         public static ClObj Cddr(params ClObj[] obj) => Cdr(Cdr(obj));
@@ -31,11 +32,11 @@ namespace Cl
         public static ParamsFunc<ClObj, ClObj> Fourth = Cadddr;
         public static ClBool IsTrue(params ClObj[] obj)
         {
-            var value = obj.Unpack<ClObj>();
+            var value = ArrayHelpers.Unpack<ClObj>(obj);
             return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
         public static ClBool IsFalse(params ClObj[] obj) => Not(IsTrue(obj));
-        public static ClBool Not(params ClObj[] obj) => ClBool.Of((!obj.Unpack<ClBool>().Value));
+        public static ClBool Not(params ClObj[] obj) => ClBool.Of((!ArrayHelpers.Unpack<ClBool>(obj).Value));
 
         public static ClCell ListOf(params ClObj[] items)
         {
@@ -49,7 +50,7 @@ namespace Cl
 
         public static ClCell Cons(params ClObj[] obj)
         {
-            var (head, tail) = obj.Unpack<ClObj, ClObj>();
+            var (head, tail) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
             return new ClCell(head, tail);
         }
 
@@ -74,9 +75,10 @@ namespace Cl
         public static ClObj Quote(ClObj obj) => new ClCell(ClSymbol.Quote, obj);
 
         // Predicates
-        public static ClBool IsNull(params ClObj[] obj) => ClBool.Of(obj.Unpack<ClObj>() == ClCell.Nil);
+        public static ClBool IsNull(params ClObj[] obj) =>
+            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj) == ClCell.Nil);
         public static ClBool HasType<T>(params ClObj[] obj) where T : ClObj  =>
-            ClBool.Of(obj.Unpack<ClObj>().TypeOf<T>() != null);
+            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj).TypeOf<T>() != null);
 
         public static ClBool IsString(params ClObj[] obj) => HasType<ClString>(obj);
         public static ClBool IsSymbol(params ClObj[] obj) => HasType<ClSymbol>(obj);
@@ -87,16 +89,16 @@ namespace Cl
         public static ClBool IsCallable(params ClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
-        public static ClInt IntOfString(params ClObj[] obj) => (ClInt) obj.Unpack<ClString>();
-        public static ClDouble DoubleOfString(params ClObj[] obj) => (ClDouble) obj.Unpack<ClString>();
-        public static ClString StringOfInt(params ClObj[] obj) => (ClString) obj.Unpack<ClInt>();
-        public static ClString StringOfDouble(params ClObj[] obj) => (ClString) obj.Unpack<ClDouble>();
-        public static ClInt IntOfChar(params ClObj[] obj) => (ClInt) obj.Unpack<ClChar>();
-        public static ClChar CharOfInt(params ClObj[] obj) => (ClChar) obj.Unpack<ClInt>();
+        public static ClInt IntOfString(params ClObj[] obj) => (ClInt) ArrayHelpers.Unpack<ClString>(obj);
+        public static ClDouble DoubleOfString(params ClObj[] obj) => (ClDouble) ArrayHelpers.Unpack<ClString>(obj);
+        public static ClString StringOfInt(params ClObj[] obj) => (ClString) ArrayHelpers.Unpack<ClInt>(obj);
+        public static ClString StringOfDouble(params ClObj[] obj) => (ClString) ArrayHelpers.Unpack<ClDouble>(obj);
+        public static ClInt IntOfChar(params ClObj[] obj) => (ClInt) ArrayHelpers.Unpack<ClChar>(obj);
+        public static ClChar CharOfInt(params ClObj[] obj) => (ClChar) ArrayHelpers.Unpack<ClInt>(obj);
 
         // Arithmetics
         public static ClObj UnaryMinus(params ClObj[] obj) =>
-            obj.Unpack<ClObj>() switch
+            ArrayHelpers.Unpack<ClObj>(obj) switch
             {
                 ClInt fixnum => -fixnum,
                 ClDouble floatingPoint => -floatingPoint,
@@ -111,32 +113,32 @@ namespace Cl
 
         public static ClObj Divide(params ClObj[] obj)
         {
-            (ClObj numerator, ClObj denominator) = obj.Unpack<ClObj, ClObj>();
+            (ClObj numerator, ClObj denominator) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
             return numerator / denominator;
         }
 
         // String functions
         public static ClString Repeat(params ClObj[] obj)
         {
-            (ClInt count, ClString source) = obj.Unpack<ClInt, ClString>();
+            (ClInt count, ClString source) = ArrayHelpers.Unpack<ClInt, ClString>(obj);
             return new ClString(string.Concat(Enumerable.Repeat(source.Value, count.Value)));
         }
 
         public static ClString Upper(params ClObj[] obj)
         {
-            var source = obj.Unpack<ClString>();
+            var source = ArrayHelpers.Unpack<ClString>(obj);
             return new ClString(source.Value.ToUpper());
         }
 
         public static ClString Lower(params ClObj[] obj)
         {
-            var source = obj.Unpack<ClString>();
+            var source = ArrayHelpers.Unpack<ClString>(obj);
             return new ClString(source.Value.ToLower());
         }
 
         public static ClObj Map(params ClObj[] obj)
         {
-            (ClCell coll, ClCallable callable) = obj.Unpack<ClCell, ClCallable>();
+            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
             var ctx = new Context(Env);
             return Seq(coll).Select(x => {
                     var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
@@ -146,7 +148,7 @@ namespace Cl
 
         public static ClObj Filter(params ClObj[] obj)
         {
-            (ClCell coll, ClCallable callable) = obj.Unpack<ClCell, ClCallable>();
+            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
             var ctx = new Context(Env);
             return Seq(coll).Where(x => {
                     var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);

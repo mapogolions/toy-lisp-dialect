@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using Cl.Input;
-using static Cl.Extensions.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests
 {

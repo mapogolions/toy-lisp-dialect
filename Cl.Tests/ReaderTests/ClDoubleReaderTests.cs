@@ -1,7 +1,7 @@
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Extensions.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {
