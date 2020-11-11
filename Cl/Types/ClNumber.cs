@@ -1,5 +1,3 @@
-using System;
-
 namespace Cl.Types
 {
     public class ClNumber<T> : ClAtom<T> where T : struct
