@@ -6,7 +6,7 @@ namespace Cl.Types
 {
     public class ClCell : ClObj
     {
-        public static ClCell Nil = new Nothing(null, null);
+        public static readonly ClCell Nil = new Nothing();
 
         public ClCell(ClObj car, ClObj cdr)
         {
@@ -31,10 +31,10 @@ namespace Cl.Types
 
         private class Nothing : ClCell
         {
-            internal Nothing(ClObj car, ClObj cdr) : base(car, cdr) { }
+            public Nothing() : base(null, null) { }
 
-            public override ClObj Car => throw new InvalidOperationException();
-            public override ClObj Cdr => throw new InvalidOperationException();
+            public override ClObj Car => throw new NotImplementedException();
+            public override ClObj Cdr => throw new NotImplementedException();
             public override string ToString() => "nil";
             public override IContext Reduce(IContext ctx) => ctx.FromResult(this);
         }

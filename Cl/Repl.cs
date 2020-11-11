@@ -9,6 +9,7 @@ namespace Cl
     {
         private readonly string _sign;
         private readonly Func<string, IReader> _readerProvider;
+
         public Repl(string sing, Func<string, IReader> readerProvider)
         {
             _sign = sing;
