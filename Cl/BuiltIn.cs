@@ -23,13 +23,13 @@ namespace Cl
         public static ClObj Caddr(params ClObj[] obj) => Car(Cddr(obj));
         public static ClObj Cdddr(params ClObj[] obj) => Cdr(Cddr(obj));
         public static ClObj Cadddr(params ClObj[] obj) => Car(Cdddr(obj));
-        public static ParamsFunc<ClObj, ClObj> Head = Car;
-        public static ParamsFunc<ClObj, ClObj> Tail = Cdr;
+        public static VarargDelegate<ClObj, ClObj> Head = Car;
+        public static VarargDelegate<ClObj, ClObj> Tail = Cdr;
 
-        public static ParamsFunc<ClObj, ClObj> First = Car;
-        public static ParamsFunc<ClObj, ClObj> Second = Cadr;
-        public static ParamsFunc<ClObj, ClObj> Third = Caddr;
-        public static ParamsFunc<ClObj, ClObj> Fourth = Cadddr;
+        public static VarargDelegate<ClObj, ClObj> First = Car;
+        public static VarargDelegate<ClObj, ClObj> Second = Cadr;
+        public static VarargDelegate<ClObj, ClObj> Third = Caddr;
+        public static VarargDelegate<ClObj, ClObj> Fourth = Cadddr;
         public static ClBool IsTrue(params ClObj[] obj)
         {
             var value = ArrayHelpers.Unpack<ClObj>(obj);
