@@ -1,5 +1,6 @@
 using System.Linq;
 using Cl.Contracts;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms
@@ -9,6 +10,6 @@ namespace Cl.SpecialForms
         internal BeginSpecialForm(ClObj cdr) : base(ClSymbol.Begin, cdr) { }
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
-            .Aggregate(ctx.FromResult(ClCell.Nil), (ctx, expr) => expr.Reduce(ctx));
+            .Aggregate(ctx.FromValue(ClCell.Nil), (ctx, expr) => expr.Reduce(ctx));
     }
 }

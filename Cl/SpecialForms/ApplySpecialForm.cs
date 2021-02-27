@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cl.Contracts;
-using Cl;
 using Cl.Extensions;
 using Cl.Types;
 
@@ -17,24 +16,24 @@ namespace Cl.SpecialForms
             var (args, env) = EvalArgs(ctx);
             if (Car is NativeFn nativeFn)
             {
-                var value = nativeFn.Apply(args.ToArray());
-                return new Context(value, env);
+                var result = nativeFn.Apply(args.ToArray());
+                return new Context(result, env);
             }
             var fn = (ClFn) Car;
             fn.LexicalEnv.Bind(BuiltIn.Seq(fn.Varargs), args);
-            var (result, _) = fn.Body.Reduce(new Context(fn.LexicalEnv));
-            return ctx.FromResult(result);
+            var (value, _) = fn.Body.Reduce(new Context(fn.LexicalEnv));
+            return ctx.FromValue(value);
         }
 
         private (IEnumerable<ClObj>, IEnv) EvalArgs(IContext ctx)
         {
             var obj = Cdr.CastOrThrow<ClCell>(Errors.Eval.InvalidFunctionCall);
             var (reversedArgs, env) = BuiltIn.Seq(obj)
-                .Aggregate<ClObj, IContext>(ctx.FromResult(ClCell.Nil),
+                .Aggregate<ClObj, IContext>(ctx.FromValue(ClCell.Nil),
                     (ctx, expr) => {
                         var acc = ctx.Value;
-                        var (obj, env) = expr.Reduce(ctx);
-                        return new Context(new ClCell(obj, acc), env);
+                        var (value, env) = expr.Reduce(ctx);
+                        return new Context(new ClCell(value, acc), env);
                     });
             return (BuiltIn.Seq(reversedArgs).Reverse(), env);
         }

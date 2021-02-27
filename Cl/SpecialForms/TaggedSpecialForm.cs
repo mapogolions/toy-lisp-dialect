@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms
@@ -12,7 +13,7 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext ctx)
         {
-            if (Tag.Equals(ClSymbol.Quote)) return ctx.FromResult(Cdr);
+            if (Tag.Equals(ClSymbol.Quote)) return ctx.FromValue(Cdr);
             if (Tag.Equals(ClSymbol.Define)) return new DefineSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.Set)) return new SetSpecialForm(Cdr).Reduce(ctx);
             if (Tag.Equals(ClSymbol.And)) return new AndSpecialForm(Cdr).Reduce(ctx);

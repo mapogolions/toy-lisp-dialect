@@ -14,7 +14,7 @@ namespace Cl.SpecialForms
                 return BuiltIn.Second(Cdr).Reduce(newCtx);
             var elseBranch = BuiltIn.Cddr(Cdr);
             return elseBranch ==  ClCell.Nil
-                ? newCtx.FromResult(ClCell.Nil) : BuiltIn.First(elseBranch).Reduce(newCtx);
+                ? new Context(newCtx.Env) : BuiltIn.First(elseBranch).Reduce(newCtx);
         }
     }
 }

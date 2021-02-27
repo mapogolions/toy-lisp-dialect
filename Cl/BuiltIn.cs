@@ -141,8 +141,8 @@ namespace Cl
             (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
             var ctx = new Context(Env);
             return Seq(coll).Select(x => {
-                    var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
-                    return result;
+                    var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
+                    return resultCtx.Value;
                 }).ListOf();
         }
 
@@ -151,8 +151,8 @@ namespace Cl
             (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
             var ctx = new Context(Env);
             return Seq(coll).Where(x => {
-                    var (result, _) = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
-                    return result is ClBool flag && flag.Value is true;
+                    var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
+                    return resultCtx.Value is ClBool flag && flag.Value is true;
                 }).ListOf();
         }
 

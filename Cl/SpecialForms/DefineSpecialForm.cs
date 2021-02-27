@@ -11,9 +11,9 @@ namespace Cl.SpecialForms
         public override IContext Reduce(IContext ctx)
         {
             var identifier = BuiltIn.First(Cdr).Cast<ClSymbol>();
-            var newCtx = BuiltIn.Second(Cdr).Reduce(ctx);
-            newCtx.Env.Bind(identifier, newCtx.Value);
-            return newCtx.FromResult(ClCell.Nil);
+            var (value, env) = BuiltIn.Second(Cdr).Reduce(ctx);
+            env.Bind(identifier, value);
+            return new Context(env);
         }
     }
 }

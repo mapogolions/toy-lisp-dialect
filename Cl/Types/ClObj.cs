@@ -1,11 +1,12 @@
 using System;
 using Cl.Contracts;
+using Cl.Extensions;
 
 namespace Cl.Types
 {
     public class ClObj : IReducable
     {
-        public virtual IContext Reduce(IContext ctx) => ctx.FromResult(this);
+        public virtual IContext Reduce(IContext ctx) => ctx.FromValue(this);
 
         public static ClObj operator +(ClObj @this, ClObj that) =>
             (@this, that) switch

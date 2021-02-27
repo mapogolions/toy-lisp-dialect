@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Extensions;
 using Cl.SpecialForms;
 
 namespace Cl.Types
@@ -21,8 +22,8 @@ namespace Cl.Types
         {
             if (Car is ClSymbol tag)
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
-            var (obj, env) = Car.Reduce(ctx);
-            if (obj is ClCallable callable)
+            var (value, env) = Car.Reduce(ctx);
+            if (value is ClCallable callable)
                 return new ApplySpecialForm(callable, Cdr).Reduce(new Context(env));
             throw new InvalidOperationException(Errors.Eval.InvalidFunctionCall);
         }
@@ -36,7 +37,7 @@ namespace Cl.Types
             public override ClObj Car => throw new NotImplementedException();
             public override ClObj Cdr => throw new NotImplementedException();
             public override string ToString() => "nil";
-            public override IContext Reduce(IContext ctx) => ctx.FromResult(this);
+            public override IContext Reduce(IContext ctx) => ctx.FromValue(this);
         }
     }
 }

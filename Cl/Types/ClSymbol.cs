@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Extensions;
 
 namespace Cl.Types
 {
@@ -8,9 +9,9 @@ namespace Cl.Types
 
         public override IContext Reduce(IContext ctx)
         {
-            if (this.Equals(Nil)) return ctx.FromResult(ClCell.Nil);
-            var result = ctx.Env.Lookup(this);
-            return ctx.FromResult(result);
+            if (this.Equals(Nil)) return new Context(ctx.Env);
+            var value = ctx.Env.Lookup(this);
+            return ctx.FromValue(value);
         }
 
         public static readonly ClSymbol And = new ClSymbol("and");

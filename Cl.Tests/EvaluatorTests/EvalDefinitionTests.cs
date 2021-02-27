@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
 using static Cl.Helpers.FpUniverse;

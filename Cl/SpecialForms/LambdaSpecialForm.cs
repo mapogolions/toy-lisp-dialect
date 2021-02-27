@@ -20,7 +20,7 @@ namespace Cl.SpecialForms
             if (hasUnsupportBinding)
                 throw new InvalidOperationException(Errors.BuiltIn.UnsupportBinding);
             var body = BuiltIn.Second(Cdr);
-            return context.FromResult(new ClFn(parameters, body, new Env(context.Env)));
+            return context.FromValue(new ClFn(parameters, body, new Env(context.Env)));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Cl.SpecialForms
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
             .AggregateWhile<ClObj, IContext>(
-                ctx.FromResult(ClBool.True),
+                ctx.FromValue(ClBool.True),
                 (ctx, expr) => expr.Reduce(ctx),
                 ctx => ctx.Value != ClCell.Nil && ctx.Value != ClBool.False);
     }
