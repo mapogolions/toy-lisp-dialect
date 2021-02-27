@@ -4,8 +4,8 @@ namespace Cl.Types
     {
         private ClBool(bool flag) : base(flag) { }
 
-        public static ClBool True = new ClBool(true);
-        public static ClBool False = new ClBool(false);
+        public static readonly ClBool True = new ClBool(true);
+        public static readonly ClBool False = new ClBool(false);
 
         public static ClBool Of(bool flag) => flag ? ClBool.True : ClBool.False;
 
