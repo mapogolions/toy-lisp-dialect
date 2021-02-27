@@ -3,7 +3,7 @@ using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Extensions
 {
-    public static class FilteredSourceOps
+    public static class FilteredSourceExtensions
     {
         public static bool SkipWhitespacesAndComments(this IFilteredSource @this,
             string startsWith = ";", bool atLeastOne = false)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Cl.Extensions
 {
-    public static class EnumerableOps
+    public static class EnumerableExtensions
     {
         public static ClCell ListOf(this IEnumerable<ClObj> @this) => BuiltIn.ListOf(@this);
 
