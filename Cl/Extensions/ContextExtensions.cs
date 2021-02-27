@@ -5,12 +5,12 @@ namespace Cl.Extensions
 {
     public static class ContextExtensions
     {
-        public static IContext FromValue(this IContext context, ClObj value) => new Context(value, context.Env);
-        public static IContext FromEnv(this IContext context, IEnv env) => new Context(context.Value, env);
-        public static void Deconstruct(this IContext context, out ClObj value, out IEnv env)
+        public static IContext FromValue(this IContext @this, ClObj value) => new Context(value, @this.Env);
+        public static IContext FromEnv(this IContext @this, IEnv env) => new Context(@this.Value, env);
+        public static void Deconstruct(this IContext @this, out ClObj value, out IEnv env)
         {
-            value = context.Value;
-            env = context.Env;
+            value = @this.Value;
+            env = @this.Env;
         }
     }
 }
