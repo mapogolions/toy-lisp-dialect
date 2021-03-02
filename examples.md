@@ -32,22 +32,18 @@
 
 #### `callable?`
 ```clojure
-(define x
-    (list
-        (callable? tail)
-        (callable? (lambda (x) x))
-        (callable? 3)))
-x
+(list
+    (callable? tail)
+    (callable? (lambda (x) x))
+    (callable? 3))
 ```
 
 #### check primitive
 ```clojure
-(define x
-    (list
-        (char? #\a)
-        (int? 12)
-        (double? 3.3)))
-x
+(list
+    (char? #\a)
+    (int? 12)
+    (double? 3.3))
 ```
 
 #### `defun` is more consice version of `define-lambda`
@@ -158,4 +154,78 @@ x
 ```clojure
 (println 10 11)
 (print 10 11)
+```
+
+#### Captured variable contains the value at time of evaluation, not the time of capture
+```clojure
+(defun f ()
+    (begin
+        (define x 11)
+        (define g (lambda () x))
+        (set! x 12)
+        g))
+
+((f)) ;; 12
+```
+
+#### counter (v1)
+```clojure
+(defun counter (n)
+    (lambda ()
+        (begin
+            (set! n (+ 1 n))
+            n)))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20))
+```
+
+#### counter (v2)
+```clojure
+(defun counter (start)
+    (begin
+        (define x start)
+        (define g
+            (lambda ()
+                (begin
+                    (set! x (+ x 1))
+                    x)))
+        g))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20))
+```
+
+#### counter (v3)
+```clojure
+(defun counter (n)
+    (begin
+        (defun f ()
+            (begin
+                (set! n (+ 1 n))
+                n))
+        f))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+(define start-from-0 (counter 0))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20)
+    (start-from-0))
 ```
