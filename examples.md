@@ -32,22 +32,18 @@
 
 #### `callable?`
 ```clojure
-(define x
-    (list
-        (callable? tail)
-        (callable? (lambda (x) x))
-        (callable? 3)))
-x
+(list
+    (callable? tail)
+    (callable? (lambda (x) x))
+    (callable? 3))
 ```
 
 #### check primitive
 ```clojure
-(define x
-    (list
-        (char? #\a)
-        (int? 12)
-        (double? 3.3)))
-x
+(list
+    (char? #\a)
+    (int? 12)
+    (double? 3.3))
 ```
 
 #### `defun` is more consice version of `define-lambda`
@@ -164,10 +160,10 @@ x
 ```clojure
 (defun f ()
     (begin
-    (define x 11)
-    (define g (lambda () x))
-    (set! x 12)
-    g))
+        (define x 11)
+        (define g (lambda () x))
+        (set! x 12)
+        g))
 
 ((f)) ;; 12
 ```
