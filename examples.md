@@ -167,3 +167,65 @@
 
 ((f)) ;; 12
 ```
+
+#### counter (v1)
+```clojure
+(defun counter (n)
+    (lambda ()
+        (begin
+            (set! n (+ 1 n))
+            n)))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20))
+```
+
+#### counter (v2)
+```clojure
+(defun counter (start)
+    (begin
+        (define x start)
+        (define g
+            (lambda ()
+                (begin
+                    (set! x (+ x 1))
+                    x)))
+        g))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20))
+```
+
+#### counter (v3)
+```clojure
+(defun counter (n)
+    (begin
+        (defun f ()
+            (begin
+                (set! n (+ 1 n))
+                n))
+        f))
+
+(define start-from-10 (counter 10))
+(define start-from-20 (counter 20))
+(define start-from-0 (counter 0))
+
+(list
+    (start-from-10)
+    (start-from-20)
+    (start-from-10)
+    (start-from-20)
+    (start-from-0))
+```
