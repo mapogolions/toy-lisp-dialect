@@ -159,3 +159,15 @@ x
 (println 10 11)
 (print 10 11)
 ```
+
+#### Captured variable contains the value at time of evaluation, not the time of capture
+```clojure
+(defun f ()
+    (begin
+    (define x 11)
+    (define g (lambda () x))
+    (set! x 12)
+    g))
+
+((f)) ;; 12
+```
