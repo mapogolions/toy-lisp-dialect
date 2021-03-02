@@ -229,3 +229,25 @@
     (start-from-20)
     (start-from-0))
 ```
+
+#### increment/decrement
+```clojure
+(defun create-inc-dec-pair (n)
+    (begin
+        (defun dec ()
+            (begin
+                (set! n (+ n (- 1)))
+                n))
+        (defun inc ()
+            (begin
+                (set! n (+ n 1))
+                n))
+        (list  inc dec)))
+
+(define obj
+    (create-inc-dec-pair 0))
+
+((first obj))
+((second obj))
+((second obj))
+```
