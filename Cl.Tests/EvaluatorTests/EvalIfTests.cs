@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(ctx.Env.Lookup(Var.Bar), Is.EqualTo(Value.One));
             Assert.That(() => ctx.Env.Lookup(Var.Foo),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]
@@ -42,7 +43,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(ctx.Env.Lookup(Var.Foo), Is.EqualTo(Value.One));
             Assert.That(() => ctx.Env.Lookup(Var.Bar),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         [Test]

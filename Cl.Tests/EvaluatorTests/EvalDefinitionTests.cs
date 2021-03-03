@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -36,7 +37,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Var.Bar);
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         [Test]

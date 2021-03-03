@@ -1,6 +1,7 @@
 using Cl.Types;
 using NUnit.Framework;
 using Cl.Extensions;
+using Cl.Exceptions;
 
 namespace Cl.Tests
 {
@@ -22,7 +23,8 @@ namespace Cl.Tests
         {
             var env = new Env(new Env());
 
-            Assert.That(() => env.Assign(Var.Foo, ClBool.False), Throws.InvalidOperationException);
+            Assert.That(() => env.Assign(Var.Foo, ClBool.False),
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]
@@ -59,10 +61,8 @@ namespace Cl.Tests
         public void Lookup_ThrowExpception_WhenIdentifierIsKeyword()
         {
             var env = new Env();
-            var errorMessage = Errors.UnboundVariable(ClSymbol.If);
-
             Assert.That(() => env.Lookup(ClSymbol.If),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable if"));
         }
 
         [Test]
@@ -70,7 +70,8 @@ namespace Cl.Tests
         {
             var env = new Env(new Env(new Env()));
 
-            Assert.That(() => env.Lookup(Var.Bar), Throws.InvalidOperationException);
+            Assert.That(() => env.Lookup(Var.Bar),
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         [Test]

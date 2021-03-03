@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace Cl.Tests.EvaluatorTests
             var ctx = expr.Reduce(_ctx);
 
             Assert.That(() => ctx.Env.Lookup(Var.Foo),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]

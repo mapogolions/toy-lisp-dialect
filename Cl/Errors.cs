@@ -19,8 +19,6 @@ namespace Cl
             public const string InvalidLambdaParametersFormat = "Invalid function parameters format";
         }
 
-        public static string UnboundVariable(ClSymbol identifier) => $"Unbound variable {identifier}";
-
         public static class BuiltIn
         {
             public const string ArgumentMustBeCell = "Argument must be a cell";

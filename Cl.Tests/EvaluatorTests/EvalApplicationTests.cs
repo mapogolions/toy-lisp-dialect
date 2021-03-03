@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -86,10 +87,8 @@ namespace Cl.Tests.EvaluatorTests
         {
             var procedure = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Bar);
             var expr = BuiltIn.ListOf(procedure);
-            var errorMessage = Errors.UnboundVariable(Var.Bar);
-
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         /**

@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -68,7 +69,8 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalAssignment_ThrowException_WhenEnvironmentDoesNotContainBinding()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Set, Var.Foo, Value.Foo);
-            Assert.That(() => expr.Reduce(_ctx), Throws.InvalidOperationException);
+            Assert.That(() => expr.Reduce(_ctx),
+                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
         }
     }
 }
