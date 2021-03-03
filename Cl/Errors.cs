@@ -1,5 +1,3 @@
-using Cl.Types;
-
 namespace Cl
 {
     public static class Errors
@@ -21,11 +19,9 @@ namespace Cl
 
         public static class BuiltIn
         {
-            public const string ArgumentMustBeCell = "Argument must be a cell";
             public const string ClauseMustBeCell = "Clause must be a cell";
             public const string ElseClauseMustBeLast = "Else clause must be last condition";
             public const string UnsupportBinding = "Unsupport binding";
-            public static string ArgumentIsNotOfType<T>() where T : ClObj => $"Argument is not of type {nameof(T)}";
         }
     }
 }
