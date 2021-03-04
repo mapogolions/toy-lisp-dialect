@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 
@@ -36,7 +37,7 @@ namespace Cl
                 return obj;
             var result = _parent?.Lookup(identifier);
             if (result is null)
-                throw new InvalidOperationException(Errors.UnboundVariable(identifier));
+                throw new UnboundVariableError($"{identifier}");
             return result;
         }
 
@@ -46,7 +47,7 @@ namespace Cl
                 return Bind(identifier, obj);
             var result = _parent?.Assign(identifier, obj) ?? false;
             if (result) return true;
-            throw new InvalidOperationException(Errors.UnboundVariable(identifier));
+            throw new UnboundVariableError($"{identifier}");
         }
 
         public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)

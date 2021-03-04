@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 
@@ -28,12 +29,14 @@ namespace Cl.SpecialForms
 
         private (IEnumerable<ClObj>, IEnv) EvalArgs(IContext ctx)
         {
-            var obj = Cdr.CastOrThrow<ClCell>(Errors.Eval.InvalidFunctionCall);
-            var (reversedArgs, env) = BuiltIn.Seq(obj)
+            if (Cdr is not ClCell expressions)
+                throw new SyntaxError("Invalid function call");
+
+            var (reversedArgs, env) = BuiltIn.Seq(expressions)
                 .Aggregate<ClObj, IContext>(new Context(ctx.Env),
-                    (ctx, expr) => {
+                    (ctx, expression) => {
                         var acc = ctx.Value;
-                        var (value, env) = expr.Reduce(ctx);
+                        var (value, env) = expression.Reduce(ctx);
                         return new Context(new ClCell(value, acc), env);
                     });
             return (BuiltIn.Seq(reversedArgs).Reverse(), env);

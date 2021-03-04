@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -39,15 +41,14 @@ namespace Cl.Tests.ReaderTests
             Assert.That(BuiltIn.Cdddr(cell), Is.EqualTo(ClCell.Nil));
         }
 
-
         [Test]
         public void ReadDottedCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f . #\\foo)");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
+            var errorMessage = $"Invalid format of the {nameof(ClCell)} literal";
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -67,9 +68,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadDottedCell_ThrowException_CanNotReadMultipleValues()
         {
             using var reader = new Reader("(1.2 . 2 . #)");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
+            var errorMessage = $"Invalid format of the {nameof(ClCell)} literal";
+
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [TestCaseSource(nameof(DottedPairTestCases))]

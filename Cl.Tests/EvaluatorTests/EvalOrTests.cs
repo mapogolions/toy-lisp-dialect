@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(ctx.Value, Is.EqualTo(ClBool.True));
             Assert.That(() => ctx.Env.Lookup(Var.Foo),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]

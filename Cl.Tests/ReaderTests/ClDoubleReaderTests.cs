@@ -1,3 +1,4 @@
+using Cl.Errors;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -37,9 +38,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadDouble_ThrowException_WhenAfterDotInvalidSymbol()
         {
             using var reader = new Reader("0. ");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClDouble));
+            var errorMessage = $"Invalid format of the {nameof(ClDouble)} literal";
+
             Assert.That(() => reader.ReadDouble(),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]

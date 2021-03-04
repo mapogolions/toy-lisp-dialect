@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -24,10 +25,10 @@ namespace Cl.Tests.EvaluatorTests
                 BuiltIn.ListOf(ClBool.False, Value.Foo),
                 BuiltIn.ListOf(ClBool.True, Value.Bar),
                 Value.One);
-            var errorMessage = Errors.BuiltIn.ClauseMustBeCell;
+            var errorMessage = "Clause must be a cell";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -41,7 +42,7 @@ namespace Cl.Tests.EvaluatorTests
 
             Assert.That(ctx.Value, Is.EqualTo(Value.One));
             Assert.That(() => ctx.Env.Lookup(Var.Foo),
-                Throws.InvalidOperationException.With.Message.StartWith("Unbound variable"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]
@@ -83,10 +84,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var elseClause = BuiltIn.ListOf(ClSymbol.Else, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Cond, elseClause, BuiltIn.ListOf(ClSymbol.Else, ClBool.True));
-            var errorMessage = Errors.BuiltIn.ElseClauseMustBeLast;
+            var errorMessage = "Else clause must be last condition";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]

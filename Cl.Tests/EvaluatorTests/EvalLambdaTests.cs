@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -25,10 +26,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
-            var errorMessage = Errors.BuiltIn.UnsupportBinding;
+            var errorMessage = $"Binding statement should have {nameof(ClSymbol)} on the left-hand-side";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<ClObj> InvalidParameterTestCases()
@@ -79,10 +80,10 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowException_WhenLambdaSpecialFormHasInvalidBody()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True, ClBool.False);
-            var errorMessage = Errors.Eval.InvalidLambdaBodyFormat;
+            var errorMessage = "Invalid function body format";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -101,10 +102,10 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowExceptionWhenParametersIsNotList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
-            var errorMessage = Errors.Eval.InvalidLambdaParametersFormat;
+            var errorMessage = "Invalid function parameters format";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
     }
 }
