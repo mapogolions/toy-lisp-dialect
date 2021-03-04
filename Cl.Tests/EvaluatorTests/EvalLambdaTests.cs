@@ -26,10 +26,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
-            var errorMessage = $"{parameter.GetType().Name} couldn't be left side of binding statement";
+            var errorMessage = $"Binding statement should have {nameof(ClSymbol)} on the left-hand-side";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.Exception.TypeOf<InvalidBindingError>().With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<ClObj> InvalidParameterTestCases()
