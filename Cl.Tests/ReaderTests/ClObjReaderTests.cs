@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using Cl.Types;
 using Cl.Extensions;
+using Cl.Errors;
 
 namespace Cl.Tests
 {
@@ -86,7 +87,8 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
         {
             using var reader = new Reader(source);
-            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(),
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
         }
 
         static IEnumerable<string> CommentTestCases()
@@ -101,21 +103,26 @@ namespace Cl.Tests
         public void ReadExpression_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
         {
             using var reader = new Reader("11.");
-            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
+            var errorMessage = $"Invalid format of the {nameof(ClDouble)} literal";
+
+            Assert.That(() => reader.ReadExpression(),
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void ReadExpression_ThrowException_WhenSourceContainsOnlySpaces()
         {
             using var reader = new Reader("   \t");
-            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(),
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
         }
 
         [Test]
         public void ReadExpression_ThrowException_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
-            Assert.That(() => reader.ReadExpression(), Throws.InvalidOperationException);
+            Assert.That(() => reader.ReadExpression(),
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
         }
     }
 }

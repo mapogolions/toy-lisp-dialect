@@ -1,5 +1,5 @@
 using Cl.Contracts;
-using Cl.Exceptions;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -24,10 +24,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             _env.Bind(Var.Fn, Value.One);
             var expr = BuiltIn.ListOf(Var.Fn, Value.One);
-            var errorMessage = Errors.Eval.InvalidFunctionCall;
+            var errorMessage = "Invalid function call";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         /**
@@ -88,7 +88,7 @@ namespace Cl.Tests.EvaluatorTests
             var procedure = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, Var.Bar);
             var expr = BuiltIn.ListOf(procedure);
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         /**

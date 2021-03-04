@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.SpecialForms;
 
@@ -21,11 +22,15 @@ namespace Cl.Types
         public override IContext Reduce(IContext ctx)
         {
             if (Car is ClSymbol tag)
+            {
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
+            }
             var (value, env) = Car.Reduce(ctx);
             if (value is ClCallable callable)
+            {
                 return new ApplySpecialForm(callable, Cdr).Reduce(new Context(env));
-            throw new InvalidOperationException(Errors.Eval.InvalidFunctionCall);
+            }
+            throw new SyntaxError("Invalid function call");
         }
 
         public override string ToString() => $"({Car} . {Cdr})";

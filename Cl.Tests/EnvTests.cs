@@ -1,7 +1,7 @@
 using Cl.Types;
 using NUnit.Framework;
 using Cl.Extensions;
-using Cl.Exceptions;
+using Cl.Errors;
 
 namespace Cl.Tests
 {
@@ -24,7 +24,7 @@ namespace Cl.Tests
             var env = new Env(new Env());
 
             Assert.That(() => env.Assign(Var.Foo, ClBool.False),
-                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace Cl.Tests
         {
             var env = new Env();
             Assert.That(() => env.Lookup(ClSymbol.If),
-                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable if"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable if"));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace Cl.Tests
             var env = new Env(new Env(new Env()));
 
             Assert.That(() => env.Lookup(Var.Bar),
-                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable bar"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable bar"));
         }
 
         [Test]

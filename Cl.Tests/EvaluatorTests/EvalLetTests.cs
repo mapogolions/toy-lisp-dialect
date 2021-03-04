@@ -1,4 +1,5 @@
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -57,10 +58,10 @@ namespace Cl.Tests.EvaluatorTests
             var bar = BuiltIn.ListOf(Var.Bar, ClBool.False);
             var bindings = BuiltIn.ListOf(foo, bar, ClCell.Nil);
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Value.One);
-            var errorMessage = Errors.Eval.InvalidBindingsFormat;
+            var errorMessage = $"Variable definition expression cannot be {nameof(ClCell.Nil)}";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
          }
 
 
@@ -68,14 +69,14 @@ namespace Cl.Tests.EvaluatorTests
          * (let (()) 1)
          */
         [Test]
-        public void EvalLet_ThrowException_WhenBindingIsNil()
+        public void EvalLet_ThrowException_WhenSingleBindingIsNil()
         {
             var bindings = BuiltIn.ListOf(ClCell.Nil);
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Value.One);
-            var errorMessage = Errors.Eval.InvalidBindingsFormat;
+            var errorMessage = $"Variable definition expression cannot be {nameof(ClCell.Nil)}";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         /**
@@ -86,10 +87,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var bindings = BuiltIn.ListOf(BuiltIn.ListOf(Var.Foo, ClBool.True, ClBool.False));
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Var.Foo);
-            var errorMessage = Errors.Eval.InvalidBindingsFormat;
+            var errorMessage = "Variable definition expression should have format (var val)";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
 
@@ -117,10 +118,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var bindings = BuiltIn.ListOf(BuiltIn.ListOf(Var.Foo, Value.One));
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings);
-            var errorMessage = Errors.Eval.InvalidLetBodyFormat;
+            var errorMessage = "Invalid body of the let special form";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         /**
@@ -132,10 +133,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var bindings = BuiltIn.ListOf(BuiltIn.ListOf(Var.Foo, Value.One));
             var expr = BuiltIn.ListOf(ClSymbol.Let, bindings, Var.Foo, ClBool.False);
-            var errorMessage = Errors.Eval.InvalidLetBodyFormat;
+            var errorMessage = "Invalid body of the let special form";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
     }
 }

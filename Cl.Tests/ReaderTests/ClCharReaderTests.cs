@@ -1,3 +1,4 @@
+using Cl.Errors;
 using Cl.Input;
 using Cl.Types;
 using NUnit.Framework;
@@ -51,9 +52,10 @@ namespace Cl.Tests.ReaderTests
         public void ReadChar_ThrowException_WhenSourceIsEqualToHashAndBackslash()
         {
             using var reader = new Reader("#\\");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClChar));
+            var errorMessage = $"Invalid format of the {nameof(ClChar)} literal";
+
             Assert.That(() => reader.ReadChar(),
-                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().And.Message.EqualTo(errorMessage));
         }
 
         [Test]

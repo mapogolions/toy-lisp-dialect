@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cl.Contracts;
-using Cl.Exceptions;
+using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -87,7 +87,7 @@ namespace Cl.Tests.EvaluatorTests
         public void Eval_Variable_ThrowUnboundException_WhenBindingIsMissed()
         {
             Assert.That(() => Var.Foo.Reduce(_ctx),
-                Throws.Exception.TypeOf<UnboundVariableException>().With.Message.EqualTo("Unbound variable foo"));
+                Throws.Exception.TypeOf<UnboundVariableError>().With.Message.EqualTo("Unbound variable foo"));
         }
 
         [Test]

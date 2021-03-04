@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -44,20 +45,20 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ThrowException_WhenSpaceIsMissed()
         {
             using var reader = new Reader("(#t1)");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
+            var errorMessage = $"Invalid format of the {nameof(ClCell)} literal";
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void ReadCell_ThrowException_WhenAfterReadCdrInvalidSymbol()
         {
             using var reader = new Reader("(#f #\\foo)");
-            var errorMessage = Errors.Reader.UnknownLiteral(nameof(ClCell));
+            var errorMessage = $"Invalid format of the {nameof(ClCell)} literal";
 
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -102,9 +103,8 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_ThrowException_WhenSourceContainsOnlyOpenBracket()
         {
             using var reader = new Reader("(");
-            var errorMessage = Errors.Reader.ReadIllegalState;
             Assert.That(() => reader.ReadCell(),
-                Throws.InvalidOperationException.And.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().And.Message.EqualTo("Unknown literal"));
         }
 
         [Test]

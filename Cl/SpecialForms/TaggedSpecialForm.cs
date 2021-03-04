@@ -1,5 +1,6 @@
 using System;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 
@@ -26,7 +27,7 @@ namespace Cl.SpecialForms
             if (Tag.Equals(ClSymbol.Defun)) return new DefunSpecialForm(Cdr).Reduce(ctx);
             var obj = ctx.Env.Lookup(Tag);
             if (obj is ClCallable callable) return new ApplySpecialForm(callable, Cdr).Reduce(ctx);
-            throw new InvalidOperationException(Errors.Eval.InvalidFunctionCall);
+            throw new SyntaxError("Invalid function call");
         }
     }
 }

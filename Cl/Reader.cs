@@ -7,6 +7,7 @@ using Cl.Extensions;
 using static Cl.Helpers.FpUniverse;
 using System.Globalization;
 using Cl.Contracts;
+using Cl.Errors;
 
 namespace Cl
 {
@@ -42,7 +43,7 @@ namespace Cl
             if (TryReadExpression(ReadFixnum, out ast)) return ast;
             if (TryReadExpression(ReadCell, out ast)) return ast;
             if (TryReadExpression(ReadSymbol, out ast)) return ast;
-            throw new InvalidOperationException(Errors.Reader.ReadIllegalState);
+            throw new SyntaxError("Unknown literal");
         }
 
         public bool TryReadExpression(Func<ClObj> fn, out ClObj ast)
@@ -76,7 +77,9 @@ namespace Cl
             var cdr = ReadExpression();
             Ignore(_source.SkipWhitespacesAndComments());
             if (!_source.SkipMatched(")"))
-                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
+            {
+                throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
+            }
             return new ClCell(car, cdr);
         }
 
@@ -97,7 +100,9 @@ namespace Cl
         {
             if (_source.SkipMatched(")")) return ClCell.Nil;
             if (!wasDelimiter)
-                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClCell)));
+            {
+                throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
+            }
             var car = ReadExpression();
             wasDelimiter = _source.SkipWhitespacesAndComments();
             if (_source.SkipMatched(")")) return new ClCell(car, ClCell.Nil);
@@ -113,7 +118,9 @@ namespace Cl
                 return null;
             }
             if (!TryReadNumbersInRow(out var mantissa))
-                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClDouble)));
+            {
+                throw new SyntaxError($"Invalid format of the {nameof(ClDouble)} literal");
+            }
             var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float,
                 CultureInfo.InvariantCulture);
             return new ClDouble(number);
@@ -144,7 +151,9 @@ namespace Cl
             string loop(string acc)
             {
                 if (_source.Eof())
-                    throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClString)));
+                {
+                    throw new SyntaxError($"Invalid format of the {nameof(ClString)} literal");
+                }
                 var ch = (char) _source.Read();
                 if (ch == '\'') return acc;
                 return loop($"{acc}{ch}");
@@ -157,7 +166,7 @@ namespace Cl
             if (!_source.SkipMatched("#")) return null;
             if (_source.SkipMatched("t")) return ClBool.True;
             if (_source.SkipMatched("f")) return ClBool.False;
-            throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClBool)));
+            throw new SyntaxError($"Invalid format of the {nameof(ClBool)} literal");
         }
 
         public ClChar ReadChar()
@@ -169,7 +178,9 @@ namespace Cl
                 return new ClChar(ch);
             }
             if (_source.Eof())
-                throw new InvalidOperationException(Errors.Reader.UnknownLiteral(nameof(ClChar)));
+            {
+                 throw new SyntaxError($"Invalid format of the {nameof(ClChar)} literal");
+            }
             return new ClChar((char) _source.Read());
         }
 

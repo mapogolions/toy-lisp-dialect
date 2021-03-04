@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Cl.Contracts;
-using Cl.Exceptions;
+using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -29,7 +29,7 @@ namespace Cl.Tests.EvaluatorTests
             var errorMessage = $"{parameter.GetType().Name} couldn't be left side of binding statement";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.Exception.TypeOf<InvalidBindingException>().With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<InvalidBindingError>().With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<ClObj> InvalidParameterTestCases()
@@ -80,10 +80,10 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowException_WhenLambdaSpecialFormHasInvalidBody()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, ClCell.Nil, ClBool.True, ClBool.False);
-            var errorMessage = Errors.Eval.InvalidLambdaBodyFormat;
+            var errorMessage = "Invalid function body format";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
@@ -102,10 +102,10 @@ namespace Cl.Tests.EvaluatorTests
         public void EvalLambda_ThrowExceptionWhenParametersIsNotList()
         {
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, Var.Foo, Var.Foo);
-            var errorMessage = Errors.Eval.InvalidLambdaParametersFormat;
+            var errorMessage = "Invalid function parameters format";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
     }
 }
