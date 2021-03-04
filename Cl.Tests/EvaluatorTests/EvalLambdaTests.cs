@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cl.Contracts;
+using Cl.Exceptions;
 using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
@@ -25,10 +26,10 @@ namespace Cl.Tests.EvaluatorTests
         {
             var parameters = BuiltIn.ListOf(parameter, ClBool.True);
             var expr = BuiltIn.ListOf(ClSymbol.Lambda, parameters, Value.One);
-            var errorMessage = Errors.BuiltIn.UnsupportBinding;
+            var errorMessage = $"{parameter.GetType().Name} couldn't be left side of binding statement";
 
             Assert.That(() => expr.Reduce(_ctx),
-                Throws.InvalidOperationException.With.Message.EqualTo(errorMessage));
+                Throws.Exception.TypeOf<InvalidBindingException>().With.Message.EqualTo(errorMessage));
         }
 
         static IEnumerable<ClObj> InvalidParameterTestCases()

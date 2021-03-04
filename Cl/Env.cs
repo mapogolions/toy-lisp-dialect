@@ -37,7 +37,7 @@ namespace Cl
                 return obj;
             var result = _parent?.Lookup(identifier);
             if (result is null)
-                throw new UnboundVariableException(identifier.ToString());
+                throw new UnboundVariableException($"{identifier}");
             return result;
         }
 
@@ -47,7 +47,7 @@ namespace Cl
                 return Bind(identifier, obj);
             var result = _parent?.Assign(identifier, obj) ?? false;
             if (result) return true;
-            throw new UnboundVariableException(identifier.ToString());
+            throw new UnboundVariableException($"{identifier}");
         }
 
         public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
