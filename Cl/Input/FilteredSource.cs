@@ -6,13 +6,10 @@ namespace Cl.Input
 {
     public class FilteredSource : PassThroughSource
     {
-        public FilteredSource(ISource source) : base(source)
-        {
-        }
+        public FilteredSource(ISource source) : base(source) { }
 
-        public FilteredSource(string source) : this(new Source(source))
-        {
-        }
+        public FilteredSource(string source) : this(new Source(source)) { }
+
         public override bool SkipEol() => SkipMatched(Environment.NewLine);
 
         public override bool SkipLine()

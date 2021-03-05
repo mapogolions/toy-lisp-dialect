@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System;
 using Cl.Types;
-using Cl.Extensions;
 using Cl.Errors;
 
 namespace Cl.Tests
@@ -17,9 +16,9 @@ namespace Cl.Tests
             var endsWith = $"\t 'bar';comment\t{Environment.NewLine});comment\t"; // ClString("bar")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.ReadExpression().TypeOf<ClCell>();
-            var first = BuiltIn.First(cell).TypeOf<ClBool>();
-            var second = BuiltIn.Second(cell).TypeOf<ClString>();
+            var cell = reader.ReadExpression() as ClCell;
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClString;
 
             Assert.That(first?.Value, Is.True);
             Assert.That(second?.Value, Is.EqualTo("bar"));
@@ -32,9 +31,9 @@ namespace Cl.Tests
             var endsWith = $";comment{Environment.NewLine}'foo';comment\t{Environment.NewLine});comment\t"; // ClString("foo")
             using var reader = new Reader($"{startsWith}{endsWith}");
 
-            var cell = reader.ReadExpression().TypeOf<ClCell>();
-            var first = BuiltIn.Car(cell).TypeOf<ClBool>();
-            var second = BuiltIn.Cadr(cell).TypeOf<ClString>();
+            var cell = reader.ReadExpression() as ClCell;
+            var first = BuiltIn.Car(cell) as ClBool;
+            var second = BuiltIn.Cadr(cell) as ClString;
 
             Assert.That(first?.Value, Is.False);
             Assert.That(second?.Value, Is.EqualTo("foo"));
@@ -46,7 +45,7 @@ namespace Cl.Tests
             var input = $";before{Environment.NewLine}112;after";
             using var reader = new Reader(input);
 
-            var atom = reader.ReadExpression().TypeOf<ClInt>();
+            var atom = reader.ReadExpression() as ClInt;
 
             Assert.That(atom?.Value, Is.EqualTo(112));
         }
@@ -55,7 +54,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnChar()
         {
             using var reader = new Reader("#\\N");
-            var atom = reader.ReadExpression().TypeOf<ClChar>();
+            var atom = reader.ReadExpression() as ClChar;
             Assert.That(atom?.Value, Is.EqualTo('N'));
         }
 
@@ -63,7 +62,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnString()
         {
             using var reader = new Reader("'foo'");
-            var atom = reader.ReadExpression().TypeOf<ClString>();
+            var atom = reader.ReadExpression() as ClString;
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
 
@@ -71,7 +70,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnBool()
         {
             using var reader = new Reader("#t");
-            var atom = reader.ReadExpression().TypeOf<ClBool>();
+            var atom = reader.ReadExpression() as ClBool;
             Assert.That(atom?.Value, Is.EqualTo(true));
         }
 
@@ -79,7 +78,7 @@ namespace Cl.Tests
         public void ReadExpression_ReturnInteger()
         {
             using var reader = new Reader("12");
-            var atom = reader.ReadExpression().TypeOf<ClInt>();
+            var atom = reader.ReadExpression() as ClInt;
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
 

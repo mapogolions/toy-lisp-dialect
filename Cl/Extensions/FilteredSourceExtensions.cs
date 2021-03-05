@@ -9,7 +9,9 @@ namespace Cl.Extensions
             string startsWith = ";", bool atLeastOne = false)
         {
             if (@this.SkipWhitespaces())
+            {
                 atLeastOne = true;
+            }
             if (!@this.SkipMatched(startsWith)) return atLeastOne;
             Ignore(@this.SkipLine());
             return @this.SkipWhitespacesAndComments(startsWith, atLeastOne: true);

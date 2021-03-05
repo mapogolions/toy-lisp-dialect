@@ -1,5 +1,5 @@
-using System;
 using Cl.Contracts;
+using Cl.Errors;
 using Cl.Extensions;
 
 namespace Cl.Types
@@ -13,7 +13,7 @@ namespace Cl.Types
             {
                 (ClInt fixnum, _) => fixnum + that,
                 (ClDouble floatingPoint, _) => floatingPoint + that,
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {@this.GetType().Name}")
             };
 
         public static ClObj operator *(ClObj @this, ClObj that) =>
@@ -21,7 +21,7 @@ namespace Cl.Types
             {
                 (ClInt fixnum, _) => fixnum * that,
                 (ClDouble floatingPoint, _) => floatingPoint * that,
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {@this.GetType().Name}")
             };
 
         public static ClObj operator /(ClObj @this, ClObj that) =>
@@ -29,7 +29,7 @@ namespace Cl.Types
             {
                 (ClInt fixnum, _) => fixnum / that,
                 (ClDouble floatingPoint, _) => floatingPoint / that,
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {@this.GetType().Name}")
             };
     }
 }

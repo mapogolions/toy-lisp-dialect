@@ -49,7 +49,7 @@ namespace Cl
         public bool TryReadExpression(Func<ClObj> fn, out ClObj ast)
         {
             ast = fn();
-            return ast != null;
+            return ast is not null;
         }
 
         public ClSymbol ReadSymbol()

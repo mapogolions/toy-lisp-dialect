@@ -1,6 +1,5 @@
 using Cl.Contracts;
 using Cl.Errors;
-using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms
@@ -14,9 +13,11 @@ namespace Cl.SpecialForms
             static ClObj Transform(ClObj clauses)
             {
                 if (clauses == ClCell.Nil) return ClBool.False;
-                var clause = BuiltIn.First(clauses).TypeOf<ClCell>();
+                var clause = BuiltIn.First(clauses) as ClCell;
                 if (clause is null)
+                {
                     throw new SyntaxError("Clause must be a cell");
+                }
                 if (clause.Car.Equals(ClSymbol.Else))
                 {
                     return BuiltIn.Tail(clauses) == ClCell.Nil

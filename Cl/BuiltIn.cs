@@ -6,6 +6,7 @@ using Cl.Types;
 using Cl.Contracts;
 using Cl.SpecialForms;
 using Cl.Helpers;
+using Cl.Errors;
 
 namespace Cl
 {
@@ -58,8 +59,7 @@ namespace Cl
 
         public static IEnumerable<ClObj> Seq(ClObj obj)
         {
-            var cell = obj.TypeOf<ClCell>();
-            if (cell is null) throw new InvalidOperationException();
+            var cell = obj.Cast<ClCell>();
             if (cell == ClCell.Nil) yield break;
             yield return cell.Car;
             var tail = cell.Cdr;
@@ -78,7 +78,7 @@ namespace Cl
         public static ClBool IsNull(params ClObj[] obj) =>
             ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj) == ClCell.Nil);
         public static ClBool HasType<T>(params ClObj[] obj) where T : ClObj  =>
-            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj).TypeOf<T>() != null);
+            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj) as T is not null);
 
         public static ClBool IsString(params ClObj[] obj) => HasType<ClString>(obj);
         public static ClBool IsSymbol(params ClObj[] obj) => HasType<ClSymbol>(obj);
@@ -102,7 +102,7 @@ namespace Cl
             {
                 ClInt fixnum => -fixnum,
                 ClDouble floatingPoint => -floatingPoint,
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {obj.GetType().Name}")
             };
 
         public static ClObj Sum(params ClObj[] obj) =>

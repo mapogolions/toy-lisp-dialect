@@ -15,9 +15,7 @@ namespace Cl.Input
             _buffer = new Stack<int>();
         }
 
-        public Source(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source)))
-        {
-        }
+        public Source(string source) : this(new MemoryStream(Encoding.UTF8.GetBytes(source))) { }
 
         public void Dispose()
         {
