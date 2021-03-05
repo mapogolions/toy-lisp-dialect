@@ -7,9 +7,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class LetSpecialForm : TaggedSpecialForm
+    public class LetSpecialForm : TaggedSpecialForm
     {
-        internal LetSpecialForm(ClObj cdr) : base(ClSymbol.Let, cdr) { }
+        public LetSpecialForm(ClObj cdr) : base(ClSymbol.Let, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {

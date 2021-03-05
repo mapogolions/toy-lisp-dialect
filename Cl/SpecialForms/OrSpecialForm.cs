@@ -4,9 +4,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class OrSpecialForm : TaggedSpecialForm
+    public class OrSpecialForm : TaggedSpecialForm
     {
-        internal OrSpecialForm(ClObj cdr) : base(ClSymbol.Or, cdr) { }
+        public OrSpecialForm(ClObj cdr) : base(ClSymbol.Or, cdr) { }
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
             .AggregateWhile<ClObj, IContext>(
