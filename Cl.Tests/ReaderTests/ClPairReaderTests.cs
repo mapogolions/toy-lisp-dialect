@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cl.Errors;
-using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -16,10 +15,10 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(#f #t 6 #\\a)");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClBool>();
-            var second = BuiltIn.Second(cell).TypeOf<ClBool>();
-            var third = BuiltIn.Third(cell).TypeOf<ClInt>();
-            var fourth = BuiltIn.Fourth(cell).TypeOf<ClChar>();
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClBool;
+            var third = BuiltIn.Third(cell) as ClInt;
+            var fourth = BuiltIn.Fourth(cell) as ClChar;
 
             Assert.That(first?.Value, Is.False);
             Assert.That(second?.Value, Is.True);
@@ -33,8 +32,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1.34\t  #\\a)");
             var cell = reader.ReadCell();
 
-            var first = BuiltIn.First(cell).TypeOf<ClDouble>();
-            var second = BuiltIn.Second(cell).TypeOf<ClChar>();
+            var first = BuiltIn.First(cell) as ClDouble;
+            var second = BuiltIn.Second(cell) as ClChar;
 
             Assert.That(first?.Value, Is.EqualTo(1.34).Within(double.Epsilon));
             Assert.That(second?.Value, Is.EqualTo('a'));
@@ -67,8 +66,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(#f #\\f)");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClBool>();
-            var second = BuiltIn.Second(cell).TypeOf<ClChar>();
+            var first = BuiltIn.First(cell) as ClBool;
+            var second = BuiltIn.Second(cell) as ClChar;
 
             Assert.That(first?.Value, Is.False);
             Assert.That(second?.Value, Is.EqualTo('f'));
@@ -80,8 +79,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1.2 2)");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClDouble>();
-            var second = BuiltIn.Second(cell).TypeOf<ClInt>();
+            var first = BuiltIn.First(cell) as ClDouble;
+            var second = BuiltIn.Second(cell) as ClInt;
 
             Assert.That(first?.Value, Is.EqualTo(1.2).Within(double.Epsilon));
             Assert.That(second?.Value, Is.EqualTo(2));
@@ -93,7 +92,7 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1)");
 
             var cell = reader.ReadCell();
-            var first = cell.Car.TypeOf<ClInt>();
+            var first = cell.Car as ClInt;
 
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(cell.Cdr, Is.EqualTo(ClCell.Nil));

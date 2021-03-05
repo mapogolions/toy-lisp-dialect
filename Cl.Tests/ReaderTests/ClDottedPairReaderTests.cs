@@ -1,6 +1,4 @@
-using System.ComponentModel;
 using Cl.Errors;
-using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
 
@@ -15,9 +13,9 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1 . ('foo' #\\w ))");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClInt>();
-            var second = BuiltIn.Second(cell).TypeOf<ClString>();
-            var third = BuiltIn.Third(cell).TypeOf<ClChar>();
+            var first = BuiltIn.First(cell) as ClInt;
+            var second = BuiltIn.Second(cell) as ClString;
+            var third = BuiltIn.Third(cell) as ClChar;
 
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(second?.Value, Is.EqualTo("foo"));
@@ -31,9 +29,9 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(1 . ('foo' . (#\\w . ())))");
 
             var cell = reader.ReadCell();
-            var first = BuiltIn.First(cell).TypeOf<ClInt>();
-            var second = BuiltIn.Second(cell).TypeOf<ClString>();
-            var third = BuiltIn.Third(cell).TypeOf<ClChar>();
+            var first = BuiltIn.First(cell) as ClInt;
+            var second = BuiltIn.Second(cell) as ClString;
+            var third = BuiltIn.Third(cell) as ClChar;
 
             Assert.That(first?.Value, Is.EqualTo(1));
             Assert.That(second?.Value, Is.EqualTo("foo"));
@@ -57,8 +55,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader("(#f . #\\f)");
 
             var cell = reader.ReadCell();
-            var car = cell.Car.TypeOf<ClBool>();
-            var cdr = cell.Cdr.TypeOf<ClChar>();
+            var car = cell.Car as ClBool;
+            var cdr = cell.Cdr as ClChar;
 
             Assert.That(car?.Value, Is.False);
             Assert.That(cdr?.Value, Is.EqualTo('f'));
@@ -80,8 +78,8 @@ namespace Cl.Tests.ReaderTests
             using var reader = new Reader(input);
 
             var cell = reader.ReadCell();
-            var car = cell.Car.TypeOf<ClDouble>();
-            var cdr = cell.Cdr.TypeOf<ClInt>();
+            var car = cell.Car as ClDouble;
+            var cdr = cell.Cdr as ClInt;
 
             Assert.That(car?.Value, Is.EqualTo(expectedCar).Within(double.Epsilon));
             Assert.That(cdr?.Value, Is.EqualTo(expectedCdr));

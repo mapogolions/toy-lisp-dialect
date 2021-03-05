@@ -24,7 +24,7 @@ namespace Cl.Tests.EvaluatorTests
         {
             _env.Bind(Var.Fn, Value.One);
             var expr = BuiltIn.ListOf(Var.Fn, Value.One);
-            var errorMessage = "Invalid function call";
+            var errorMessage = $"{nameof(ClInt)} is neither callable nor special from";
 
             Assert.That(() => expr.Reduce(_ctx),
                 Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));

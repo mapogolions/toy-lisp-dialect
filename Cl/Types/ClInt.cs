@@ -1,4 +1,4 @@
-using System;
+using Cl.Errors;
 
 namespace Cl.Types
 {
@@ -14,7 +14,7 @@ namespace Cl.Types
             {
                 ClInt fixnum => new ClInt(@this.Value + fixnum.Value),
                 ClDouble floatingPont => new ClDouble(@this.Value + floatingPont.Value),
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {that.GetType().Name}")
             };
 
         public static ClObj operator *(ClInt @this, ClObj that) =>
@@ -22,7 +22,7 @@ namespace Cl.Types
             {
                 ClInt fixnum => new ClInt(@this.Value * fixnum.Value),
                 ClDouble floatingPont => new ClDouble(@this.Value * floatingPont.Value),
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {that.GetType().Name}")
             };
 
         public static ClObj operator / (ClInt @this, ClObj that) =>
@@ -30,7 +30,8 @@ namespace Cl.Types
             {
                 ClInt fixnum => new ClInt(@this.Value / fixnum.Value),
                 ClDouble floatingPont => new ClDouble(@this.Value / floatingPont.Value),
-                _ => throw new InvalidOperationException()
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {that.GetType().Name}")
+
             };
     }
 }

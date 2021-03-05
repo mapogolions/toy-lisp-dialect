@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cl.Contracts;
 using Cl.Errors;
@@ -9,12 +8,12 @@ namespace Cl
 {
      public class Env : IEnv
     {
-        private readonly IEnv _parent;
+        private readonly IEnv _outer;
         private readonly IDictionary<ClSymbol, ClObj> _bindings = new Dictionary<ClSymbol, ClObj>();
 
-        public Env(IEnv parent = null)
+        public Env(IEnv outer = null)
         {
-            _parent = parent;
+            _outer = outer;
         }
 
         public Env(params (ClSymbol, ClObj)[] pairs)
@@ -35,7 +34,7 @@ namespace Cl
         {
             if (_bindings.TryGetValue(identifier, out var obj))
                 return obj;
-            var result = _parent?.Lookup(identifier);
+            var result = _outer?.Lookup(identifier);
             if (result is null)
                 throw new UnboundVariableError($"{identifier}");
             return result;
@@ -45,7 +44,7 @@ namespace Cl
         {
             if (_bindings.ContainsKey(identifier))
                 return Bind(identifier, obj);
-            var result = _parent?.Assign(identifier, obj) ?? false;
+            var result = _outer?.Assign(identifier, obj) ?? false;
             if (result) return true;
             throw new UnboundVariableError($"{identifier}");
         }
@@ -53,7 +52,7 @@ namespace Cl
         public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
         {
             var pairs = identifiers.ZipIfBalanced(values);
-            pairs.ForEach(pair => Bind(pair.First as ClSymbol, pair.Second));
+            pairs.ForEach(pair => Bind(pair.First.Cast<ClSymbol>(), pair.Second));
             return true;
         }
     }
