@@ -4,9 +4,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class AndSpecialForm : TaggedSpecialForm
+    public class AndSpecialForm : TaggedSpecialForm
     {
-        internal AndSpecialForm(ClObj cdr) : base(ClSymbol.And, cdr) { }
+        public AndSpecialForm(ClObj cdr) : base(ClSymbol.And, cdr) { }
 
         public override IContext Reduce(IContext ctx) => BuiltIn.Seq(Cdr)
             .AggregateWhile<ClObj, IContext>(

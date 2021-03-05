@@ -4,9 +4,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class DefineSpecialForm : TaggedSpecialForm
+    public class DefineSpecialForm : TaggedSpecialForm
     {
-        internal DefineSpecialForm(ClObj cdr) : base(ClSymbol.Define, cdr) { }
+        public DefineSpecialForm(ClObj cdr) : base(ClSymbol.Define, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {

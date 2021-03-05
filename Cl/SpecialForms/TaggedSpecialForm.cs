@@ -5,9 +5,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class TaggedSpecialForm : ClCell
+    public class TaggedSpecialForm : ClCell
     {
-        internal TaggedSpecialForm(ClSymbol tag, ClObj cdr) : base(tag, cdr) { }
+        public TaggedSpecialForm(ClSymbol tag, ClObj cdr) : base(tag, cdr) { }
 
         public ClSymbol Tag => Car as ClSymbol;
 

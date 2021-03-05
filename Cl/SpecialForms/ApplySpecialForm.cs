@@ -8,9 +8,9 @@ using Cl.Types;
 
 namespace Cl.SpecialForms
 {
-    internal class ApplySpecialForm : ClCell
+    public class ApplySpecialForm : ClCell
     {
-        internal ApplySpecialForm(ClCallable car, ClObj cdr) : base(car, cdr) { }
+        public ApplySpecialForm(ClCallable car, ClObj cdr) : base(car, cdr) { }
 
         public override IContext Reduce(IContext ctx)
         {
