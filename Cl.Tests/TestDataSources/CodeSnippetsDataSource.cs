@@ -11,6 +11,22 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
+                (defun inc (n)
+                    (+ n 1))
+
+                (defun dec (n)
+                    (+ n (- 1)))
+
+                (cons
+                    (inc 11)
+                    (dec 12))
+                ",
+                "(12 . 11)"
+            };
+
+            yield return new object[]
+            {
+                @"
                 (defun counter (n)
                     (begin
                         (defun f ()
@@ -22,9 +38,11 @@ namespace Cl.Tests.TestDataSources
                 (define start-from-10 (counter 10))
                 (define start-from-20 (counter 20))
 
-                (start-from-10)
+                (list
+                    (start-from-10)
+                    (start-from-10))
                 ",
-                new ClNumber<int>(11)
+                "(11 . (12 . nil))"
             };
         }
 
