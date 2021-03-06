@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Cl.Tests
 {
-    public class CodeSnippetTests
+    public class CodeSnippetsTests
     {
         [Test]
         [TestCaseSource(typeof(CodeSnippetsDataSource))]
