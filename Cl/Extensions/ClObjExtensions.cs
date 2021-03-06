@@ -8,7 +8,7 @@ namespace Cl.Extensions
         public static T Cast<T>(this ClObj @this) where T : ClObj
         {
             if (@this is T t) return t;
-            throw new TypeError($"Expected {nameof(T)}, but found {@this.GetType().Name}");
+            throw new TypeError($"'{@this}' cannot be converted to {typeof(T).Name}");
         }
     }
 }

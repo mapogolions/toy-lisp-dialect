@@ -1,8 +1,8 @@
 using System;
-using Cl.Input;
+using Cl.Sources;
 using NUnit.Framework;
 
-namespace Cl.Tests
+namespace Cl.Tests.SourceTests
 {
     [TestFixture]
     public class FilteredSourceTests

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 
-namespace Cl.Input
+namespace Cl.Sources
 {
-    public class FilteredSource : PassThroughSource
+    public class FilteredSource : BySource
     {
         public FilteredSource(ISource source) : base(source) { }
 

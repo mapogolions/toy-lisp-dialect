@@ -89,21 +89,24 @@ namespace Cl
         public static ClBool IsCallable(params ClObj[] obj) => HasType<ClCallable>(obj);
 
         // Converts
-        public static ClInt IntOfString(params ClObj[] obj) => (ClInt) ArrayHelpers.Unpack<ClString>(obj);
-        public static ClDouble DoubleOfString(params ClObj[] obj) => (ClDouble) ArrayHelpers.Unpack<ClString>(obj);
-        public static ClString StringOfInt(params ClObj[] obj) => (ClString) ArrayHelpers.Unpack<ClInt>(obj);
-        public static ClString StringOfDouble(params ClObj[] obj) => (ClString) ArrayHelpers.Unpack<ClDouble>(obj);
-        public static ClInt IntOfChar(params ClObj[] obj) => (ClInt) ArrayHelpers.Unpack<ClChar>(obj);
-        public static ClChar CharOfInt(params ClObj[] obj) => (ClChar) ArrayHelpers.Unpack<ClInt>(obj);
+        public static ClInt IntOfString(params ClObj[] obj) => ArrayHelpers.Unpack<ClString>(obj).Cast<ClInt>();
+        public static ClDouble DoubleOfString(params ClObj[] obj) => ArrayHelpers.Unpack<ClString>(obj).Cast<ClDouble>();
+        public static ClString StringOfInt(params ClObj[] obj) => ArrayHelpers.Unpack<ClInt>(obj).Cast<ClString>();
+        public static ClString StringOfDouble(params ClObj[] obj) => ArrayHelpers.Unpack<ClDouble>(obj).Cast<ClString>();
+        public static ClInt IntOfChar(params ClObj[] obj) => ArrayHelpers.Unpack<ClChar>(obj).Cast<ClInt>();
+        public static ClChar CharOfInt(params ClObj[] obj) => ArrayHelpers.Unpack<ClInt>(obj).Cast<ClChar>();
 
         // Arithmetics
-        public static ClObj UnaryMinus(params ClObj[] obj) =>
-            ArrayHelpers.Unpack<ClObj>(obj) switch
+        public static ClObj UnaryMinus(params ClObj[] obj)
+        {
+            var _ = ArrayHelpers.Unpack<ClObj>(obj);
+            return _ switch
             {
                 ClInt fixnum => -fixnum,
                 ClDouble floatingPoint => -floatingPoint,
-                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {obj.GetType().Name}")
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {_.GetType().Name}")
             };
+        }
 
         public static ClObj Sum(params ClObj[] obj) =>
             obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(0), (acc, seed) => acc + seed);

@@ -8,7 +8,7 @@ namespace Cl.Types
 {
     public class ClCell : ClObj
     {
-        public static readonly ClCell Nil = new Nothing();
+        public static readonly ClCell Nil = new NIL();
 
         public ClCell(ClObj car, ClObj cdr)
         {
@@ -35,9 +35,9 @@ namespace Cl.Types
 
         public override string ToString() => $"({Car} . {Cdr})";
 
-        private class Nothing : ClCell
+        private class NIL : ClCell
         {
-            public Nothing() : base(null, null) { }
+            public NIL() : base(null, null) { }
 
             public override ClObj Car => throw new NotImplementedException();
             public override ClObj Cdr => throw new NotImplementedException();
