@@ -11,12 +11,17 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
-                (defun increment (n)
+                (defun inc (n)
                     (+ n 1))
 
-                (increment 10)
+                (defun dec (n)
+                    (+ n (- 1)))
+
+                (cons
+                    (inc 11)
+                    (dec 12))
                 ",
-                "11"
+                "(12 . 11)"
             };
 
             yield return new object[]
