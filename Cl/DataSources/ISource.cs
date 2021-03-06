@@ -1,6 +1,6 @@
 using System;
 
-namespace Cl.Input
+namespace Cl.DataSources
 {
     public interface ISource : IDisposable
     {

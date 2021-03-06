@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using Cl.Input;
+using Cl.DataSources;
 using static Cl.Helpers.FpUniverse;
 
-namespace Cl.Tests
+namespace Cl.Tests.DataSourceTests
 {
     [TestFixture]
     public class SourceTests

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Cl.Input
+namespace Cl.DataSources
 {
     public class Source : ISource
     {

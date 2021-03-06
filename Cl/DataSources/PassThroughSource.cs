@@ -1,4 +1,4 @@
-namespace Cl.Input
+namespace Cl.DataSources
 {
     // like Kotlin by-construction
     public abstract class PassThroughSource : IFilteredSource
