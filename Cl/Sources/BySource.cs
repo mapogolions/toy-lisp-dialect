@@ -1,11 +1,11 @@
 namespace Cl.Sources
 {
     // like Kotlin by-construction
-    public abstract class PassThroughSource : IFilteredSource
+    public abstract class BySource : IFilteredSource
     {
         protected readonly ISource _source;
 
-        public PassThroughSource(ISource source)
+        public BySource(ISource source)
         {
             _source = source;
         }

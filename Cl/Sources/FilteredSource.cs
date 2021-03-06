@@ -4,7 +4,7 @@ using Cl.Extensions;
 
 namespace Cl.Sources
 {
-    public class FilteredSource : PassThroughSource
+    public class FilteredSource : BySource
     {
         public FilteredSource(ISource source) : base(source) { }
 
