@@ -38,7 +38,7 @@ namespace Cl.Extensions
                     yield return (first.Current, second.Current);
                     continue;
                 }
-                throw new InvalidOperationException("Unbalanced");
+                throw new InvalidOperationException("Enumerables are of different lengths");
             }
         }
     }

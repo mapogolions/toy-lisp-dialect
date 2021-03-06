@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 
-namespace Cl.DataSources
+namespace Cl.Sources
 {
     public class FilteredSource : PassThroughSource
     {

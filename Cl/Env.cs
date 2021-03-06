@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cl.Contracts;
 using Cl.Errors;
 using Cl.Extensions;
@@ -51,6 +52,13 @@ namespace Cl
 
         public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
         {
+            var arity = identifiers.Count();
+            var passed = values.Count();
+            if (arity != passed)
+            {
+                var s = arity == 0 ? string.Empty : "s";
+                throw new TypeError($"Arity exception: function expects {arity} arg{s}, but passed {passed}");
+            }
             var pairs = identifiers.ZipIfBalanced(values);
             pairs.ForEach(pair => Bind(pair.First.Cast<ClSymbol>(), pair.Second));
             return true;

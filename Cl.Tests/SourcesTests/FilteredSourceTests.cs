@@ -1,8 +1,8 @@
 using System;
-using Cl.DataSources;
+using Cl.Sources;
 using NUnit.Framework;
 
-namespace Cl.Tests.DataSourceTests
+namespace Cl.Tests.SourceTests
 {
     [TestFixture]
     public class FilteredSourceTests

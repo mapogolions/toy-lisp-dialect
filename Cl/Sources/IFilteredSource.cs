@@ -1,4 +1,4 @@
-namespace Cl.DataSources
+namespace Cl.Sources
 {
     public interface IFilteredSource : ISource
     {
