@@ -24,7 +24,7 @@ namespace Cl.Extensions
             foreach (var el in @this) apply(el);
         }
 
-        public static IEnumerable<(A First, B Second)> ZipIfBalanced<A, B>(this IEnumerable<A> @this, IEnumerable<B> that)
+        public static IEnumerable<(A, B)> ZipIfBalanced<A, B>(this IEnumerable<A> @this, IEnumerable<B> that)
         {
             var first = @this.GetEnumerator();
             var second = that.GetEnumerator();

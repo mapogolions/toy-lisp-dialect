@@ -23,7 +23,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalIf_EvalOnlyElseBranch_WhenConditionIsFalse()
         {
-            Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            Func<ClSymbol, ClCell> defineVar = x => BuiltIn.ListOf(ClSymbol.Define, x, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.False, defineVar(Var.Foo), defineVar(Var.Bar));
 
             var ctx = expr.Reduce(_ctx);
@@ -36,7 +36,7 @@ namespace Cl.Tests.EvaluatorTests
         [Test]
         public void EvalIf_EvalOnlyThenBranch_WhenConditionIsTrue()
         {
-            Func<ClSymbol, ClCell> defineVar = it => BuiltIn.ListOf(ClSymbol.Define, it, Value.One);
+            Func<ClSymbol, ClCell> defineVar = x => BuiltIn.ListOf(ClSymbol.Define, x, Value.One);
             var expr = BuiltIn.ListOf(ClSymbol.If, ClBool.True, defineVar(Var.Foo), defineVar(Var.Bar));
 
             var ctx = expr.Reduce(_ctx);

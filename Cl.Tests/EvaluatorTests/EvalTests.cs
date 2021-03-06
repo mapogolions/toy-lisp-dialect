@@ -41,9 +41,9 @@ namespace Cl.Tests.EvaluatorTests
 
         static IEnumerable<Func<ClCell, ClCell>> DoesNotCreateNewScopeTestCases()
         {
-            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.If, it, ClBool.True, ClBool.False));
-            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.And, it, ClBool.False));
-            yield return new Func<ClCell, ClCell>(it => BuiltIn.ListOf(ClSymbol.Or, it, ClBool.True));
+            yield return new Func<ClCell, ClCell>(x => BuiltIn.ListOf(ClSymbol.If, x, ClBool.True, ClBool.False));
+            yield return new Func<ClCell, ClCell>(x => BuiltIn.ListOf(ClSymbol.And, x, ClBool.False));
+            yield return new Func<ClCell, ClCell>(x => BuiltIn.ListOf(ClSymbol.Or, x, ClBool.True));
         }
 
         [Test]

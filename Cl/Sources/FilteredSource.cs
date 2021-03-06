@@ -43,7 +43,7 @@ namespace Cl.Sources
                 var code = _source.Peek();
                 if (code == -1 || ch != (char) code)
                 {
-                    codes.ForEach(it => _source.Buffer(it));
+                    codes.ForEach(x => _source.Buffer(x));
                     return false;
                 }
                 codes.AddFirst(_source.Read());

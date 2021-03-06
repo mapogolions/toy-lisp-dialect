@@ -60,7 +60,7 @@ namespace Cl
                 throw new TypeError($"Arity exception: function expects {arity} arg{s}, but passed {passed}");
             }
             var pairs = identifiers.ZipIfBalanced(values);
-            pairs.ForEach(pair => Bind(pair.First.Cast<ClSymbol>(), pair.Second));
+            pairs.ForEach(x => Bind(x.Item1.Cast<ClSymbol>(), x.Item2));
             return true;
         }
     }

@@ -21,7 +21,7 @@ namespace Cl.SpecialForms
             {
                 throw new SyntaxError("Invalid function parameters format");
             }
-            var invalidParam = BuiltIn.Seq(parameters).FirstOrDefault(it => it as ClSymbol is null);
+            var invalidParam = BuiltIn.Seq(parameters).FirstOrDefault(x => x as ClSymbol is null);
             if (invalidParam is not null)
             {
                 throw new SyntaxError($"Binding statement should have {nameof(ClSymbol)} on the left-hand-side");
