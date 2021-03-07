@@ -34,19 +34,28 @@ namespace Cl
         public ClObj Lookup(ClSymbol identifier)
         {
             if (_bindings.TryGetValue(identifier, out var obj))
+            {
                 return obj;
+            }
             var result = _outer?.Lookup(identifier);
             if (result is null)
+            {
                 throw new UnboundVariableError($"{identifier}");
+            }
             return result;
         }
 
         public bool Assign(ClSymbol identifier, ClObj obj)
         {
             if (_bindings.ContainsKey(identifier))
+            {
                 return Bind(identifier, obj);
+            }
             var result = _outer?.Assign(identifier, obj) ?? false;
-            if (result) return true;
+            if (result)
+            {
+                return true;
+            }
             throw new UnboundVariableError($"{identifier}");
         }
 
