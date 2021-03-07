@@ -16,14 +16,14 @@ namespace Cl
             .Aggregate<ClObj, IContext>(ctx, (ctx, expr) => expr.Reduce(ctx));
         public static IContext Eval(IEnumerable<ClObj> expressions) => Eval(expressions, new Context(Env));
 
-        public static ClObj Car(params ClObj[] obj) => ArrayHelpers.Unpack<ClCell>(obj).Car;
-        public static ClObj Cdr(params ClObj[] obj) => ArrayHelpers.Unpack<ClCell>(obj).Cdr;
+        public static ClObj Car(params ClObj[] args) => ArrayHelpers.Unpack<ClCell>(args).Car;
+        public static ClObj Cdr(params ClObj[] args) => ArrayHelpers.Unpack<ClCell>(args).Cdr;
 
-        public static ClObj Cadr(params ClObj[] obj) => Car(Cdr(obj));
-        public static ClObj Cddr(params ClObj[] obj) => Cdr(Cdr(obj));
-        public static ClObj Caddr(params ClObj[] obj) => Car(Cddr(obj));
-        public static ClObj Cdddr(params ClObj[] obj) => Cdr(Cddr(obj));
-        public static ClObj Cadddr(params ClObj[] obj) => Car(Cdddr(obj));
+        public static ClObj Cadr(params ClObj[] args) => Car(Cdr(args));
+        public static ClObj Cddr(params ClObj[] args) => Cdr(Cdr(args));
+        public static ClObj Caddr(params ClObj[] args) => Car(Cddr(args));
+        public static ClObj Cdddr(params ClObj[] args) => Cdr(Cddr(args));
+        public static ClObj Cadddr(params ClObj[] args) => Car(Cdddr(args));
         public static VarargDelegate<ClObj, ClObj> Head = Car;
         public static VarargDelegate<ClObj, ClObj> Tail = Cdr;
 
@@ -31,13 +31,13 @@ namespace Cl
         public static VarargDelegate<ClObj, ClObj> Second = Cadr;
         public static VarargDelegate<ClObj, ClObj> Third = Caddr;
         public static VarargDelegate<ClObj, ClObj> Fourth = Cadddr;
-        public static ClBool IsTrue(params ClObj[] obj)
+        public static ClBool IsTrue(params ClObj[] args)
         {
-            var value = ArrayHelpers.Unpack<ClObj>(obj);
+            var value = ArrayHelpers.Unpack<ClObj>(args);
             return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
-        public static ClBool IsFalse(params ClObj[] obj) => Not(IsTrue(obj));
-        public static ClBool Not(params ClObj[] obj) => ClBool.Of((!ArrayHelpers.Unpack<ClBool>(obj).Value));
+        public static ClBool IsFalse(params ClObj[] args) => Not(IsTrue(args));
+        public static ClBool Not(params ClObj[] args) => ClBool.Of((!ArrayHelpers.Unpack<ClBool>(args).Value));
 
         public static ClCell ListOf(params ClObj[] items)
         {
@@ -49,9 +49,9 @@ namespace Cl
             return cell;
         }
 
-        public static ClCell Cons(params ClObj[] obj)
+        public static ClCell Cons(params ClObj[] args)
         {
-            var (head, tail) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (head, tail) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return new ClCell(head, tail);
         }
 
@@ -73,64 +73,57 @@ namespace Cl
         }
 
         public static ClObj Quote(ClObj obj) => new ClCell(ClSymbol.Quote, obj);
+        public static ClBool IsNull(params ClObj[] args) =>
+            ClBool.Of(ArrayHelpers.Unpack<ClObj>(args) == ClCell.Nil);
+        public static ClBool HasType<T>(params ClObj[] args) where T : ClObj  =>
+            ClBool.Of(ArrayHelpers.Unpack<ClObj>(args) as T is not null);
+        public static ClBool IsString(params ClObj[] args) => HasType<ClString>(args);
+        public static ClBool IsSymbol(params ClObj[] args) => HasType<ClSymbol>(args);
+        public static ClBool IsInteger(params ClObj[] args) => HasType<ClInt>(args);
+        public static ClBool IsDouble(params ClObj[] args) => HasType<ClDouble>(args);
+        public static ClBool IsChar(params ClObj[] args) => HasType<ClChar>(args);
+        public static ClBool IsPair(params ClObj[] args) => HasType<ClCell>(args);
+        public static ClBool IsCallable(params ClObj[] args) => HasType<ClCallable>(args);
+        public static ClInt IntOfString(params ClObj[] args) => ArrayHelpers.Unpack<ClString>(args).Cast<ClInt>();
+        public static ClDouble DoubleOfString(params ClObj[] args) => ArrayHelpers.Unpack<ClString>(args).Cast<ClDouble>();
+        public static ClString StringOfInt(params ClObj[] args) => ArrayHelpers.Unpack<ClInt>(args).Cast<ClString>();
+        public static ClString StringOfDouble(params ClObj[] args) => ArrayHelpers.Unpack<ClDouble>(args).Cast<ClString>();
+        public static ClInt IntOfChar(params ClObj[] args) => ArrayHelpers.Unpack<ClChar>(args).Cast<ClInt>();
+        public static ClChar CharOfInt(params ClObj[] args) => ArrayHelpers.Unpack<ClInt>(args).Cast<ClChar>();
 
-        // Predicates
-        public static ClBool IsNull(params ClObj[] obj) =>
-            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj) == ClCell.Nil);
-        public static ClBool HasType<T>(params ClObj[] obj) where T : ClObj  =>
-            ClBool.Of(ArrayHelpers.Unpack<ClObj>(obj) as T is not null);
-
-        public static ClBool IsString(params ClObj[] obj) => HasType<ClString>(obj);
-        public static ClBool IsSymbol(params ClObj[] obj) => HasType<ClSymbol>(obj);
-        public static ClBool IsInteger(params ClObj[] obj) => HasType<ClInt>(obj);
-        public static ClBool IsDouble(params ClObj[] obj) => HasType<ClDouble>(obj);
-        public static ClBool IsChar(params ClObj[] obj) => HasType<ClChar>(obj);
-        public static ClBool IsPair(params ClObj[] obj) => HasType<ClCell>(obj);
-        public static ClBool IsCallable(params ClObj[] obj) => HasType<ClCallable>(obj);
-
-        // Converts
-        public static ClInt IntOfString(params ClObj[] obj) => ArrayHelpers.Unpack<ClString>(obj).Cast<ClInt>();
-        public static ClDouble DoubleOfString(params ClObj[] obj) => ArrayHelpers.Unpack<ClString>(obj).Cast<ClDouble>();
-        public static ClString StringOfInt(params ClObj[] obj) => ArrayHelpers.Unpack<ClInt>(obj).Cast<ClString>();
-        public static ClString StringOfDouble(params ClObj[] obj) => ArrayHelpers.Unpack<ClDouble>(obj).Cast<ClString>();
-        public static ClInt IntOfChar(params ClObj[] obj) => ArrayHelpers.Unpack<ClChar>(obj).Cast<ClInt>();
-        public static ClChar CharOfInt(params ClObj[] obj) => ArrayHelpers.Unpack<ClInt>(obj).Cast<ClChar>();
-
-        // Equality comparison
-        public static ClBool Eq(params ClObj[] obj)
+        public static ClBool Eq(params ClObj[] args)
         {
-            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return ClBool.Of(a.Equals(b));
         }
 
-        public static ClBool Lt(params ClObj[] obj)
+        public static ClBool Lt(params ClObj[] args)
         {
-            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return ClBool.Of(a.CompareTo(b) <= -1);
         }
 
-        public static ClBool Lte(params ClObj[] obj)
+        public static ClBool Lte(params ClObj[] args)
         {
-            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return ClBool.Of(a.CompareTo(b) <= 0);
         }
 
-        public static ClBool Gt(params ClObj[] obj)
+        public static ClBool Gt(params ClObj[] args)
         {
-            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return ClBool.Of(a.CompareTo(b) >= 1);
         }
 
-        public static ClBool Gte(params ClObj[] obj)
+        public static ClBool Gte(params ClObj[] args)
         {
-            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
             return ClBool.Of(a.CompareTo(b) >= 0);
         }
 
-        // Arithmetics
-        public static ClObj UnaryMinus(params ClObj[] obj)
+        public static ClObj UnaryMinus(params ClObj[] args)
         {
-            var _ = ArrayHelpers.Unpack<ClObj>(obj);
+            var _ = ArrayHelpers.Unpack<ClObj>(args);
             return _ switch
             {
                 ClInt fixnum => -fixnum,
@@ -139,40 +132,39 @@ namespace Cl
             };
         }
 
-        public static ClObj Sum(params ClObj[] obj) =>
-            obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(0), (acc, seed) => acc + seed);
+        public static ClObj Sum(params ClObj[] args) =>
+            args.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(0), (acc, seed) => acc + seed);
 
-        public static ClObj Product(params ClObj[] obj) =>
-            obj.ToList<ClObj>().Aggregate<ClObj, ClObj>(new ClInt(1), (acc, seed) => acc * seed);
+        public static ClObj Product(params ClObj[] args) =>
+            args.Aggregate<ClObj, ClObj>(new ClInt(1), (acc, seed) => acc * seed);
 
-        public static ClObj Divide(params ClObj[] obj)
+        public static ClObj Divide(params ClObj[] args)
         {
-            (ClObj numerator, ClObj denominator) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
-            return numerator / denominator;
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(args);
+            return a / b;
         }
 
-        // String functions
-        public static ClString Repeat(params ClObj[] obj)
+        public static ClString Repeat(params ClObj[] args)
         {
-            (ClInt count, ClString source) = ArrayHelpers.Unpack<ClInt, ClString>(obj);
-            return new ClString(string.Concat(Enumerable.Repeat(source.Value, count.Value)));
+            var (times, source) = ArrayHelpers.Unpack<ClInt, ClString>(args);
+            return new ClString(string.Concat(Enumerable.Repeat(source.Value, times.Value)));
         }
 
-        public static ClString Upper(params ClObj[] obj)
+        public static ClString Upper(params ClObj[] args)
         {
-            var source = ArrayHelpers.Unpack<ClString>(obj);
+            var source = ArrayHelpers.Unpack<ClString>(args);
             return new ClString(source.Value.ToUpper());
         }
 
-        public static ClString Lower(params ClObj[] obj)
+        public static ClString Lower(params ClObj[] args)
         {
-            var source = ArrayHelpers.Unpack<ClString>(obj);
+            var source = ArrayHelpers.Unpack<ClString>(args);
             return new ClString(source.Value.ToLower());
         }
 
-        public static ClObj Map(params ClObj[] obj)
+        public static ClObj Map(params ClObj[] args)
         {
-            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
+            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(args);
             var ctx = new Context(Env);
             return Seq(coll).Select(x => {
                     var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
@@ -180,9 +172,9 @@ namespace Cl
                 }).ListOf();
         }
 
-        public static ClObj Filter(params ClObj[] obj)
+        public static ClObj Filter(params ClObj[] args)
         {
-            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(obj);
+            (ClCell coll, ClCallable callable) = ArrayHelpers.Unpack<ClCell, ClCallable>(args);
             var ctx = new Context(Env);
             return Seq(coll).Where(x => {
                     var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
@@ -190,19 +182,18 @@ namespace Cl
                 }).ListOf();
         }
 
-        public static ClObj Println(params ClObj[] obj)
+        public static ClObj Println(params ClObj[] args)
         {
-            obj.ToList().ForEach(x => Console.WriteLine(x));
+            args.ForEach(x => Console.WriteLine(x));
             return ClCell.Nil;
         }
 
-        public static ClObj Print(params ClObj[] obj)
+        public static ClObj Print(params ClObj[] args)
         {
-            obj.ToList().ForEach(x => Console.Write(x));
+            args.ForEach(x => Console.Write(x));
             return ClCell.Nil;
         }
 
-        // Pervasives
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
             (new ClSymbol("string?"), new NativeFn(IsString)),

@@ -12,25 +12,24 @@ namespace Cl.Tests.TestDataSources
                 "(list (lte 2 2) (gte (- 1) (- 1)))",
                 "(#t . (#t . nil))"
             };
+
             yield return new object[]
             {
                 "(gt 0 (- 10))",
                 "#t"
             };
+
             yield return new object[]
             {
                 "(lt 1 3)",
                 "#t"
             };
 
-            // eq
             yield return new object[]
             {
                 @"
                 (defun f (x) nil)
-
                 (defun g (x) nil)
-
                 (not (eq f g))
                 ",
                 "#t"
@@ -58,6 +57,7 @@ namespace Cl.Tests.TestDataSources
                 ",
                 "#t"
             };
+
             yield return new object[]
             {
                 @"
@@ -97,6 +97,7 @@ namespace Cl.Tests.TestDataSources
                 ",
                 "#f"
             };
+
             yield return new object[]
             {
                 @"

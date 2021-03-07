@@ -8,7 +8,6 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            // convertion
             yield return new object[]
             {
                 @"(int-of-string #\a)",
@@ -49,8 +48,7 @@ namespace Cl.Tests.TestDataSources
                 "(int-of-string 'some')",
                 $"'some' cannot be converted to {nameof(ClInt)}"
             };
-            // TODO: (+ 1 2) (* )
-            // Unary minus
+
             yield return new object[]
             {
                 "(- #t)",
@@ -62,7 +60,6 @@ namespace Cl.Tests.TestDataSources
                 $"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {nameof(ClString)}"
             };
 
-            // arity exception
             yield return new object[]
             {
                 "(string? 1 '34')",
