@@ -1,6 +1,7 @@
+using System;
 namespace Cl.Types
 {
-    public class ClNumber<T> : ClAtom<T> where T : struct
+    public class ClNumber<T> : ClAtom<T> where T : struct, IComparable<T>
     {
         public ClNumber(T number) : base(number) { }
 

@@ -96,6 +96,37 @@ namespace Cl
         public static ClInt IntOfChar(params ClObj[] obj) => ArrayHelpers.Unpack<ClChar>(obj).Cast<ClInt>();
         public static ClChar CharOfInt(params ClObj[] obj) => ArrayHelpers.Unpack<ClInt>(obj).Cast<ClChar>();
 
+        // Equality comparison
+        public static ClBool Eq(params ClObj[] obj)
+        {
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            return ClBool.Of(a.Equals(b));
+        }
+
+        public static ClBool Lt(params ClObj[] obj)
+        {
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            return ClBool.Of(a.CompareTo(b) <= -1);
+        }
+
+        public static ClBool Lte(params ClObj[] obj)
+        {
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            return ClBool.Of(a.CompareTo(b) <= 0);
+        }
+
+        public static ClBool Gt(params ClObj[] obj)
+        {
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            return ClBool.Of(a.CompareTo(b) >= 1);
+        }
+
+        public static ClBool Gte(params ClObj[] obj)
+        {
+            var (a, b) = ArrayHelpers.Unpack<ClObj, ClObj>(obj);
+            return ClBool.Of(a.CompareTo(b) >= 0);
+        }
+
         // Arithmetics
         public static ClObj UnaryMinus(params ClObj[] obj)
         {
@@ -213,7 +244,12 @@ namespace Cl
             (new ClSymbol("map"), new NativeFn(Map)),
             (new ClSymbol("filter"), new NativeFn(Filter)),
             (new ClSymbol("println"), new NativeFn(Println)),
-            (new ClSymbol("print"), new NativeFn(Print))
+            (new ClSymbol("print"), new NativeFn(Print)),
+            (new ClSymbol("eq"), new NativeFn(Eq)),
+            (new ClSymbol("lt"), new NativeFn(Lt)),
+            (new ClSymbol("gt"), new NativeFn(Gt)),
+            (new ClSymbol("lte"), new NativeFn(Lte)),
+            (new ClSymbol("gte"), new NativeFn(Gte))
         );
     }
 }
