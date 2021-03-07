@@ -10,6 +10,68 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
+                (defun where (f coll)
+                    (if (null? coll)
+                        nil
+                        (if (f (first coll))
+                            (cons
+                                (first coll)
+                                (where f (tail coll)))
+                            (where f (tail coll)))))
+
+                (where
+                    (lambda (x)
+                        (gt x 0))
+                    (list
+                        (- 1) 0 2 4 (- 10) 0 5))
+                ",
+                "(2 . (4 . (5 . nil)))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun select (f coll)
+                    (if (null? coll)
+                        nil
+                        (cons
+                            (f (first coll))
+                            (select f (tail coll)))))
+
+                (select
+                    (lambda (x)
+                        (+ x 1))
+                    (list 0 1))
+                ",
+                "(1 . (2 . nil))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun and-then (f g)
+                    (lambda (x)
+                        (g (f x))))
+
+                (defun compose (f g)
+                    (and-then g f))
+
+                (defun inc (x)
+                    (+ 1 x))
+
+                (defun multiply-by-3 (x)
+                    (* x 3))
+
+                (list
+                    ((compose inc multiply-by-3) 0)
+                    ((and-then inc multiply-by-3) 0))
+                ",
+                "(1 . (3 . nil))"
+            };
+
+            yield return new object[]
+            {
+                @"
                 (defun count-down (n)
                     (if (eq n (- 1))
                         nil
