@@ -10,6 +10,141 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
+                (defun count (coll)
+                    (if (null? coll)
+                        0
+                        (+ 1 (count (tail coll)))))
+
+                (defun at-index (i coll)
+                    (if (or (null? coll) (lt i 0))
+                        nil
+                        (if (eq i 0)
+                            (first coll)
+                            (at-index (+ i (- 1)) (tail coll)))))
+
+                (defun koa-compose (middleware)
+                    ;; https://github.com/koajs/compose for more details
+                    (lambda (context)
+                        (begin
+                            (define index (- 1))
+                            (defun dispatch (i)
+                                (if (gte index i)
+                                    (println 'Next must be called only')
+                                    (begin
+                                        (set! index i)
+                                        (if (eq i (count middleware))
+                                            context
+                                            (begin
+                                                (define f (at-index i middleware))
+                                                (f context (lambda ()
+                                                    (dispatch (+ i 1)))))))))
+                            (dispatch 0))))
+
+                (defun increment (context next)
+                    (+ 1 context))
+
+                (defun multiply-by-3 (context next)
+                    (* (next) 3))
+
+                (define fn
+                    (koa-compose
+                        (list multiply-by-3 increment)))
+
+                (list
+                    (fn 0)
+                    (fn 11))
+                ",
+                "(3 . (36 . nil))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun at-index (i coll)
+                    (if (or (null? coll) (lt i 0))
+                        nil
+                        (if (eq i 0)
+                            (first coll)
+                            (at-index (+ i (- 1)) (tail coll)))))
+
+                (list
+                    (at-index 2 (list 0 1 2))
+                    (at-index (- 1) (list 0))
+                    (at-index 0 (list #t #f #t)))
+                ",
+                "(2 . (nil . (#t . nil)))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun prepend (x coll)
+                    (cons x coll))
+
+                (defun append (x coll)
+                    (begin
+                        (defun iter (coll)
+                            (if (null? coll)
+                                (cons x nil)
+                                (cons
+                                    (first coll)
+                                    (iter (tail coll)))))
+                        (iter coll)))
+                (join ''
+                    (append ']' (prepend '[' nil)))
+                ",
+                "[]"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun append (x coll)
+                    (begin
+                        (defun iter (coll)
+                            (if (null? coll)
+                                (cons x nil)
+                                (cons
+                                    (first coll)
+                                    (iter (tail coll)))))
+                        (iter coll)))
+
+                (append 2 (list 0 1))
+                ",
+                "(0 . (1 . (2 . nil)))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun prepend (x coll)
+                    (cons x coll))
+
+                (prepend 0 (list 1 2))
+                ",
+                "(0 . (1 . (2 . nil)))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (defun count (coll)
+                    (if (null? coll)
+                        0
+                        (+ 1 (count (tail coll)))))
+
+                (list
+                    (count nil)
+                    (count (list 1))
+                    (count (list 1 2 3))
+                )
+                ",
+                "(0 . (1 . (3 . nil)))"
+            };
+
+            yield return new object[]
+            {
+                @"
                 (defun where (f coll)
                     (if (null? coll)
                         nil
