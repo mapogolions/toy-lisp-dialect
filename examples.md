@@ -253,7 +253,7 @@
 ```
 
 #### koa-compose
-```
+```clojure
 (defun count (coll)
     (if (null? coll)
         0
