@@ -72,6 +72,12 @@ namespace Cl
             yield return tail;
         }
 
+        public static ClString Join(params ClObj[] args)
+        {
+            var (delimiter, coll) = ArrayHelpers.Unpack<ClString, ClCell>(args);
+            return new ClString(string.Join(delimiter.Value, Seq(coll)));
+        }
+
         public static ClObj Quote(ClObj obj) => new ClCell(ClSymbol.Quote, obj);
         public static ClBool IsNull(params ClObj[] args) =>
             ClBool.Of(ArrayHelpers.Unpack<ClObj>(args) == ClCell.Nil);
@@ -240,7 +246,8 @@ namespace Cl
             (new ClSymbol("lt"), new NativeFn(Lt)),
             (new ClSymbol("gt"), new NativeFn(Gt)),
             (new ClSymbol("lte"), new NativeFn(Lte)),
-            (new ClSymbol("gte"), new NativeFn(Gte))
+            (new ClSymbol("gte"), new NativeFn(Gte)),
+            (new ClSymbol("join"), new NativeFn(Join))
         );
     }
 }
