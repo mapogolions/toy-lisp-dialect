@@ -251,3 +251,48 @@
 ((second obj))
 ((second obj))
 ```
+
+#### koa-compose
+```
+(defun count (coll)
+    (if (null? coll)
+        0
+        (+ 1 (count (tail coll)))))
+
+(defun at-index (i coll)
+    (if (or (null? coll) (lt i 0))
+        nil
+        (if (eq i 0)
+            (first coll)
+            (at-index (+ i (- 1)) (tail coll)))))
+
+(defun koa-compose (middleware)
+    (lambda (context)
+        (begin
+            (define index (- 1))
+            (defun dispatch (i)
+                (if (gte index i)
+                    (println 'Next must be called only')
+                    (begin
+                        (set! index i)
+                        (if (eq i (count middleware))
+                            context
+                            (begin
+                                (define f (at-index i middleware))
+                                (f context (lambda ()
+                                    (dispatch (+ i 1)))))))))
+            (dispatch 0))))
+
+(defun increment (context next)
+    (+ 1 context))
+
+
+(defun multiply-by-3 (context next)
+    (* (next) 3))
+
+(define fn
+    (koa-compose
+        (list multiply-by-3 increment)))
+
+(fn 0)
+```
