@@ -29,7 +29,7 @@ namespace Cl
                 try
                 {
                     var line = Console.ReadLine();
-                    snippet.Append(line);
+                    snippet.AppendLine(line);
                     if (string.IsNullOrEmpty(line))
                     {
                         using var reader = _readerProvider(snippet.ToString());

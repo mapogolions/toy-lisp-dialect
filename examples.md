@@ -27,6 +27,7 @@
 #### `quote` vs `list`
 ```clojure
 (quote (define x 10))
+
 (list (define x 10))
 ```
 
