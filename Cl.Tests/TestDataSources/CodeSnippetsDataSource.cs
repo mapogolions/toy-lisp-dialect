@@ -11,11 +11,20 @@ namespace Cl.Tests.TestDataSources
             {
                 @"
                     (list
-                        'foo' ;; first
-                        'bar' ;; second
-                        )
+                        'foo'
+                        ;; comment )
+                    )
                 ",
-                "(foo . (bar . nil))"
+                "(foo . nil)"
+            };
+
+            yield return new object[]
+            {
+                @"
+                    ( ;; some
+                    )
+                ",
+                "nil"
             };
 
             yield return new object[]
