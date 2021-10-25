@@ -36,6 +36,7 @@ namespace Cl
         public ClObj ReadExpression()
         {
             _source.SkipWhitespacesAndComments();
+            if (_source.Eof()) return ClCell.Nil;
             if (TryReadExpression(ReadChar, out var ast)) return ast;
             if (TryReadExpression(ReadBool, out ast)) return ast;
             if (TryReadExpression(ReadString, out ast)) return ast;
@@ -43,7 +44,6 @@ namespace Cl
             if (TryReadExpression(ReadFixnum, out ast)) return ast;
             if (TryReadExpression(ReadCell, out ast)) return ast;
             if (TryReadExpression(ReadSymbol, out ast)) return ast;
-            if (_source.Eof()) return ClCell.Nil;
             throw new SyntaxError("Unknown literal");
         }
 
