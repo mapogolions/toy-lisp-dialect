@@ -83,11 +83,10 @@ namespace Cl.Tests
         }
 
         [TestCaseSource(nameof(CommentTestCases))]
-        public void ReadExpression_ThrowException_WhenSourceContainsOnlyCommentLine(string source)
+        public void ReadExpression_ReturnNil_WhenSourceContainsOnlyComments(string source)
         {
             using var reader = new Reader(source);
-            Assert.That(() => reader.ReadExpression(),
-                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
+            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
         }
 
         static IEnumerable<string> CommentTestCases()
@@ -109,19 +108,17 @@ namespace Cl.Tests
         }
 
         [Test]
-        public void ReadExpression_ThrowException_WhenSourceContainsOnlySpaces()
+        public void ReadExpression_ReturnNil_WhenSourceContainsOnlySpaces()
         {
             using var reader = new Reader("   \t");
-            Assert.That(() => reader.ReadExpression(),
-                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
+            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
         }
 
         [Test]
-        public void ReadExpression_ThrowException_WhenSourceIsEmpty()
+        public void ReadExpression_ReturnNil_WhenSourceIsEmpty()
         {
             using var reader = new Reader(string.Empty);
-            Assert.That(() => reader.ReadExpression(),
-                Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo("Unknown literal"));
+            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
         }
     }
 }

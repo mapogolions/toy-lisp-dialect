@@ -43,6 +43,7 @@ namespace Cl
             if (TryReadExpression(ReadFixnum, out ast)) return ast;
             if (TryReadExpression(ReadCell, out ast)) return ast;
             if (TryReadExpression(ReadSymbol, out ast)) return ast;
+            if (_source.Eof()) return ClCell.Nil;
             throw new SyntaxError("Unknown literal");
         }
 

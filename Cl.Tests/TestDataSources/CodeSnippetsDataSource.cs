@@ -10,6 +10,42 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
+                    (list
+                        'foo' ;; first
+                        'bar' ;; second
+                        )
+                ",
+                "(foo . (bar . nil))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                    ;; first
+
+                    ;; second
+                ",
+                "nil"
+            };
+
+            yield return new object[]
+            {
+                @"
+                    ;; comment
+                    101
+                ",
+                "101"
+            };
+
+            yield return new object[]
+            {
+                @";; comment",
+                "nil"
+            };
+
+            yield return new object[]
+            {
+                @"
                 (defun count (coll)
                     (if (null? coll)
                         0

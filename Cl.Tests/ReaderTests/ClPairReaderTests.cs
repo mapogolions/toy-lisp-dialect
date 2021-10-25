@@ -103,7 +103,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var reader = new Reader("(");
             Assert.That(() => reader.ReadCell(),
-                Throws.Exception.TypeOf<SyntaxError>().And.Message.EqualTo("Unknown literal"));
+                Throws.Exception.TypeOf<SyntaxError>().And.Message.EqualTo($"Invalid format of the {nameof(ClCell)} literal"));
         }
 
         [Test]
