@@ -1,13 +1,21 @@
 ## Toy LISP dialect
 
+Yet another lisp interpreter
+
 #### Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
 
+
 #### How to use
+
 ```sh
-> dotnet test
-> dotnet run --project <project-name>
+dotnet test
+dotnet run --project .\Cl\Cl.csproj
 ```
 
-If you want to test some code, the best choise for you might be the [CodeSnippetsTests](./Cl.Tests/CodeSnippetsTests.cs) class. The last provides basic scaffolding. Just put your code with expected result into the [CodeSnippetsDataSource](./Cl.Tests/TestDataSources/CodeSnippetsDataSource.cs) and run `dotnet test` command.
+#### Hello World
 
-[Examples](./examples.md)
+```clojure
+(println 'hello world')
+```
+
+In case you want some more [examples](./examples.md)
