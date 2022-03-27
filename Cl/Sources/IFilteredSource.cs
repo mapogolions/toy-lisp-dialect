@@ -5,6 +5,6 @@ namespace Cl.Sources
         bool SkipEol();
         bool SkipWhitespaces();
         bool SkipLine();
-        bool  SkipMatched(string pattern);
+        bool SkipMatched(string pattern);
     }
 }
