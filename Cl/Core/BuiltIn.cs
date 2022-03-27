@@ -1,11 +1,11 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 using Cl.Types;
 using Cl.SpecialForms;
-using Cl.Helpers;
 using Cl.Errors;
+using Cl.Core.Helpers;
 
 namespace Cl.Core
 {

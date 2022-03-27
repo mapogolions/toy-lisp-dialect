@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cl.Core;
 using Cl.Errors;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 using Cl.Types;
 
 namespace Cl.SpecialForms

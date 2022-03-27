@@ -1,7 +1,7 @@
 using System;
 using Cl.Core;
 using Cl.Errors;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 using Cl.SpecialForms;
 
 namespace Cl.Types

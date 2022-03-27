@@ -1,6 +1,6 @@
 using Cl.Types;
 using NUnit.Framework;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 using Cl.Errors;
 using Cl.Core;
 

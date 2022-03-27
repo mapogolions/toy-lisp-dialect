@@ -1,5 +1,5 @@
 using Cl.Core;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 
 namespace Cl.Types
 {

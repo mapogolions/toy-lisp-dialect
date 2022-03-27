@@ -1,5 +1,5 @@
 using Cl.Core;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 using Cl.Tests.TestDataSources;
 using NUnit.Framework;
 

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Cl.Extensions;
+using Cl.Core.Extensions;
 
 namespace Cl.Tests
 {

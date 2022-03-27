@@ -3,7 +3,7 @@ using Cl.Types;
 using System.Collections.Generic;
 using Cl.Core;
 
-namespace Cl.Extensions
+namespace Cl.Core.Extensions
 {
     public static class EnumerableExtensions
     {
