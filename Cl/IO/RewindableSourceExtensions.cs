@@ -21,13 +21,13 @@ namespace Cl.IO
 
         public static bool TryRewindSpaces(this ISource source)
         {
-            bool loop(bool recur = false)
+            bool loop(bool atLeastOne = false)
             {
-                if (source.Eof()) return recur;
+                if (source.Eof()) return atLeastOne;
                 var code = source.Read();
                 if (char.IsWhiteSpace((char) code)) return loop(true);
                 source.Buffer(code);
-                return recur;
+                return atLeastOne;
             }
             return loop();
         }
