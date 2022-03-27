@@ -1,4 +1,4 @@
-namespace Cl.Contracts
+namespace Cl.Core
 {
     public interface IReducable
     {

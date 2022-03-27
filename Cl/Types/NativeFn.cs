@@ -1,3 +1,5 @@
+using Cl.Core;
+
 namespace Cl.Types
 {
     public class NativeFn : ClCallable

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using Cl.Types;
 using Cl.Errors;
+using Cl.Core;
 
 namespace Cl.Tests
 {

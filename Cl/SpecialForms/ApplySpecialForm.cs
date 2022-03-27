@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cl.Contracts;
+using Cl.Core;
 using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;

@@ -1,6 +1,7 @@
 using Cl.Errors;
 using NUnit.Framework;
 using Cl.Tests.TestDataSources;
+using Cl.Core;
 
 namespace Cl.Tests
 {

@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using Cl.Extensions;
 using Cl.Types;
-using Cl.Contracts;
 using Cl.SpecialForms;
 using Cl.Helpers;
 using Cl.Errors;
 
-namespace Cl
+namespace Cl.Core
 {
     public static class BuiltIn
     {

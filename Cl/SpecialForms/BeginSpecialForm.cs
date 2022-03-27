@@ -1,5 +1,5 @@
 using System.Linq;
-using Cl.Contracts;
+using Cl.Core;
 using Cl.Types;
 
 namespace Cl.SpecialForms

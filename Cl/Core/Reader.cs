@@ -6,10 +6,10 @@ using Cl.Types;
 using Cl.Extensions;
 using static Cl.Helpers.FpUniverse;
 using System.Globalization;
-using Cl.Contracts;
+using Cl.Core;
 using Cl.Errors;
 
-namespace Cl
+namespace Cl.Core
 {
     public class Reader : IReader
     {

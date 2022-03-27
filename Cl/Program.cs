@@ -1,4 +1,6 @@
-﻿namespace Cl
+﻿using Cl.Core;
+
+namespace Cl
 {
     internal static class Program
     {

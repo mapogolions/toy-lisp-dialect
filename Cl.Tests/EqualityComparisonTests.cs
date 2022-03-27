@@ -1,3 +1,4 @@
+using Cl.Core;
 using Cl.Extensions;
 using Cl.Tests.TestDataSources;
 using NUnit.Framework;

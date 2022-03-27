@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
-using Cl.Contracts;
+using Cl.Core;
 
 namespace Cl
 {

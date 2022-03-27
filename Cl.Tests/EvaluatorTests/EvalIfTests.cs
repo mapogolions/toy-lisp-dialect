@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Cl.Contracts;
+using Cl.Core;
 using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;

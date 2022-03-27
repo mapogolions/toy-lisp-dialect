@@ -1,4 +1,4 @@
-using Cl.Contracts;
+using Cl.Core;
 
 namespace Cl.Types
 {

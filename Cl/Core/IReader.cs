@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cl.Types;
 
-namespace Cl.Contracts
+namespace Cl.Core
 {
     public interface IReader : IDisposable
     {
