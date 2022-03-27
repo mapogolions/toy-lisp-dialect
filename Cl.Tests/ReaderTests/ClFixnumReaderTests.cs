@@ -10,7 +10,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadFixnum_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("120rest");
+            var source = new Source("120rest");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadFixnum());

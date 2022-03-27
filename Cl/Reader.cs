@@ -13,14 +13,14 @@ namespace Cl
 {
     public class Reader : IReader
     {
-        private readonly IFilteredSource _source;
+        private readonly ISource _source;
 
-        public Reader(IFilteredSource source)
+        public Reader(ISource source)
         {
             _source = source;
         }
 
-        public Reader(string source) : this(new FilteredSource(source)) { }
+        public Reader(string source) : this(new Source(source)) { }
 
         public IEnumerable<ClObj> Read()
         {
@@ -28,14 +28,14 @@ namespace Cl
             while (!_source.Eof())
             {
                 items.Add(ReadExpression());
-                _source.SkipWhitespacesAndComments();
+                _source.RewindWhitespacesAndComments();
             }
             return items;
         }
 
         public ClObj ReadExpression()
         {
-            _source.SkipWhitespacesAndComments();
+            _source.RewindWhitespacesAndComments();
             if (_source.Eof()) return ClCell.Nil;
             if (TryReadExpression(ReadChar, out var ast)) return ast;
             if (TryReadExpression(ReadBool, out ast)) return ast;
@@ -73,11 +73,11 @@ namespace Cl
         {
             if(TryReadNilOrNull(out var cell)) return cell;
             var car = ReadExpression();
-            var wasDelimiter = _source.SkipWhitespacesAndComments();
-            if (!_source.SkipMatched(".")) return new ClCell(car, ReadList(wasDelimiter));
+            var wasDelimiter = _source.RewindWhitespacesAndComments();
+            if (!_source.RewindMatched(".")) return new ClCell(car, ReadList(wasDelimiter));
             var cdr = ReadExpression();
-            Ignore(_source.SkipWhitespacesAndComments());
-            if (!_source.SkipMatched(")"))
+            Ignore(_source.RewindWhitespacesAndComments());
+            if (!_source.RewindMatched(")"))
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
@@ -87,9 +87,9 @@ namespace Cl
         private bool TryReadNilOrNull(out ClCell cell)
         {
             cell = default;
-            if (!_source.SkipMatched("(")) return true;
-            Ignore(_source.SkipWhitespacesAndComments());
-            if (_source.SkipMatched(")"))
+            if (!_source.RewindMatched("(")) return true;
+            Ignore(_source.RewindWhitespacesAndComments());
+            if (_source.RewindMatched(")"))
             {
                 cell = ClCell.Nil;
                 return true;
@@ -99,21 +99,21 @@ namespace Cl
 
         private ClCell ReadList(bool wasDelimiter)
         {
-            if (_source.SkipMatched(")")) return ClCell.Nil;
+            if (_source.RewindMatched(")")) return ClCell.Nil;
             if (!wasDelimiter)
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
             var car = ReadExpression();
-            wasDelimiter = _source.SkipWhitespacesAndComments();
-            if (_source.SkipMatched(")")) return new ClCell(car, ClCell.Nil);
+            wasDelimiter = _source.RewindWhitespacesAndComments();
+            if (_source.RewindMatched(")")) return new ClCell(car, ClCell.Nil);
             return new ClCell(car, ReadList(wasDelimiter));
         }
 
         public ClDouble ReadDouble()
         {
             if (!TryReadNumbersInRow(out var significand)) return null;
-            if (!_source.SkipMatched("."))
+            if (!_source.RewindMatched("."))
             {
                 significand.Reverse().ForEach(ch => _source.Buffer(ch));
                 return null;
@@ -148,7 +148,7 @@ namespace Cl
 
         public ClString ReadString()
         {
-            if (!_source.SkipMatched("'")) return null;
+            if (!_source.RewindMatched("'")) return null;
             string loop(string acc)
             {
                 if (_source.Eof())
@@ -164,18 +164,18 @@ namespace Cl
 
         public ClBool ReadBool()
         {
-            if (!_source.SkipMatched("#")) return null;
-            if (_source.SkipMatched("t")) return ClBool.True;
-            if (_source.SkipMatched("f")) return ClBool.False;
+            if (!_source.RewindMatched("#")) return null;
+            if (_source.RewindMatched("t")) return ClBool.True;
+            if (_source.RewindMatched("f")) return ClBool.False;
             throw new SyntaxError($"Invalid format of the {nameof(ClBool)} literal");
         }
 
         public ClChar ReadChar()
         {
-            if (!_source.SkipMatched("#\\")) return null;
+            if (!_source.RewindMatched("#\\")) return null;
             foreach (var (word, ch) in SpecialChars)
             {
-                if (!_source.SkipMatched(word)) continue;
+                if (!_source.RewindMatched(word)) continue;
                 return new ClChar(ch);
             }
             if (_source.Eof())
@@ -198,7 +198,7 @@ namespace Cl
             var builinFuncitons = new [] { "+", "-", "*", "/" };
             foreach (var fun in builinFuncitons)
             {
-                if (!_source.SkipMatched(fun)) continue;
+                if (!_source.RewindMatched(fun)) continue;
                 symbol = fun;
                 return true;
             }

@@ -12,7 +12,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadDouble_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("120.0rest");
+            var source = new Source("120.0rest");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadDouble());

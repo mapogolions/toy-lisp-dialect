@@ -12,7 +12,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadString_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("'foo'bar");
+            var source = new Source("'foo'bar");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadString());

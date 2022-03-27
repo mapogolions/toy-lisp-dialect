@@ -12,7 +12,7 @@ namespace Cl.Tests.ReaderTests
         [Test]
         public void ReadBool_SkipOnlyPartOfSource()
         {
-            var source = new FilteredSource("#ttf");
+            var source = new Source("#ttf");
             using var reader = new Reader(source);
 
             Ignore(reader.ReadBool());
