@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cl.Extensions;
 using static Cl.Helpers.FpUniverse;
 
-namespace Cl.Sources
+namespace Cl.IO
 {
     public static class RewindableSourceExtensions
     {
