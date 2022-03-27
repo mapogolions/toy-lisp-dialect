@@ -19,6 +19,7 @@ namespace Cl.Sources
 
         public void Dispose()
         {
+            _buffer.Clear();
             _stream.Dispose();
         }
 
