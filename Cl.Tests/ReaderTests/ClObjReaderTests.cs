@@ -4,20 +4,24 @@ using System;
 using Cl.Types;
 using Cl.Errors;
 using Cl.Core;
+using Cl.Core.Readers;
+using Cl.IO;
 
 namespace Cl.Tests
 {
     [TestFixture]
     public class ClObjReaderTests
     {
+        private readonly ClObjReader _reader = new();
+
         [Test]
         public void ReadExpression_Treat_WhitespacesBetweenCarAndCdrAsDelimiter()
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#t"; // ClBool.True
             var endsWith = $"\t 'bar';comment\t{Environment.NewLine});comment\t"; // ClString("bar")
-            using var reader = new Reader($"{startsWith}{endsWith}");
+            using var source = new Source($"{startsWith}{endsWith}");
 
-            var cell = reader.ReadExpression() as ClCell;
+            var cell = _reader.Read(source) as ClCell;
             var first = BuiltIn.First(cell) as ClBool;
             var second = BuiltIn.Second(cell) as ClString;
 
@@ -30,9 +34,9 @@ namespace Cl.Tests
         {
             var startsWith = $"\t;comment{Environment.NewLine}(\t;comment{Environment.NewLine}#f"; // ClBool.False
             var endsWith = $";comment{Environment.NewLine}'foo';comment\t{Environment.NewLine});comment\t"; // ClString("foo")
-            using var reader = new Reader($"{startsWith}{endsWith}");
+            using var source = new Source($"{startsWith}{endsWith}");
 
-            var cell = reader.ReadExpression() as ClCell;
+            var cell = _reader.Read(source) as ClCell;
             var first = BuiltIn.Car(cell) as ClBool;
             var second = BuiltIn.Cadr(cell) as ClString;
 
@@ -44,9 +48,9 @@ namespace Cl.Tests
         public void ReadExpression_ReturnInteger_WhenCommentsAround()
         {
             var input = $";before{Environment.NewLine}112;after";
-            using var reader = new Reader(input);
+            using var source = new Source(input);
 
-            var atom = reader.ReadExpression() as ClInt;
+            var atom = _reader.Read(source) as ClInt;
 
             Assert.That(atom?.Value, Is.EqualTo(112));
         }
@@ -54,40 +58,40 @@ namespace Cl.Tests
         [Test]
         public void ReadExpression_ReturnChar()
         {
-            using var reader = new Reader("#\\N");
-            var atom = reader.ReadExpression() as ClChar;
+            using var source = new Source("#\\N");
+            var atom = _reader.Read(source) as ClChar;
             Assert.That(atom?.Value, Is.EqualTo('N'));
         }
 
         [Test]
         public void ReadExpression_ReturnString()
         {
-            using var reader = new Reader("'foo'");
-            var atom = reader.ReadExpression() as ClString;
+            using var source = new Source("'foo'");
+            var atom = _reader.Read(source) as ClString;
             Assert.That(atom?.Value, Is.EqualTo("foo"));
         }
 
         [Test]
         public void ReadExpression_ReturnBool()
         {
-            using var reader = new Reader("#t");
-            var atom = reader.ReadExpression() as ClBool;
+            using var source = new Source("#t");
+            var atom = _reader.Read(source) as ClBool;
             Assert.That(atom?.Value, Is.EqualTo(true));
         }
 
         [Test]
         public void ReadExpression_ReturnInteger()
         {
-            using var reader = new Reader("12");
-            var atom = reader.ReadExpression() as ClInt;
+            using var source = new Source("12");
+            var atom = _reader.Read(source) as ClInt;
             Assert.That(atom?.Value, Is.EqualTo(12));
         }
 
         [TestCaseSource(nameof(CommentTestCases))]
-        public void ReadExpression_ReturnNil_WhenSourceContainsOnlyComments(string source)
+        public void ReadExpression_ReturnNil_WhenSourceContainsOnlyComments(string input)
         {
-            using var reader = new Reader(source);
-            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
+            using var source = new Source(input);
+            Assert.AreSame(ClCell.Nil, _reader.Read(source));
         }
 
         static IEnumerable<string> CommentTestCases()
@@ -101,25 +105,25 @@ namespace Cl.Tests
         [Test]
         public void ReadExpression_ThrowException_WhenAfterSignificandAndDotInvalidSymbol()
         {
-            using var reader = new Reader("11.");
+            using var source = new Source("11.");
             var errorMessage = $"Invalid format of the {nameof(ClDouble)} literal";
 
-            Assert.That(() => reader.ReadExpression(),
+            Assert.That(() => _reader.Read(source),
                 Throws.Exception.TypeOf<SyntaxError>().With.Message.EqualTo(errorMessage));
         }
 
         [Test]
         public void ReadExpression_ReturnNil_WhenSourceContainsOnlySpaces()
         {
-            using var reader = new Reader("   \t");
-            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
+            using var source = new Source("   \t");
+            Assert.AreSame(ClCell.Nil, _reader.Read(source));
         }
 
         [Test]
         public void ReadExpression_ReturnNil_WhenSourceIsEmpty()
         {
-            using var reader = new Reader(string.Empty);
-            Assert.AreSame(ClCell.Nil, reader.ReadExpression());
+            using var source = new Source(string.Empty);
+            Assert.AreSame(ClCell.Nil, _reader.Read(source));
         }
     }
 }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Cl.Core;
+using Cl.Core.Readers;
 using Cl.IO;
 using NUnit.Framework;
 using static Cl.Core.Helpers.FpUniverse;
@@ -9,22 +9,21 @@ namespace Cl.Tests.ReaderTests
     [TestFixture]
     public class ClSymbolReaderTests
     {
+        private readonly ClSymbolReader _reader = new();
+
         [Test]
         public void ReadSymbol_SkipOnlyPartOfSource()
         {
-            var source = new Source("foo bar");
-            using var reader = new Reader(source);
-
-            Ignore(reader.ReadSymbol());
-
+            using var source = new Source("foo bar");
+            Ignore(_reader.Read(source));
             Assert.That(source.ToString(), Is.EqualTo(" bar"));
         }
 
         [TestCaseSource(nameof(ValidSymbolsTestCases))]
         public void ReadSymbol_ReturnSymbol(string input, string expected)
         {
-            using var reader = new Reader(input);
-            Assert.That(reader.ReadSymbol()?.Value, Is.EqualTo(expected));
+            using var source = new Source(input);
+            Assert.That(_reader.Read(source)?.Value, Is.EqualTo(expected));
         }
 
         static object[] ValidSymbolsTestCases =
@@ -49,8 +48,8 @@ namespace Cl.Tests.ReaderTests
         [TestCaseSource(nameof(InvalidSymbolsTestCases))]
         public void ReadString_ReturnNull_WhenSourceStartsWithInvalidSymbol(string input)
         {
-            using var reader = new Reader("\"some");
-            Assert.That(() => reader.ReadSymbol(),Is.Null);
+            using var source = new Source("\"some");
+            Assert.That(() => _reader.Read(source),Is.Null);
         }
 
         static IEnumerable<string> InvalidSymbolsTestCases()

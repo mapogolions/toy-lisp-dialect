@@ -38,7 +38,7 @@ namespace Cl.IO
             foreach (var ch in pattern)
             {
                 var code = source.Peek();
-                if (code == -1 || ch != (char) code)
+                if (code == - 1 || ch != (char) code)
                 {
                     codes.ForEach(x => source.Buffer(x));
                     return false;
