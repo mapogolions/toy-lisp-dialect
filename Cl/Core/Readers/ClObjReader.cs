@@ -25,7 +25,7 @@ namespace Cl.Core.Readers
 
         public ClObj Read(ISource source)
         {
-            source.TryRewindSpacesAndComments();
+            source.RewindSpacesAndComments();
             if (source.Eof()) return ClCell.Nil;
             foreach (var reader in _readers)
             {

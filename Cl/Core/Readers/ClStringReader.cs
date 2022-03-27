@@ -8,7 +8,7 @@ namespace Cl.Core.Readers
     {
         public ClString Read(ISource source)
         {
-            if (!source.TryRewind("'")) return null;
+            if (!source.Rewind("'")) return null;
             string loop(string acc)
             {
                 if (source.Eof())

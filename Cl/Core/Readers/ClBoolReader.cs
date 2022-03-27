@@ -8,9 +8,9 @@ namespace Cl.Core.Readers
     {
         public ClBool Read(ISource source)
         {
-            if (!source.TryRewind("#")) return null;
-            if (source.TryRewind("t")) return ClBool.True;
-            if (source.TryRewind("f")) return ClBool.False;
+            if (!source.Rewind("#")) return null;
+            if (source.Rewind("t")) return ClBool.True;
+            if (source.Rewind("f")) return ClBool.False;
             throw new SyntaxError($"Invalid format of the {nameof(ClBool)} literal");
         }
     }

@@ -9,10 +9,10 @@ namespace Cl.Core.Readers
     {
         public ClChar Read(ISource source)
         {
-            if (!source.TryRewind(@"#\")) return null;
+            if (!source.Rewind(@"#\")) return null;
             foreach (var (word, ch) in SpecialChars)
             {
-                if (!source.TryRewind(word)) continue;
+                if (!source.Rewind(word)) continue;
                 return new ClChar(ch);
             }
             if (source.Eof())

@@ -19,11 +19,11 @@ namespace Cl.Core.Readers
         {
             if(TryReadNilOrNull(source, out var cell)) return cell;
             var car = _reader.Read(source);
-            var wasDelimiter = source.TryRewindSpacesAndComments();
-            if (!source.TryRewind(".")) return new ClCell(car, ReadList(source, wasDelimiter));
+            var wasDelimiter = source.RewindSpacesAndComments();
+            if (!source.Rewind(".")) return new ClCell(car, ReadList(source, wasDelimiter));
             var cdr = _reader.Read(source);
-            Ignore(source.TryRewindSpacesAndComments());
-            if (!source.TryRewind(")"))
+            Ignore(source.RewindSpacesAndComments());
+            if (!source.Rewind(")"))
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
@@ -33,9 +33,9 @@ namespace Cl.Core.Readers
         private bool TryReadNilOrNull(ISource source, out ClCell cell)
         {
             cell = default;
-            if (!source.TryRewind("(")) return true;
-            Ignore(source.TryRewindSpacesAndComments());
-            if (source.TryRewind(")"))
+            if (!source.Rewind("(")) return true;
+            Ignore(source.RewindSpacesAndComments());
+            if (source.Rewind(")"))
             {
                 cell = ClCell.Nil;
                 return true;
@@ -45,14 +45,14 @@ namespace Cl.Core.Readers
 
         private ClCell ReadList(ISource source, bool wasDelimiter)
         {
-            if (source.TryRewind(")")) return ClCell.Nil;
+            if (source.Rewind(")")) return ClCell.Nil;
             if (!wasDelimiter)
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
             var car = _reader.Read(source);
-            wasDelimiter = source.TryRewindSpacesAndComments();
-            if (source.TryRewind(")")) return new ClCell(car, ClCell.Nil);
+            wasDelimiter = source.RewindSpacesAndComments();
+            if (source.Rewind(")")) return new ClCell(car, ClCell.Nil);
             return new ClCell(car, ReadList(source, wasDelimiter));
         }
     }

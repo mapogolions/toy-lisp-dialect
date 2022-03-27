@@ -12,7 +12,7 @@ namespace Cl.Core.Readers
         public ClDouble Read(ISource source)
         {
             if (!TryReadNumbersInRow(source, out var significand)) return null;
-            if (!source.TryRewind("."))
+            if (!source.Rewind("."))
             {
                 significand.Reverse().ForEach(ch => source.Buffer(ch));
                 return null;

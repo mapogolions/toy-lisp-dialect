@@ -5,21 +5,21 @@ using static Cl.Core.Helpers.FpUniverse;
 
 namespace Cl.IO
 {
-    public static class RewindableSourceExtensions
+    public static class SourceExtensions
     {
-        public static bool TryRewindEol(this ISource source) => TryRewind(source, Environment.NewLine);
+        public static bool RewindEol(this ISource source) => Rewind(source, Environment.NewLine);
 
-        public static bool TryRewindLine(this ISource source)
+        public static bool RewindLine(this ISource source)
         {
             bool loop(bool recur = false)
             {
-                if (TryRewindEol(source)) return true;
+                if (RewindEol(source)) return true;
                 return source.Read() == -1 ? recur : loop(true);
             }
             return loop();
         }
 
-        public static bool TryRewindSpaces(this ISource source)
+        public static bool RewindSpaces(this ISource source)
         {
             bool loop(bool atLeastOne = false)
             {
@@ -32,7 +32,7 @@ namespace Cl.IO
             return loop();
         }
 
-        public static bool TryRewind(this ISource source, string pattern)
+        public static bool Rewind(this ISource source, string pattern)
         {
             var codes = new LinkedList<int>();
             foreach (var ch in pattern)
@@ -48,16 +48,16 @@ namespace Cl.IO
             return true;
         }
 
-        public static bool TryRewindSpacesAndComments(this ISource source,
+        public static bool RewindSpacesAndComments(this ISource source,
             string startsWith = ";", bool atLeastOne = false)
         {
-            if (TryRewindSpaces(source))
+            if (RewindSpaces(source))
             {
                 atLeastOne = true;
             }
-            if (!TryRewind(source, startsWith)) return atLeastOne;
-            Ignore(TryRewindLine(source));
-            return TryRewindSpacesAndComments(source, startsWith, atLeastOne: true);
+            if (!Rewind(source, startsWith)) return atLeastOne;
+            Ignore(RewindLine(source));
+            return RewindSpacesAndComments(source, startsWith, atLeastOne: true);
         }
     }
 }

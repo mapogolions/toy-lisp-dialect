@@ -12,7 +12,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("partial");
 
-            Assert.That(source.TryRewind("parts"), Is.False);
+            Assert.That(source.Rewind("parts"), Is.False);
             Assert.That(source.ToString(), Is.EqualTo("partial"));
         }
 
@@ -21,7 +21,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foo");
 
-            Assert.That(source.TryRewind("bar"), Is.False);
+            Assert.That(source.Rewind("bar"), Is.False);
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
@@ -30,7 +30,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foobar");
 
-            Assert.That(source.TryRewind("foo"), Is.True);
+            Assert.That(source.Rewind("foo"), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
 
@@ -39,7 +39,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foo");
 
-            Assert.That(source.TryRewind("foo"), Is.True);
+            Assert.That(source.Rewind("foo"), Is.True);
             Assert.That(source.ToString(), Is.EqualTo(string.Empty));
         }
 
@@ -48,7 +48,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(string.Empty);
 
-            Assert.That(source.TryRewind("foo"), Is.False);
+            Assert.That(source.Rewind("foo"), Is.False);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(string.Empty);
 
-            Assert.That(source.TryRewind(string.Empty), Is.True);
+            Assert.That(source.Rewind(string.Empty), Is.True);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("  \tsome ");
 
-            Assert.That(source.TryRewindSpaces(), Is.True);
+            Assert.That(source.RewindSpaces(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("some "));
         }
 
@@ -73,7 +73,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("\t\n \f");
 
-            Assert.That(source.TryRewindSpaces(), Is.True);
+            Assert.That(source.RewindSpaces(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo(string.Empty));
         }
 
@@ -82,7 +82,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("b r");
 
-            Assert.That(source.TryRewindSpaces(), Is.False);
+            Assert.That(source.RewindSpaces(), Is.False);
             Assert.That(source.ToString(), Is.EqualTo("b r"));
         }
 
@@ -91,7 +91,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(string.Empty);
 
-            Assert.That(source.TryRewindSpaces(), Is.False);
+            Assert.That(source.RewindSpaces(), Is.False);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foo");
 
-            Assert.That(source.TryRewindLine(), Is.True);
+            Assert.That(source.RewindLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo(string.Empty));
         }
 
@@ -108,7 +108,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source($"fi\rst{Environment.NewLine}second");
 
-            Assert.That(source.TryRewindLine(), Is.True);
+            Assert.That(source.RewindLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("second"));
         }
 
@@ -116,7 +116,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source($"foo{Environment.NewLine}bar");
 
-            Assert.That(source.TryRewindLine(), Is.True);
+            Assert.That(source.RewindLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
 
@@ -125,7 +125,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(string.Empty);
 
-            Assert.That(source.TryRewindLine(), Is.False);
+            Assert.That(source.RewindLine(), Is.False);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foo\r");
 
-            Assert.That(source.TryRewindEol(), Is.False);
+            Assert.That(source.RewindEol(), Is.False);
             Assert.That(source.ToString(), Is.EqualTo("foo\r"));
         }
 
@@ -142,14 +142,14 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(string.Empty);
 
-            Assert.That(source.TryRewindEol(), Is.False);
+            Assert.That(source.RewindEol(), Is.False);
         }
 
         public void RewindEol_ReturnRestOfTheSource()
         {
             using var source = new Source($"{Environment.NewLine}foo");
 
-            Assert.That(source.TryRewindEol(), Is.True);
+            Assert.That(source.RewindEol(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
@@ -157,7 +157,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source(Environment.NewLine);
 
-            Assert.That(source.TryRewindEol(), Is.True);
+            Assert.That(source.RewindEol(), Is.True);
             Assert.That(source.Eof(), Is.True);
         }
 
@@ -165,7 +165,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source($"foo{Environment.NewLine}");
 
-            Assert.That(source.TryRewindEol(), Is.False);
+            Assert.That(source.RewindEol(), Is.False);
             Assert.That(source.ToString(), Is.EqualTo($"foo{Environment.NewLine}"));
         }
     }

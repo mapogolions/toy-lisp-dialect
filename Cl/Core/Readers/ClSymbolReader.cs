@@ -27,7 +27,7 @@ namespace Cl.Core.Readers
             var builinFuncitons = new [] { "+", "-", "*", "/" };
             foreach (var fun in builinFuncitons)
             {
-                if (!source.TryRewind(fun)) continue;
+                if (!source.Rewind(fun)) continue;
                 symbol = fun;
                 return true;
             }

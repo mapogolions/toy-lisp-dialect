@@ -24,7 +24,7 @@ namespace Cl.Core
             while (!_source.Eof())
             {
                 items.Add(_reader.Read(_source));
-                _source.TryRewindSpacesAndComments();
+                _source.RewindSpacesAndComments();
             }
             return items;
         }
