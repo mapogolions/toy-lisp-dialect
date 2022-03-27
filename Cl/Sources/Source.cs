@@ -25,7 +25,7 @@ namespace Cl.Sources
 
         public int Read()
         {
-            if (_buffer.TryPop(out var code)) return (char) code;
+            if (_buffer.TryPop(out var code)) return code;
             return _stream.ReadByte();
         }
 
@@ -33,8 +33,8 @@ namespace Cl.Sources
 
         public int Peek()
         {
-            var code = Read();
-            if (code == -1) return -1;
+            if (_buffer.TryPeek(out var code)) return code;
+            code = _stream.ReadByte();
             _buffer.Push(code);
             return code;
         }
