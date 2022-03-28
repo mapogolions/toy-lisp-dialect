@@ -9,7 +9,7 @@ Yet another lisp interpreter
 
 ```sh
 dotnet test
-dotnet run --project .\Cl\Cl.csproj
+dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 ```
 
 #### Hello World
