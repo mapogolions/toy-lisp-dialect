@@ -2,6 +2,8 @@ using System.Text;
 using Cl.Readers;
 using Cl.IO;
 using Cl.Types;
+using System.Linq;
+using System;
 
 namespace Cl.Utop
 {
