@@ -23,6 +23,7 @@ namespace Cl.Core
             var items = new List<ClObj>();
             while (!_source.Eof())
             {
+                _source.RewindSpacesAndComments();
                 items.Add(_reader.Read(_source));
                 _source.RewindSpacesAndComments();
             }

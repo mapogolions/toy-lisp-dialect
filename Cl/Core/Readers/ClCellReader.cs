@@ -21,8 +21,9 @@ namespace Cl.Core.Readers
             var car = _reader.Read(source);
             var wasDelimiter = source.RewindSpacesAndComments();
             if (!source.Rewind(".")) return new ClCell(car, ReadList(source, wasDelimiter));
+            source.RewindSpacesAndComments();
             var cdr = _reader.Read(source);
-            Ignore(source.RewindSpacesAndComments());
+            source.RewindSpacesAndComments();
             if (!source.Rewind(")"))
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
