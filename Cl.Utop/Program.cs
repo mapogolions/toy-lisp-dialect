@@ -1,6 +1,6 @@
 ﻿using Cl.Readers;
 
-namespace Cl
+namespace Cl.Utop
 {
     internal static class Program
     {

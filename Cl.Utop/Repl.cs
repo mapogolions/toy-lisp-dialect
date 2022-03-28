@@ -1,11 +1,9 @@
-using System;
-using System.Linq;
 using System.Text;
 using Cl.Readers;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl
+namespace Cl.Utop
 {
     public class Repl
     {
