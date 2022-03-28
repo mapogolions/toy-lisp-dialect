@@ -2,9 +2,9 @@ using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClBoolReader : IClObjReader<ClBool>
+    public class ClBoolReader : IReader<ClBool>
     {
         public ClBool Read(ISource source)
         {

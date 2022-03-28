@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Cl.Core;
+using Cl;
 using Cl.Errors;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
 

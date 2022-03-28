@@ -1,5 +1,5 @@
-using Cl.Core;
-using Cl.Core.Readers;
+using Cl;
+using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;

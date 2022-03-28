@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Cl.Core.Readers;
+using Cl.Readers;
 using Cl.IO;
 using NUnit.Framework;
-using static Cl.Core.Helpers.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {

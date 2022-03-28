@@ -1,7 +1,7 @@
 using Cl.Errors;
 using Cl.Types;
 
-namespace Cl.Core.Extensions
+namespace Cl.Extensions
 {
     public static class ClObjExtensions
     {

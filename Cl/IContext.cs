@@ -1,6 +1,6 @@
 using Cl.Types;
 
-namespace Cl.Core
+namespace Cl
 {
     public interface IContext
     {

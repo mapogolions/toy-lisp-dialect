@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Cl.Types;
 using Cl.Errors;
-using Cl.Core.Readers;
+using Cl.Readers;
 using Cl.IO;
 
 namespace Cl.Tests

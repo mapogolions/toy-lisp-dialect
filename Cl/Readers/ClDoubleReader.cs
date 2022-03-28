@@ -1,13 +1,13 @@
 using System.Globalization;
 using System.Linq;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClDoubleReader : ClNumberReader, IClObjReader<ClDouble>
+    public class ClDoubleReader : ClNumberReader, IReader<ClDouble>
     {
         public ClDouble Read(ISource source)
         {

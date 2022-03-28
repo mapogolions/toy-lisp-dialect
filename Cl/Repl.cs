@@ -1,19 +1,21 @@
 using System;
 using System.Linq;
 using System.Text;
-using Cl.Core;
+using Cl.Readers;
+using Cl.IO;
+using Cl.Types;
 
 namespace Cl
 {
     public class Repl
     {
         private readonly string _sign;
-        private readonly Func<string, IReader> _readerProvider;
+        private readonly IReader<ClObj> _reader;
 
-        public Repl(string sing, Func<string, IReader> readerProvider)
+        public Repl(string sing, IReader<ClObj> reader)
         {
             _sign = sing;
-            _readerProvider = readerProvider;
+            _reader = reader;
         }
 
         public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _sign.Length))}";
@@ -32,9 +34,10 @@ namespace Cl
                     snippet.AppendLine(line);
                     if (string.IsNullOrEmpty(line))
                     {
-                        using var reader = _readerProvider(snippet.ToString());
+                        using var source = new Source(snippet.ToString());
                         snippet.Clear();
-                        ctx = BuiltIn.Eval(reader.Read(), ctx);
+                        var obj = _reader.Read(source);
+                        ctx = obj.Reduce(ctx);
                         Console.Write($"{ResultLine}{ctx.Value}{Environment.NewLine}{_sign} ");
                         continue;
                     }

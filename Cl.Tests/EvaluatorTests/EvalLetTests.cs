@@ -1,4 +1,4 @@
-using Cl.Core;
+using Cl;
 using Cl.Errors;
 using Cl.Types;
 using NUnit.Framework;

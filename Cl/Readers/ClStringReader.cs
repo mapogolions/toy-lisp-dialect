@@ -2,9 +2,9 @@ using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClStringReader : IClObjReader<ClString>
+    public class ClStringReader : IReader<ClString>
     {
         public ClString Read(ISource source)
         {

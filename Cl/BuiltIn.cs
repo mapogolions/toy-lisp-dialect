@@ -1,19 +1,20 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 using Cl.Types;
 using Cl.SpecialForms;
 using Cl.Errors;
-using Cl.Core.Helpers;
+using Cl.Helpers;
 
-namespace Cl.Core
+namespace Cl
 {
     public static class BuiltIn
     {
         public static IContext Eval(IEnumerable<ClObj> expressions, IContext ctx) => expressions
             .Aggregate<ClObj, IContext>(ctx, (ctx, expr) => expr.Reduce(ctx));
-        public static IContext Eval(IEnumerable<ClObj> expressions) => Eval(expressions, new Context(Env));
+
+        public static IContext Eval(params ClObj[] expressions) => Eval(expressions, new Context(Env));
 
         public static ClObj Car(params ClObj[] args) => ArrayHelpers.Unpack<ClCell>(args).Car;
         public static ClObj Cdr(params ClObj[] args) => ArrayHelpers.Unpack<ClCell>(args).Cdr;

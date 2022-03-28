@@ -1,5 +1,5 @@
 using System.Linq;
-using Cl.Core;
+using Cl;
 using Cl.Types;
 
 namespace Cl.SpecialForms

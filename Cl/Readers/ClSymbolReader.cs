@@ -1,9 +1,9 @@
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClSymbolReader : IClObjReader<ClSymbol>
+    public class ClSymbolReader : IReader<ClSymbol>
     {
         public ClSymbol Read(ISource source)
         {

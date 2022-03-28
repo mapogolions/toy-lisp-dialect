@@ -1,6 +1,6 @@
 using Cl.IO;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
     public abstract class ClNumberReader
     {

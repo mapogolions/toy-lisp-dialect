@@ -1,10 +1,10 @@
 using System;
-using Cl.Core;
+using Cl;
 using Cl.Errors;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Core.Helpers.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {

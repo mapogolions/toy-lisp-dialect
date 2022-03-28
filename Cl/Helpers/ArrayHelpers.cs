@@ -2,7 +2,7 @@ using System;
 using Cl.Errors;
 using Cl.Types;
 
-namespace Cl.Core.Helpers
+namespace Cl.Helpers
 {
     public static class ArrayHelpers
     {

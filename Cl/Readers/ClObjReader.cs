@@ -3,15 +3,15 @@ using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClObjReader : IClObjReader<ClObj>
+    public class ClObjReader : IReader<ClObj>
     {
-        private readonly List<IClObjReader<ClObj>> _readers;
+        private readonly List<IReader<ClObj>> _readers;
 
         public ClObjReader()
         {
-            _readers = new List<IClObjReader<ClObj>>
+            _readers = new List<IReader<ClObj>>
                 {
                     new ClCharReader(),
                     new ClBoolReader(),

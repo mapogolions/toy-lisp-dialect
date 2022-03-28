@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Cl.Core;
+using Cl;
 using Cl.Errors;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 using Cl.Types;
 
 namespace Cl

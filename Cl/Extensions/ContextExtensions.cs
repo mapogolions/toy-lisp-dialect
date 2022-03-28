@@ -1,7 +1,7 @@
-using Cl.Core;
+using Cl;
 using Cl.Types;
 
-namespace Cl.Core.Extensions
+namespace Cl.Extensions
 {
     public static class ContextExtensions
     {

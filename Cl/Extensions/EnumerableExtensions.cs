@@ -1,9 +1,9 @@
 using System;
 using Cl.Types;
 using System.Collections.Generic;
-using Cl.Core;
+using Cl;
 
-namespace Cl.Core.Extensions
+namespace Cl.Extensions
 {
     public static class EnumerableExtensions
     {

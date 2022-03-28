@@ -3,9 +3,9 @@ using Cl.IO;
 using Cl.Types;
 using Cl.Errors;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClCharReader : IClObjReader<ClChar>
+    public class ClCharReader : IReader<ClChar>
     {
         public ClChar Read(ISource source)
         {

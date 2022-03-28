@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Cl.Core.Extensions;
-using static Cl.Core.Helpers.FpUniverse;
+using Cl.Extensions;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.IO
 {

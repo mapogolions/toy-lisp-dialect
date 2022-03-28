@@ -1,7 +1,8 @@
 using Cl.Errors;
 using NUnit.Framework;
 using Cl.Tests.TestDataSources;
-using Cl.Core;
+using Cl.IO;
+using Cl.Readers;
 
 namespace Cl.Tests
 {
@@ -11,9 +12,10 @@ namespace Cl.Tests
         [TestCaseSource(typeof(TypeErrorDataSource))]
         public void ShouldThrowTypeErrorException(string snippet, string errorMessage)
         {
-            using var reader = new Reader(snippet);
-            var ast = reader.Read();
-            Assert.That(() => BuiltIn.Eval(ast, new Context(BuiltIn.Env)),
+            using var source = new Source(snippet);
+            var reader = new Reader();
+            var obj = reader.Read(source);
+            Assert.That(() => BuiltIn.Eval(obj),
                 Throws.Exception.TypeOf<TypeError>().With.Message.EqualTo(errorMessage));
 
         }

@@ -1,10 +1,10 @@
-using Cl.Core;
-using Cl.Core.Readers;
+using Cl;
+using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
 using NUnit.Framework;
-using static Cl.Core.Helpers.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {

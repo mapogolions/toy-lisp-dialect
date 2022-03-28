@@ -1,7 +1,7 @@
 using System;
-using Cl.Core;
+using Cl;
 using Cl.Errors;
-using Cl.Core.Extensions;
+using Cl.Extensions;
 
 namespace Cl.Types
 {

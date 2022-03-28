@@ -1,5 +1,6 @@
-using Cl.Core;
-using Cl.Core.Extensions;
+using Cl.Extensions;
+using Cl.Readers;
+using Cl.IO;
 using Cl.Tests.TestDataSources;
 using NUnit.Framework;
 
@@ -11,8 +12,9 @@ namespace Cl.Tests
         [TestCaseSource(typeof(CodeSnippetsDataSource))]
         public void SnippetsTest(string snippet, string expected)
         {
-            using var reader = new Reader(snippet);
-            var (actual, _) = BuiltIn.Eval(reader.Read());
+            using var source = new Source(snippet);
+            var reader = new Reader();
+            var (actual, _) = BuiltIn.Eval(reader.Read(source));
             Assert.That(actual.ToString(), Is.EqualTo(expected));
         }
     }

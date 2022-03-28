@@ -2,11 +2,11 @@ using System;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
-using static Cl.Core.Helpers.FpUniverse;
+using static Cl.Helpers.FpUniverse;
 
-namespace Cl.Core.Readers
+namespace Cl.Readers
 {
-    public class ClCellReader : IClObjReader<ClCell>
+    public class ClCellReader : IReader<ClCell>
     {
         private ClObjReader _reader;
 
