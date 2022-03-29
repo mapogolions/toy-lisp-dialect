@@ -20,7 +20,7 @@ namespace Cl.Readers
             return new ClChar((char) source.Read());
         }
 
-        private IDictionary<string, char> SpecialChars = new Dictionary<string, char>
+        private static IDictionary<string, char> SpecialChars = new Dictionary<string, char>
             {
                 ["newline"] = '\n',
                 ["tab"] = '\t',

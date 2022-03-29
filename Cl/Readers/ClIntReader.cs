@@ -7,9 +7,8 @@ namespace Cl.Readers
     {
         public ClInt Read(ISource source)
         {
-            if (!TryReadNumbersInRow(source, out var nums)) return null;
-            if (!int.TryParse(nums, out var integer)) return null;
-            return new ClInt(integer);
+            if (!TryReadAtLeastOneNumber(source, out var nums)) return null;
+            return new ClInt(int.Parse(nums));
         }
     }
 }

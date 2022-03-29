@@ -11,16 +11,14 @@ namespace Cl.Readers
     {
         public ClDouble Read(ISource source)
         {
-            if (!TryReadNumbersInRow(source, out var significand)) return null;
+            if (!TryReadAtLeastOneNumber(source, out var significand)) return null;
             if (!source.Rewind("."))
             {
                 significand.Reverse().ForEach(ch => source.Buffer(ch));
                 return null;
             }
-            if (!TryReadNumbersInRow(source, out var mantissa))
-            {
+            if (!TryReadAtLeastOneNumber(source, out var mantissa))
                 throw new SyntaxError($"Invalid format of the {nameof(ClDouble)} literal");
-            }
             var number = double.Parse($"{significand}.{mantissa}", NumberStyles.Float,
                 CultureInfo.InvariantCulture);
             return new ClDouble(number);

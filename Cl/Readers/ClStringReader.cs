@@ -12,9 +12,7 @@ namespace Cl.Readers
             string loop(string acc)
             {
                 if (source.Eof())
-                {
                     throw new SyntaxError($"Invalid format of the {nameof(ClString)} literal");
-                }
                 var ch = (char) source.Read();
                 if (ch == '\'') return acc;
                 return loop($"{acc}{ch}");

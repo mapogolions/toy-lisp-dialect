@@ -4,7 +4,7 @@ namespace Cl.Readers
 {
     public abstract class ClNumberReader
     {
-        protected bool TryReadNumbersInRow(ISource source, out string nums)
+        protected bool TryReadAtLeastOneNumber(ISource source, out string nums)
         {
             string loop(string acc = "")
             {
