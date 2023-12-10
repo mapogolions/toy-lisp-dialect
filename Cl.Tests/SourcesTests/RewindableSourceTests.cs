@@ -1,6 +1,5 @@
 using System;
 using Cl.IO;
-using NUnit.Framework;
 
 namespace Cl.Tests.SourceTests
 {

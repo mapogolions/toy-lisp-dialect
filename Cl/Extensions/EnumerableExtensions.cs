@@ -1,7 +1,5 @@
 using System;
 using Cl.Types;
-using System.Collections.Generic;
-using Cl;
 
 namespace Cl.Extensions
 {

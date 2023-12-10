@@ -1,6 +1,5 @@
 using Cl.Readers;
 using Cl.IO;
-using NUnit.Framework;
 using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests

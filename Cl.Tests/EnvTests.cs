@@ -1,8 +1,6 @@
 using Cl.Types;
-using NUnit.Framework;
 using Cl.Extensions;
 using Cl.Errors;
-using Cl;
 
 namespace Cl.Tests
 {

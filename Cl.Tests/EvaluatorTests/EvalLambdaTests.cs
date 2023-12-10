@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using Cl;
 using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
-using NUnit.Framework;
 
 namespace Cl.Tests.EvaluatorTests
 {

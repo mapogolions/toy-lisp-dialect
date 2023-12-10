@@ -1,5 +1,4 @@
 using Cl.Errors;
-using NUnit.Framework;
 using Cl.Tests.TestDataSources;
 using Cl.IO;
 using Cl.Readers;

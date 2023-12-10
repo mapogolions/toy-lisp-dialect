@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using Cl.Types;
 using Cl.Errors;
 using Cl.Readers;

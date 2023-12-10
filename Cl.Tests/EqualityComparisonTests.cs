@@ -2,7 +2,6 @@ using Cl.Extensions;
 using Cl.Readers;
 using Cl.IO;
 using Cl.Tests.TestDataSources;
-using NUnit.Framework;
 
 namespace Cl.Tests
 {

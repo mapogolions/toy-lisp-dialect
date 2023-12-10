@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Collections.Generic;
-using NUnit.Framework;
 using Cl.Extensions;
 
 namespace Cl.Tests

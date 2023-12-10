@@ -1,8 +1,6 @@
 using System;
-using Cl;
 using Cl.Errors;
 using Cl.Types;
-using NUnit.Framework;
 
 namespace Cl.Tests.EvaluatorTests
 {

@@ -2,7 +2,6 @@ using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
-using NUnit.Framework;
 using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
