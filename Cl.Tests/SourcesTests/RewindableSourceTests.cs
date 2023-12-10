@@ -106,15 +106,17 @@ namespace Cl.Tests.SourceTests
         [Test]
         public void RewindLine_RegognizeCarriageReturn()
         {
-            using var source = new Source($"fi\rst{Environment.NewLine}second");
+            using var source = new Source($"fi\rst\nsecond");
 
             Assert.That(source.RewindLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("second"));
         }
 
+        [Test]
+
         public void RewindLine_RewindAllSymbols_UntilEolAppears()
         {
-            using var source = new Source($"foo{Environment.NewLine}bar");
+            using var source = new Source($"foo\nbar");
 
             Assert.That(source.RewindLine(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("bar"));
@@ -145,28 +147,34 @@ namespace Cl.Tests.SourceTests
             Assert.That(source.RewindEol(), Is.False);
         }
 
+        [Test]
+
         public void RewindEol_ReturnRestOfTheSource()
         {
-            using var source = new Source($"{Environment.NewLine}foo");
+            using var source = new Source($"\nfoo");
 
             Assert.That(source.RewindEol(), Is.True);
             Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
+        [Test]
+
         public void RewindEol_IsCrossPlatform()
         {
-            using var source = new Source(Environment.NewLine);
+            using var source = new Source("\n");
 
             Assert.That(source.RewindEol(), Is.True);
             Assert.That(source.Eof(), Is.True);
         }
 
-        public void RewindEol_ReturnFalse_WhenSourceDoesNotContainEol()
+        [Test]
+
+        public void RewindEol_ReturnFalse_WhenSourceDoesNotStartWithEol()
         {
-            using var source = new Source($"foo{Environment.NewLine}");
+            using var source = new Source($"foo\n");
 
             Assert.That(source.RewindEol(), Is.False);
-            Assert.That(source.ToString(), Is.EqualTo($"foo{Environment.NewLine}"));
+            Assert.That(source.ToString(), Is.EqualTo($"foo\n"));
         }
     }
 }

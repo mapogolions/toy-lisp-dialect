@@ -7,7 +7,7 @@ namespace Cl.IO
 {
     public static class SourceExtensions
     {
-        public static bool RewindEol(this ISource source) => Rewind(source, Environment.NewLine);
+        public static bool RewindEol(this ISource source) => Rewind(source, "\n");
 
         public static bool RewindLine(this ISource source)
         {
