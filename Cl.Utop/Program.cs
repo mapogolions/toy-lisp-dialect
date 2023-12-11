@@ -1,3 +1,3 @@
 ﻿using Cl.Utop;
 
-new Repl(">").Start();
+new Repl(">>>").Start();

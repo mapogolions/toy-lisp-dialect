@@ -18,7 +18,7 @@
     (lambda ()
         (begin
             (define x 10) ;; side effect
-            (define y 11) ;; affected only lexical env
+            (define y 11) ;; affected lexical env only
             (list x y))))
 
 (f)
@@ -134,10 +134,10 @@
     (lambda (number)
         (+ number n)))
 
-(defun map (number fn)
+(defun custom-map (number fn)
     (fn number))
 
-(map 10 (plus-n 1))
+(custom-map 10 (plus-n 1))
 ```
 
 #### builtin map

@@ -9,6 +9,9 @@ Yet another lisp interpreter
 
 ```sh
 dotnet test
+```
+
+```sh
 dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 ```
 
@@ -19,3 +22,7 @@ dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 ```
 
 In case you want some more [examples](./examples.md)
+
+#### Pitfalls
+
+Use `LF` instead of `CRLF`
