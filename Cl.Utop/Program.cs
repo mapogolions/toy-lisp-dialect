@@ -1,10 +1,3 @@
-﻿using Cl.Readers;
+﻿using Cl.Utop;
 
-namespace Cl.Utop
-{
-    internal static class Program
-    {
-        internal static void Main() =>
-            new Repl(">", new Reader()).Start(new Context(BuiltIn.Env));
-    }
-}
+new Repl(">").Start();

@@ -1,27 +1,26 @@
 using System.Text;
 using Cl.Readers;
 using Cl.IO;
-using Cl.Types;
 
 namespace Cl.Utop
 {
-    public class Repl
+    public sealed class Repl
     {
         private readonly string _sign;
-        private readonly IReader<ClObj> _reader;
+        private readonly Reader _reader = new();
 
-        public Repl(string sing, IReader<ClObj> reader)
+        public Repl(string sing)
         {
             _sign = sing;
-            _reader = reader;
         }
 
         public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _sign.Length))}";
         public string MultiLineInput => $"{Indent}|";
         public string ResultLine => $"{Indent}|> ";
 
-        public void Start(IContext ctx)
+        public void Start()
         {
+            IContext ctx = new Context(BuiltIn.Env);
             var snippet = new StringBuilder();
             Console.Write($"{_sign} ");
             while (true)
