@@ -1,4 +1,3 @@
-using System;
 using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
@@ -16,7 +15,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(#f #t 6 #\\a)");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = BuiltIn.First(cell) as ClBool;
             var second = BuiltIn.Second(cell) as ClBool;
             var third = BuiltIn.Third(cell) as ClInt;
@@ -32,7 +31,7 @@ namespace Cl.Tests.ReaderTests
         public void ReadCell_SkipAllWhitespacesBetweenCarAndCdr()
         {
             using var source = new Source("(1.34\t  #\\a)");
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
 
             var first = BuiltIn.First(cell) as ClDouble;
             var second = BuiltIn.Second(cell) as ClChar;
@@ -67,7 +66,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(#f #\\f)");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = BuiltIn.First(cell) as ClBool;
             var second = BuiltIn.Second(cell) as ClChar;
 
@@ -80,7 +79,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(1.2 2)");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = BuiltIn.First(cell) as ClDouble;
             var second = BuiltIn.Second(cell) as ClInt;
 
@@ -93,7 +92,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(1)");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = cell.Car as ClInt;
 
             Assert.That(first?.Value, Is.EqualTo(1));

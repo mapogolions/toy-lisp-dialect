@@ -5,7 +5,7 @@ namespace Cl.Readers
 {
     public class ClSymbolReader : IReader<ClSymbol>
     {
-        public ClSymbol Read(ISource source)
+        public ClSymbol? Read(ISource source)
         {
             if (source.Eof()) return null;
             if (TryCheckSpecialBuiltInFunction(source, out var fun)) return new ClSymbol(fun);

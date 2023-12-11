@@ -20,7 +20,7 @@ namespace Cl.Readers
             while (!source.Eof())
             {
                 source.RewindSpacesAndComments();
-                items.Add(_reader.Read(source));
+                items.Add(_reader.Read(source)!);
                 source.RewindSpacesAndComments();
             }
             return BuiltIn.ListOf(items);

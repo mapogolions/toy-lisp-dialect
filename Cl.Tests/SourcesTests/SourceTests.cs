@@ -48,7 +48,7 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("foo");
 
-            Assert.That("foo", Is.EqualTo(source.ToString()));
+            Assert.That(source.ToString(), Is.EqualTo("foo"));
         }
 
         [Test]

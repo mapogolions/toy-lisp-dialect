@@ -6,10 +6,10 @@ namespace Cl
 {
      public class Env : IEnv
     {
-        private readonly IEnv _outer;
+        private readonly IEnv? _outer;
         private readonly IDictionary<ClSymbol, ClObj> _bindings = new Dictionary<ClSymbol, ClObj>();
 
-        public Env(IEnv outer = null)
+        public Env(IEnv? outer = null)
         {
             _outer = outer;
         }

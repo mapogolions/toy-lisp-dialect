@@ -6,7 +6,7 @@ namespace Cl.Readers
 {
     public class ClBoolReader : IReader<ClBool>
     {
-        public ClBool Read(ISource source)
+        public ClBool? Read(ISource source)
         {
             if (!source.Rewind("#")) return null;
             if (source.Rewind("t")) return ClBool.True;

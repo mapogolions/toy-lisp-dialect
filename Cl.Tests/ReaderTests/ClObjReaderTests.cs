@@ -59,7 +59,7 @@ namespace Cl.Tests
         public void Read_ReturnNil_WhenSourceIsEmpty()
         {
             using var source = new Source(string.Empty);
-            Assert.AreSame(ClCell.Nil, _reader.Read(source));
+            Assert.That(_reader.Read(source), Is.SameAs(ClCell.Nil));
         }
     }
 }

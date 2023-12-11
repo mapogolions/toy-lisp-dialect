@@ -15,7 +15,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(1 . ('foo' #\\w ))");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = BuiltIn.First(cell) as ClInt;
             var second = BuiltIn.Second(cell) as ClString;
             var third = BuiltIn.Third(cell) as ClChar;
@@ -31,7 +31,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source("(1 . ('foo' . (#\\w . ())))");
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var first = BuiltIn.First(cell) as ClInt;
             var second = BuiltIn.Second(cell) as ClString;
             var third = BuiltIn.Third(cell) as ClChar;
@@ -56,7 +56,7 @@ namespace Cl.Tests.ReaderTests
         public void ReadDottedCell_ReturnBoolAndChar()
         {
             using var source = new Source("(#f . 2)");
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var car = cell.Car as ClBool;
             var cdr = cell.Cdr as ClInt;
 
@@ -79,7 +79,7 @@ namespace Cl.Tests.ReaderTests
         {
             using var source = new Source(input);
 
-            var cell = _reader.Read(source);
+            var cell = _reader.Read(source)!;
             var car = cell.Car as ClDouble;
             var cdr = cell.Cdr as ClInt;
 

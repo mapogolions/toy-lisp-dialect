@@ -1,4 +1,3 @@
-using System;
 using Cl.Errors;
 using Cl.Extensions;
 using Cl.SpecialForms;
@@ -36,10 +35,10 @@ namespace Cl.Types
 
         private class NIL : ClCell
         {
-            public NIL() : base(null, null) { }
+            public NIL() : base(null!, null!) { }
 
-            public override ClObj Car => throw new NotImplementedException();
-            public override ClObj Cdr => throw new NotImplementedException();
+            public override ClObj Car => throw new NotSupportedException();
+            public override ClObj Cdr => throw new NotSupportedException();
             public override string ToString() => "nil";
             public override IContext Reduce(IContext ctx) => ctx.FromValue(this);
         }

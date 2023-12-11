@@ -8,9 +8,12 @@ namespace Cl.Readers
 {
     public class ClDoubleReader : ClNumberReader, IReader<ClDouble>
     {
-        public ClDouble Read(ISource source)
+        public ClDouble? Read(ISource source)
         {
-            if (!TryReadAtLeastOneNumber(source, out var significand)) return null;
+            if (!TryReadAtLeastOneNumber(source, out var significand))
+            {
+                return null;
+            }
             if (!source.Rewind("."))
             {
                 significand.Reverse().ForEach(ch => source.Buffer(ch));

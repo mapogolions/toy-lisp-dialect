@@ -1,4 +1,3 @@
-using System;
 using Cl.IO;
 
 namespace Cl.Tests.SourceTests

@@ -7,21 +7,27 @@ namespace Cl.Readers
 {
     public class ClCellReader : IReader<ClCell>
     {
-        private ClObjReader _reader;
+        private readonly ClObjReader _reader;
 
         public ClCellReader(ClObjReader reader)
         {
             _reader = reader;
         }
 
-        public ClCell Read(ISource source)
+        public ClCell? Read(ISource source)
         {
-            if(TryReadNilOrNull(source, out var cell)) return cell;
-            var car = _reader.Read(source);
+            if(TryReadNilOrNull(source, out var cell))
+            {
+                return cell;
+            }
+            var car = _reader.Read(source)!;
             var wasDelimiter = source.RewindSpacesAndComments();
-            if (!source.Rewind(".")) return new ClCell(car, ReadList(source, wasDelimiter));
+            if (!source.Rewind("."))
+            {
+                return new ClCell(car, ReadList(source, wasDelimiter));
+            }
             source.RewindSpacesAndComments();
-            var cdr = _reader.Read(source);
+            var cdr = _reader.Read(source)!;
             source.RewindSpacesAndComments();
             if (!source.Rewind(")"))
             {
@@ -30,7 +36,7 @@ namespace Cl.Readers
             return new ClCell(car, cdr);
         }
 
-        private bool TryReadNilOrNull(ISource source, out ClCell cell)
+        private bool TryReadNilOrNull(ISource source, out ClCell? cell)
         {
             cell = default;
             if (!source.Rewind("(")) return true;

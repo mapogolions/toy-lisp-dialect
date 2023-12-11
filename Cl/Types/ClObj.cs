@@ -1,4 +1,3 @@
-using System;
 using Cl.Errors;
 using Cl.Extensions;
 
@@ -6,9 +5,9 @@ namespace Cl.Types
 {
     public class ClObj : IReducable, IEquatable<ClObj>, IComparable<ClObj>
     {
-        public virtual bool Equals(ClObj other) => ReferenceEquals(this, other);
+        public virtual bool Equals(ClObj? other) => ReferenceEquals(this, other);
 
-        public override bool Equals(object other) => other is ClObj obj ? Equals(obj) : false;
+        public override bool Equals(object? other) => other is ClObj obj && Equals(obj);
 
         public virtual IContext Reduce(IContext ctx) => ctx.FromValue(this);
 
@@ -41,6 +40,6 @@ namespace Cl.Types
             throw new NotImplementedException();
         }
 
-        public virtual int CompareTo(ClObj other) => throw new NotImplementedException();
+        public virtual int CompareTo(ClObj? other) => throw new NotImplementedException();
     }
 }

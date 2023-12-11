@@ -6,9 +6,12 @@ namespace Cl.SpecialForms
 {
     public class TaggedSpecialForm : ClCell
     {
-        public TaggedSpecialForm(ClSymbol tag, ClObj cdr) : base(tag, cdr) { }
+        public TaggedSpecialForm(ClSymbol tag, ClObj cdr) : base(tag, cdr)
+        {
+            Tag = tag;
+        }
 
-        public ClSymbol Tag => Car as ClSymbol;
+        public ClSymbol Tag { get; }
 
         public override IContext Reduce(IContext ctx)
         {

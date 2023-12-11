@@ -6,7 +6,7 @@ namespace Cl.Readers
 {
     public class ClCharReader : IReader<ClChar>
     {
-        public ClChar Read(ISource source)
+        public ClChar? Read(ISource source)
         {
             if (!source.Rewind(@"#\")) return null;
             foreach (var (word, ch) in SpecialChars)

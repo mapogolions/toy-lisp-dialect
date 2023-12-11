@@ -1,5 +1,3 @@
-using System;
-
 namespace Cl.Types
 {
     public abstract class ClAtom<T> : ClObj, IEquatable<ClAtom<T>>, IComparable<ClAtom<T>>
@@ -9,19 +7,19 @@ namespace Cl.Types
 
         public T Value { get; }
 
-        public override int CompareTo(ClObj other) =>
-            other is ClAtom<T> atom ? CompareTo(atom) : throw new NotImplementedException();
+        public override int CompareTo(ClObj? other) => CompareTo(other as ClAtom<T>);
 
-        public int CompareTo(ClAtom<T> other) => Value.CompareTo(other.Value);
+        public int CompareTo(ClAtom<T>? other) => other is {} atom
+            ? Value.CompareTo(atom.Value) : 1;
 
-        public bool Equals(ClAtom<T> other) => Value.Equals(other.Value);
+        public bool Equals(ClAtom<T>? other) => other is {} atom && Value.Equals(atom.Value);
 
-        public override bool Equals(ClObj other) => Equals((object) other);
+        public override bool Equals(ClObj? other) => Equals(other as ClAtom<T>);
 
-        public override bool Equals(object other) => other is ClAtom<T> atom ? Equals(atom) : false;
+        public override bool Equals(object? other) => Equals(other as ClAtom<T>);
 
         public override int GetHashCode() => Value.GetHashCode();
 
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value.ToString() ?? throw new NotSupportedException();
     }
 }
