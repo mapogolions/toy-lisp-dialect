@@ -73,7 +73,7 @@ namespace Cl.Tests.TestDataSources
                             (define index (- 1))
                             (defun dispatch (i)
                                 (if (gte index i)
-                                    (println 'Next must be called only')
+                                    (println 'Next must be called only once')
                                     (begin
                                         (set! index i)
                                         (if (eq i (count middleware))
