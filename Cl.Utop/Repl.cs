@@ -6,15 +6,15 @@ namespace Cl.Utop
 {
     public sealed class Repl
     {
-        private readonly string _sign;
+        private readonly string _prompt;
         private readonly Reader _reader = new();
 
-        public Repl(string sing)
+        public Repl(string prompt)
         {
-            _sign = sing;
+            _prompt = prompt;
         }
 
-        public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _sign.Length))}";
+        public string Indent => $"{string.Concat(Enumerable.Repeat(" ", _prompt.Length))}";
         public string MultiLineInput => $"{Indent}|";
         public string ResultLine => $"{Indent}|> ";
 
@@ -22,7 +22,7 @@ namespace Cl.Utop
         {
             IContext ctx = new Context(BuiltIn.Env);
             var snippet = new StringBuilder();
-            Console.Write($"{_sign} ");
+            Console.Write($"{_prompt} ");
             while (true)
             {
                 try
@@ -35,7 +35,7 @@ namespace Cl.Utop
                         snippet.Clear();
                         var obj = _reader.Read(source);
                         ctx = obj.Reduce(ctx);
-                        Console.Write($"{ResultLine}{ctx.Value}{Environment.NewLine}{_sign} ");
+                        Console.Write($"{ResultLine}{ctx.Value}{Environment.NewLine}{_prompt} ");
                         continue;
                     }
                     Console.Write(MultiLineInput);
@@ -43,7 +43,7 @@ namespace Cl.Utop
                 catch (Exception ex)
                 {
                     snippet.Clear();
-                    Console.Write($"{ex.Message}{Environment.NewLine}{_sign} ");
+                    Console.Write($"{ex.Message}{Environment.NewLine}{_prompt} ");
                 }
             }
         }
