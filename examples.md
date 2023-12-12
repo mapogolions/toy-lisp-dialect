@@ -297,3 +297,56 @@
 
 (fn 0)
 ```
+
+#### Work with collection
+
+```clojure
+(defun at-index (i coll)
+    (if (or (null? coll) (lt i 0))
+        nil
+        (if (eq i 0)
+            (first coll)
+            (at-index (+ i (- 1)) (tail coll)))))
+
+(defun count (coll)
+    (if (null? coll)
+        0
+        (+ 1 (count (tail coll)))))
+
+(defun where (f coll)
+    (if (null? coll)
+        nil
+        (if (f (first coll))
+            (cons
+                (first coll)
+                (where f (tail coll)))
+            (where f (tail coll)))))
+
+(defun select (f coll)
+    (if (null? coll)
+        nil
+        (cons
+            (f (first coll))
+            (select f (tail coll)))))
+
+(define nums (list 1 2 3))
+
+(count nums)
+
+(at-index 2 nums)
+
+(select
+    (lambda (x)
+        (+ x 1))
+    nums)
+
+(where
+    (lambda (x)
+        (gte x 2))
+    nums)
+
+(where
+    (lambda (x)
+        (lt x 2))
+    nums)
+```
