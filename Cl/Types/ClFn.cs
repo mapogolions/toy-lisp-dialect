@@ -1,4 +1,3 @@
-
 namespace Cl.Types
 {
     public class ClFn : ClCallable

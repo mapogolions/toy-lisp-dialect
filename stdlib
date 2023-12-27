@@ -46,7 +46,7 @@
             (for-each f (tail coll))))))
 
 (defun fold-left (f seed coll)
-;; Example (fold-left + 0 (range 1 5))
+;; Example: (fold-left + 0 (range 1 5))
     (if (null? coll)
         seed
         (fold-left
@@ -55,7 +55,7 @@
             (tail coll))))
 
 (defun fold-right (f seed coll)
-;; (fold-right * 1 (range 1 5))
+;; Example: (fold-right * 1 (range 1 5))
     (if (null? coll)
         seed
         (f

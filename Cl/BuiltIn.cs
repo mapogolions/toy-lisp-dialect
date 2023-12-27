@@ -35,7 +35,7 @@ namespace Cl
             return ClBool.Of(value != ClCell.Nil && value != ClBool.False);
         }
         public static ClBool IsFalse(params ClObj[] args) => Not(IsTrue(args));
-        public static ClBool Not(params ClObj[] args) => ClBool.Of((!VarArgs.Get<ClBool>(args).Value));
+        public static ClBool Not(params ClObj[] args) => ClBool.Of(!VarArgs.Get<ClBool>(args).Value);
 
         public static ClCell ListOf(params ClObj[] items)
         {
@@ -67,7 +67,6 @@ namespace Cl
                 yield return pair.Car;
                 tail = pair.Cdr;
             }
-            yield return tail;
         }
 
         public static ClString Join(params ClObj[] args)
