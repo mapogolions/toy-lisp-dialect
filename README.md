@@ -22,4 +22,4 @@ dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 (println hello-world)
 ```
 
-In case you want some more [examples](./examples.md)
+In case you want more [examples](./examples.md)
