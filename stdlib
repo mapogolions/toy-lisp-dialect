@@ -1,4 +1,7 @@
 (defun range (a b)
+;; Example:
+;; (range 1 4) -> (list 1 2 3)
+;; (range 4 1) -> (list 4 3 2)
     (if (eq a b)
         nil
         (if (lt a b)
@@ -6,11 +9,13 @@
             (cons a (range (+ a (- 1)) b)))))
 
 (defun count (coll)
+;; Example: (count (list 1 2))
     (if (null? coll)
         0
         (+ 1 (count (tail coll)))))
 
 (defun at-index (i coll)
+;; Example: (at-index 1 (list 'a' 'b' 'c'))
     (if (or (null? coll) (lt i 0))
         nil
         (if (eq i 0)
