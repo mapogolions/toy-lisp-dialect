@@ -92,7 +92,7 @@ namespace Cl.Tests.EvaluatorTests
                 .Value
                 .Cast<ClFn>();
 
-            Assert.That(fn.Varargs, Is.EqualTo(ClCell.Nil));
+            Assert.That(fn.Parameters, Is.EqualTo(ClCell.Nil));
         }
 
         [Test]

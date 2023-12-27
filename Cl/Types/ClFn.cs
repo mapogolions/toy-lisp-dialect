@@ -2,16 +2,16 @@ namespace Cl.Types
 {
     public class ClFn : ClCallable
     {
-        public ClFn(ClCell varargs, ClObj body, IEnv scope)
+        public ClFn(ClCell varargs, ClObj body, IEnv lexicalEnv)
         {
-            Varargs = varargs;
+            Parameters = varargs;
             Body = body;
-            HasBeenCreatedWithinScope = scope;
+            LexicalEnv = lexicalEnv;
         }
 
-        public ClCell Varargs { get; }
+        public ClCell Parameters { get; }
         public ClObj Body { get; }
-        public IEnv HasBeenCreatedWithinScope { get; }
+        public IEnv LexicalEnv { get; }
 
         public override string ToString() => "#<procedure>";
     }

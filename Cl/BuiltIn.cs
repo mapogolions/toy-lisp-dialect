@@ -178,6 +178,17 @@ namespace Cl
             return ClCell.Nil;
         }
 
+        public static ClInt Arity(params ClObj[] args)
+        {
+            var callable = VarArgs.Get<ClCallable>(args);
+            return callable switch
+            {
+                ClFn fn => ListLength(fn.Parameters),
+                NativeFn nativeFn => new ClInt(0),
+                _ => throw new IndexOutOfRangeException()
+            };
+        }
+
         public static ClInt Len(params ClObj[] args)
         {
             var obj = VarArgs.Get<ClObj>(args);
@@ -189,7 +200,7 @@ namespace Cl
             };
         }
 
-        private static ClInt ListLength(ClCell cell)
+        public static ClInt ListLength(ClCell cell)
         {
             int i = 0;
             while (cell != ClCell.Nil)
@@ -200,7 +211,7 @@ namespace Cl
             return new ClInt(i);
         }
 
-        private static ClInt StringLength(ClString clString)
+        public static ClInt StringLength(ClString clString)
         {
             return new ClInt(clString.Value.Length);
         }
@@ -269,7 +280,8 @@ namespace Cl
             (new ClSymbol("lte"), new NativeFn(Lte)),
             (new ClSymbol("gte"), new NativeFn(Gte)),
             (new ClSymbol("join"), new NativeFn(Join)),
-            (new ClSymbol("len"), new NativeFn(Len))
+            (new ClSymbol("len"), new NativeFn(Len)),
+            (new ClSymbol("arity"), new NativeFn(Arity))
         );
     }
 }

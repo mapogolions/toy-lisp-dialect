@@ -17,8 +17,8 @@ namespace Cl.SpecialForms
                 return new Context(result, env);
             }
             var fn = (ClFn) Car;
-            var lexicalEnv = new Env(fn.HasBeenCreatedWithinScope);
-            lexicalEnv.Bind(BuiltIn.Seq(fn.Varargs), args);
+            var lexicalEnv = new Env(fn.LexicalEnv);
+            lexicalEnv.Bind(BuiltIn.Seq(fn.Parameters), args);
             var (value, _) = fn.Body.Reduce(new Context(lexicalEnv));
             return ctx.FromValue(value);
         }
