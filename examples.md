@@ -8,7 +8,7 @@
 
 (define g (f 10))
 (define h (g 11))
-(h)
+(h) ;; or (call h)
 ```
 
 #### compound function body
@@ -21,7 +21,7 @@
             (define y 11) ;; affected lexical env only
             (list x y))))
 
-(f)
+(f) ;; or (call f)
 ```
 
 #### `quote` vs `list`
@@ -140,17 +140,6 @@
 (custom-map 10 (plus-n 1))
 ```
 
-#### builtin map
-```clojure
-(map
-    (list 'foo' 'bar' 'baz')
-        (lambda (x) (repeat 2 x)))
-
-(map
-    (list 'foo' 'bar' 'baz') upper)
-```
-
-
 #### print(ln)
 ```clojure
 (println 10 11)
@@ -166,10 +155,10 @@
         (set! x 12)
         g))
 
-((f)) ;; 12
+(call (f)) ;; 12
 ```
 
-#### counter (v1)
+#### counter
 ```clojure
 (defun counter (n)
     (lambda ()
@@ -181,54 +170,10 @@
 (define start-from-20 (counter 20))
 
 (list
-    (start-from-10)
-    (start-from-20)
-    (start-from-10)
-    (start-from-20))
-```
-
-#### counter (v2)
-```clojure
-(defun counter (start)
-    (begin
-        (define x start)
-        (define g
-            (lambda ()
-                (begin
-                    (set! x (+ x 1))
-                    x)))
-        g))
-
-(define start-from-10 (counter 10))
-(define start-from-20 (counter 20))
-
-(list
-    (start-from-10)
-    (start-from-20)
-    (start-from-10)
-    (start-from-20))
-```
-
-#### counter (v3)
-```clojure
-(defun counter (n)
-    (begin
-        (defun f ()
-            (begin
-                (set! n (+ 1 n))
-                n))
-        f))
-
-(define start-from-10 (counter 10))
-(define start-from-20 (counter 20))
-(define start-from-0 (counter 0))
-
-(list
-    (start-from-10)
-    (start-from-20)
-    (start-from-10)
-    (start-from-20)
-    (start-from-0))
+    (call start-from-10)
+    (call start-from-20)
+    (call start-from-10)
+    (call start-from-20))
 ```
 
 #### increment/decrement
@@ -248,25 +193,15 @@
 (define obj
     (create-inc-dec-pair 0))
 
-((first obj))
-((second obj))
-((second obj))
+(call (first obj))
+
+(call (second obj))
+
+(call (second obj))
 ```
 
 #### koa-compose
 ```clojure
-(defun count (coll)
-    (if (null? coll)
-        0
-        (+ 1 (count (tail coll)))))
-
-(defun at-index (i coll)
-    (if (or (null? coll) (lt i 0))
-        nil
-        (if (eq i 0)
-            (first coll)
-            (at-index (+ i (- 1)) (tail coll)))))
-
 (defun koa-compose (middleware)
     (lambda (context)
         (begin
@@ -296,57 +231,4 @@
         (list multiply-by-3 increment)))
 
 (fn 0)
-```
-
-#### Work with collection
-
-```clojure
-(defun at-index (i coll)
-    (if (or (null? coll) (lt i 0))
-        nil
-        (if (eq i 0)
-            (first coll)
-            (at-index (+ i (- 1)) (tail coll)))))
-
-(defun count (coll)
-    (if (null? coll)
-        0
-        (+ 1 (count (tail coll)))))
-
-(defun where (f coll)
-    (if (null? coll)
-        nil
-        (if (f (first coll))
-            (cons
-                (first coll)
-                (where f (tail coll)))
-            (where f (tail coll)))))
-
-(defun select (f coll)
-    (if (null? coll)
-        nil
-        (cons
-            (f (first coll))
-            (select f (tail coll)))))
-
-(define nums (list 1 2 3))
-
-(count nums)
-
-(at-index 2 nums)
-
-(select
-    (lambda (x)
-        (+ x 1))
-    nums)
-
-(where
-    (lambda (x)
-        (gte x 2))
-    nums)
-
-(where
-    (lambda (x)
-        (lt x 2))
-    nums)
 ```

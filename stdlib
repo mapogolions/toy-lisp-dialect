@@ -39,3 +39,6 @@
         (begin
             (f (head coll)
             (for-each f (tail coll))))))
+
+(defun call (f)
+    (f))
