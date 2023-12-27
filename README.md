@@ -9,11 +9,10 @@ Yet another lisp interpreter
 
 ```sh
 dotnet test
-```
-
-```sh
 dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 ```
+
+By default REPL loads the [stdlib](./stdlib) file so you can use predefined functions written in toy lisp.
 
 #### Hello World
 
