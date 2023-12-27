@@ -4,6 +4,7 @@ using Cl.Errors;
 using Cl.Helpers;
 using Cl.IO;
 using Cl.Readers;
+using System.Security.Cryptography;
 
 namespace Cl
 {
@@ -177,6 +178,33 @@ namespace Cl
             return ClCell.Nil;
         }
 
+        public static ClInt Len(params ClObj[] args)
+        {
+            var obj = VarArgs.Get<ClObj>(args);
+            return obj switch
+            {
+                ClCell cell => ListLength(cell),
+                ClString clString => StringLength(clString),
+                _ => throw new IndexOutOfRangeException()
+            };
+        }
+
+        private static ClInt ListLength(ClCell cell)
+        {
+            int i = 0;
+            while (cell != ClCell.Nil)
+            {
+                i++;
+                cell = (ClCell)cell.Cdr;
+            }
+            return new ClInt(i);
+        }
+
+        private static ClInt StringLength(ClString clString)
+        {
+            return new ClInt(clString.Value.Length);
+        }
+
         public static IContext StdLib(string? stdlibPath)
         {
             if (string.IsNullOrEmpty(stdlibPath))
@@ -240,7 +268,8 @@ namespace Cl
             (new ClSymbol("gt"), new NativeFn(Gt)),
             (new ClSymbol("lte"), new NativeFn(Lte)),
             (new ClSymbol("gte"), new NativeFn(Gte)),
-            (new ClSymbol("join"), new NativeFn(Join))
+            (new ClSymbol("join"), new NativeFn(Join)),
+            (new ClSymbol("len"), new NativeFn(Len))
         );
     }
 }
