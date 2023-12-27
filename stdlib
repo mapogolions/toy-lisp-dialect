@@ -1,0 +1,41 @@
+(defun range (a b)
+    (if (eq a b)
+        nil
+        (if (lt a b)
+            (cons a (range (+ a 1) b))
+            (cons a (range (+ a (- 1)) b)))))
+
+(defun count (coll)
+    (if (null? coll)
+        0
+        (+ 1 (count (tail coll)))))
+
+(defun at-index (i coll)
+    (if (or (null? coll) (lt i 0))
+        nil
+        (if (eq i 0)
+            (first coll)
+            (at-index (+ i (- 1)) (tail coll)))))
+
+(defun map (f coll)
+    (if (null? coll)
+        nil
+        (cons
+            (f (first coll))
+            (map f (tail coll)))))
+
+(defun filter (f coll)
+    (if (null? coll)
+        nil
+        (if (f (first coll))
+            (cons
+                (first coll)
+                (filter f (tail coll)))
+            (filter f (tail coll)))))
+
+(defun for-each (f coll)
+    (if (null? coll)
+        nil
+        (begin
+            (f (head coll)
+            (for-each f (tail coll))))))

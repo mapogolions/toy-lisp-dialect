@@ -18,9 +18,9 @@ namespace Cl.Utop
         public string MultiLineInput => $"{Indent}|";
         public string ResultLine => $"{Indent}|> ";
 
-        public void Start()
+        public void Start(params string[] args)
         {
-            IContext ctx = new Context(BuiltIn.Env);
+            var ctx = BuiltIn.StdLib(args.Length > 0 ? args[0] : null);
             var snippet = new StringBuilder();
             Console.Write($"{_prompt} ");
             while (true)

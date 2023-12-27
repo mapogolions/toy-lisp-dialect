@@ -18,6 +18,12 @@ dotnet run --project .\Cl.Utop\Cl.Utop.csproj
 #### Hello World
 
 ```clojure
+(defun for-each (n f)
+    (if (gte n 0)
+        (begin
+            (f n)
+            (for-each (- n 1) f))
+        nil))
 (println 'hello world')
 ```
 

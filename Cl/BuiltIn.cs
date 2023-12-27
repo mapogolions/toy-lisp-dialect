@@ -1,8 +1,9 @@
 using Cl.Extensions;
 using Cl.Types;
-using Cl.SpecialForms;
 using Cl.Errors;
 using Cl.Helpers;
+using Cl.IO;
+using Cl.Readers;
 
 namespace Cl
 {
@@ -165,36 +166,34 @@ namespace Cl
             return new ClString(source.Value.ToLower());
         }
 
-        public static ClObj Map(params ClObj[] args)
-        {
-            (ClCell coll, ClCallable callable) = VarArgs.Get<ClCell, ClCallable>(args);
-            var ctx = new Context(Env);
-            return Seq(coll).Select(x => {
-                    var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
-                    return resultCtx.Value;
-                }).ListOf();
-        }
-
-        public static ClObj Filter(params ClObj[] args)
-        {
-            (ClCell coll, ClCallable callable) = VarArgs.Get<ClCell, ClCallable>(args);
-            var ctx = new Context(Env);
-            return Seq(coll).Where(x => {
-                    var resultCtx = new ApplySpecialForm(callable, ListOf(x)).Reduce(ctx);
-                    return resultCtx.Value is ClBool flag && flag.Value is true;
-                }).ListOf();
-        }
-
         public static ClObj Println(params ClObj[] args)
         {
-            args.ForEach(x => Console.WriteLine(x));
+            args.ForEach(Console.WriteLine);
             return ClCell.Nil;
         }
 
         public static ClObj Print(params ClObj[] args)
         {
-            args.ForEach(x => Console.Write(x));
+            args.ForEach(Console.Write);
             return ClCell.Nil;
+        }
+
+        public static IContext StdLib(string? stdlibPath)
+        {
+            if (string.IsNullOrEmpty(stdlibPath))
+            {
+                stdlibPath = Path.Combine(Environment.CurrentDirectory, "stdlib");
+            }
+            if (!File.Exists(stdlibPath))
+            {
+                throw new NotSupportedException($"Standard library not found. Location: {stdlibPath}");
+            }
+            using var fs = new FileStream(stdlibPath, FileMode.Open);
+            using var source = new Source(fs);
+            var reader = new Reader();
+            var obj = reader.Read(source);
+            IContext ctx = new Context(Env);
+            return obj.Reduce(ctx);
         }
 
         public static IEnv Env = new Env(
@@ -235,8 +234,6 @@ namespace Cl
             (new ClSymbol("repeat"), new NativeFn(Repeat)),
             (new ClSymbol("upper"), new NativeFn(Upper)),
             (new ClSymbol("lower"), new NativeFn(Lower)),
-            (new ClSymbol("map"), new NativeFn(Map)),
-            (new ClSymbol("filter"), new NativeFn(Filter)),
             (new ClSymbol("println"), new NativeFn(Println)),
             (new ClSymbol("print"), new NativeFn(Print)),
             (new ClSymbol("eq"), new NativeFn(Eq)),
