@@ -2,9 +2,9 @@ namespace Cl.Types
 {
     public class ClFn : ClCallable
     {
-        public ClFn(ClCell varargs, ClObj body, IEnv lexicalEnv)
+        public ClFn(ClCell parameters, ClObj body, IEnv lexicalEnv)
         {
-            Parameters = varargs;
+            Parameters = parameters;
             Body = body;
             LexicalEnv = lexicalEnv;
         }

@@ -4,7 +4,6 @@ using Cl.Errors;
 using Cl.Helpers;
 using Cl.IO;
 using Cl.Readers;
-using System.Security.Cryptography;
 
 namespace Cl
 {
@@ -184,7 +183,7 @@ namespace Cl
             return callable switch
             {
                 ClFn fn => ListLength(fn.Parameters),
-                NativeFn nativeFn => new ClInt(0),
+                NativeFn nativeFn => new ClInt(nativeFn.Arity),
                 _ => throw new IndexOutOfRangeException()
             };
         }
@@ -234,6 +233,8 @@ namespace Cl
             return obj.Reduce(ctx);
         }
 
+        public const int MaxArity = 2147483591;
+
         public static IEnv Env = new Env(
             (new ClSymbol("null?"), new NativeFn(IsNull)),
             (new ClSymbol("string?"), new NativeFn(IsString)),
@@ -266,20 +267,20 @@ namespace Cl
             (new ClSymbol("int-of-char"), new NativeFn(IntOfChar)),
             (new ClSymbol("char-of-int"), new NativeFn(CharOfInt)),
             (new ClSymbol("-"), new NativeFn(UnaryMinus)),
-            (new ClSymbol("+"), new NativeFn(Sum)),
-            (new ClSymbol("*"), new NativeFn(Product)),
-            (new ClSymbol("/"), new NativeFn(Divide)),
-            (new ClSymbol("repeat"), new NativeFn(Repeat)),
+            (new ClSymbol("+"), new NativeFn(Sum, MaxArity)),
+            (new ClSymbol("*"), new NativeFn(Product, MaxArity)),
+            (new ClSymbol("/"), new NativeFn(Divide, 2)),
+            (new ClSymbol("repeat"), new NativeFn(Repeat, 2)),
             (new ClSymbol("upper"), new NativeFn(Upper)),
             (new ClSymbol("lower"), new NativeFn(Lower)),
-            (new ClSymbol("println"), new NativeFn(Println)),
-            (new ClSymbol("print"), new NativeFn(Print)),
-            (new ClSymbol("eq"), new NativeFn(Eq)),
-            (new ClSymbol("lt"), new NativeFn(Lt)),
-            (new ClSymbol("gt"), new NativeFn(Gt)),
-            (new ClSymbol("lte"), new NativeFn(Lte)),
-            (new ClSymbol("gte"), new NativeFn(Gte)),
-            (new ClSymbol("join"), new NativeFn(Join)),
+            (new ClSymbol("println"), new NativeFn(Println, MaxArity)),
+            (new ClSymbol("print"), new NativeFn(Print, MaxArity)),
+            (new ClSymbol("eq"), new NativeFn(Eq, arity: 2)),
+            (new ClSymbol("lt"), new NativeFn(Lt, arity: 2)),
+            (new ClSymbol("gt"), new NativeFn(Gt, arity: 2)),
+            (new ClSymbol("lte"), new NativeFn(Lte, arity: 2)),
+            (new ClSymbol("gte"), new NativeFn(Gte, arity: 2)),
+            (new ClSymbol("join"), new NativeFn(Join, arity: 2)),
             (new ClSymbol("len"), new NativeFn(Len)),
             (new ClSymbol("arity"), new NativeFn(Arity))
         );

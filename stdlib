@@ -64,3 +64,6 @@
 
 (defun call (f)
     (f))
+
+(defun max-arity ()
+    2147483591)
