@@ -62,6 +62,84 @@
             (fold-right f seed (tail coll))
             (head coll))))
 
+(defun prepend (x coll)
+    (cons x coll))
+
+(defun append (x coll)
+;; Example: (append 5 (append 4 (append 3 nil)))
+    (if (null? coll)
+        (list x)
+        (cons
+            (head coll)
+            (append x (tail coll)))))
+
+(defun zip (xs ys)
+;; Example:
+;; Balanced: (zip (list 1 2 3) (list 'a' 'b' 'c'))
+;; Unbalanced: (zip (list 1 2 3) (list 'a' 'b'))
+    (if (or ;; short-circuit if unbalanced
+            (null? xs)
+            (null? ys))
+        nil
+        (cons
+            (list
+                (head xs)
+                (head ys))
+            (zip (tail xs) (tail ys)))))
+
+(defun take (n coll)
+;; Example: (take 2 (list 1 2 3))
+    (if (or
+            (null? coll)
+            (lte n 0))
+        nil
+        (cons
+            (head coll)
+            (take (+ n (- 1)) (tail coll)))))
+
+(defun skip (n coll)
+;; Example: (skip 2 (list 1 2 3))
+    (cond
+        ((null? coll) nil)
+        ((lte n 0) coll)
+        ((gt n 0)
+            (skip (+ n (- 1)) (tail coll)))))
+
+(defun reverse (coll)
+;; Example: (reverse (list 1 2 3))
+    (begin
+        (defun iter (acc xs)
+            (if (null? xs)
+                acc
+                (iter
+                    (cons (head xs) acc)
+                    (tail xs))))
+        (iter nil coll)))
+
+(defun any (predicate coll)
+;; Example: (any (lambda (x) (eq x 0)) (list 1 2 0))
+    (if (null? coll)
+        #f
+        (or
+            (predicate (head coll))
+            (any predicate (tail coll)))))
+
+(defun all (predicate coll)
+;; Example: (all (lambda (x) (gte x 0)) (list 1 2 0))
+    (if (null? coll)
+        #t
+        (and
+            (predicate (head coll))
+            (all predicate (tail coll)))))
+
+(defun concat (xs ys)
+;; Example: (concat (list 1 2) (list 3 4))
+    (if (null? xs)
+        ys
+        (cons
+            (head xs)
+            (concat (tail xs) ys))))
+
 (defun call (f)
     (f))
 
