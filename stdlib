@@ -140,6 +140,30 @@
             (head xs)
             (concat (tail xs) ys))))
 
+(defun group-n (n coll)
+;; Example: (group-n 2 (range 1 7))
+    (begin
+        (defun group (n coll)
+            (cond
+                ((null? coll) (list nil nil))
+                ((lte n 0) (list nil coll))
+                ((gt n 0)
+                    (begin
+                        (define r
+                            (group (+ n (- 1)) (tail coll)))
+                        (list
+                            (cons (head coll) (first r))
+                            (second r))))))
+        (defun iter (n coll)
+            (begin
+                (define pair (group n coll))
+                (if (null? (second pair))
+                    (list (first pair))
+                    (cons
+                        (first pair)
+                        (iter n (second pair))))))
+        (iter n coll)))
+
 (defun call (f)
     (f))
 
