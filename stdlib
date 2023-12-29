@@ -189,6 +189,16 @@
                 (head coll)
                 (flatten (tail coll))))))
 
+(defun and-then (f g)
+    (lambda (x)
+        (f (g x))))
+
+(defun compose (f g)
+    (lambda (x)
+        (g (f x))))
+
+(defun identity (x) x)
+
 (defun call (f)
     (f))
 
