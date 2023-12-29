@@ -257,6 +257,7 @@ namespace Cl
             (new ClSymbol("fourth"), new NativeFn(Fourth)),
             (new ClSymbol("true?"), new NativeFn(IsTrue)),
             (new ClSymbol("false?"), new NativeFn(IsFalse)),
+            (new ClSymbol("cell?"), new NativeFn(IsPair)),
             (new ClSymbol("not"), new NativeFn(Not)),
             (new ClSymbol("list"), new NativeFn(ListOf)),
             (new ClSymbol("cons"), new NativeFn(Cons)),

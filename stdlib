@@ -164,6 +164,18 @@
                         (iter n (second pair))))))
         (iter n coll)))
 
+(defun flat-map (f coll)
+;; Example: (flat-map (lambda (x) (if (eq x 2) (list x x) x))  (list 1 2 3))
+    (if (null? coll)
+        nil
+        (begin
+            (define r (f (head coll)))
+            (if (cell? r)
+                (concat r (flat-map f (tail coll)))
+                (cons
+                    r
+                    (flat-map f (tail coll)))))))
+
 (defun call (f)
     (f))
 
