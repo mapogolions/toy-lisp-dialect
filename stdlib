@@ -170,7 +170,9 @@
                     (cons
                         (first pair)
                         (iter n (second pair))))))
-        (iter n coll)))
+        (if (lte n 0)
+            coll ;; just return original
+            (iter n coll))))
 
 (defun flat-map (f coll)
 ;; Example: (flat-map (lambda (x) (if (eq x 2) (list x x) x))  (list 1 2 3))

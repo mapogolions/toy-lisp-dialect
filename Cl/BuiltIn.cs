@@ -13,6 +13,7 @@ namespace Cl
             .Aggregate<ClObj, IContext>(ctx, (ctx, expr) => expr.Reduce(ctx));
 
         public static IContext Eval(params ClObj[] expressions) => Eval(expressions, new Context(Env));
+        public static IContext Eval(IContext ctx, params ClObj[] expressions) => Eval(expressions, ctx);
 
         public static ClObj Car(params ClObj[] args) => VarArgs.Get<ClCell>(args).Car;
         public static ClObj Cdr(params ClObj[] args) => VarArgs.Get<ClCell>(args).Cdr;
@@ -215,7 +216,7 @@ namespace Cl
             return new ClInt(clString.Value.Length);
         }
 
-        public static IContext StdLib(string? stdlibPath)
+        public static IContext StdLib(string? stdlibPath = null)
         {
             if (string.IsNullOrEmpty(stdlibPath))
             {
