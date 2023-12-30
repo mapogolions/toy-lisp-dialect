@@ -5,9 +5,8 @@ using Cl.Tests.TestDataSources;
 
 namespace Cl.Tests
 {
-    public class StdlibTests
+    public class StdLibTests
     {
-        private static IContext _ctx = BuiltIn.StdLib();
         [Test]
         [TestCaseSource(typeof(StdLibDataSource))]
         public void Test(string snippet, string expected)
@@ -17,5 +16,7 @@ namespace Cl.Tests
             var (actual, _) = BuiltIn.Eval(_ctx, reader.Read(source));
             Assert.That(actual.ToString(), Is.EqualTo(expected));
         }
+
+        private static IContext _ctx = BuiltIn.StdLib();
     }
 }

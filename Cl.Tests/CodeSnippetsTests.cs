@@ -9,7 +9,7 @@ namespace Cl.Tests
     {
         [Test]
         [TestCaseSource(typeof(CodeSnippetsDataSource))]
-        public void SnippetsTest(string snippet, string expected)
+        public void Test(string snippet, string expected)
         {
             using var source = new Source(snippet);
             var reader = new Reader();
