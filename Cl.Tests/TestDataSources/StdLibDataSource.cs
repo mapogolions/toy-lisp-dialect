@@ -6,6 +6,21 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
+            // for-each
+            yield return new object[]
+            {
+                @"
+                (begin
+                    (define n 0)
+                    (for-each
+                        (lambda (x)
+                            (set! n (+ n x)))
+                        (list 1 2 3 4))
+                    n)
+                ",
+                "10"
+            };
+
             // assoc
             yield return new object[]
             {

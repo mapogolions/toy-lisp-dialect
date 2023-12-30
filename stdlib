@@ -50,8 +50,8 @@
     (if (null? coll)
         nil
         (begin
-            (f (head coll)
-            (for-each f (tail coll))))))
+            (f (head coll))
+            (for-each f (tail coll)))))
 
 (defun fold-left (f seed coll)
 ;; Example: (fold-left + 0 (range 1 5))
