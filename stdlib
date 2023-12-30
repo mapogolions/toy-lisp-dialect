@@ -14,13 +14,13 @@
         0
         (+ 1 (count (tail coll)))))
 
-(defun matches (predicate coll)
+(defun matches (f coll)
 ;; Example: (matches (lambda (x) (eq 2 x)) (list 2 1 2))
     (if (null? coll)
         0
-        (if (predicate (head coll))
-            (+ 1 (matches predicate (tail coll)))
-            (matches predicate (tail coll)))))
+        (if (f (head coll))
+            (+ 1 (matches f (tail coll)))
+            (matches f (tail coll)))))
 
 (defun at-index (i coll)
 ;; Example: (at-index 1 (list 'a' 'b' 'c'))
@@ -124,21 +124,21 @@
                     (tail xs))))
         (iter nil coll)))
 
-(defun any (predicate coll)
+(defun any (f coll)
 ;; Example: (any (lambda (x) (eq x 0)) (list 1 2 0))
     (if (null? coll)
         #f
         (or
-            (predicate (head coll))
-            (any predicate (tail coll)))))
+            (f (head coll))
+            (any f (tail coll)))))
 
-(defun all (predicate coll)
+(defun all (f coll)
 ;; Example: (all (lambda (x) (gte x 0)) (list 1 2 0))
     (if (null? coll)
         #t
         (and
-            (predicate (head coll))
-            (all predicate (tail coll)))))
+            (f (head coll))
+            (all f (tail coll)))))
 
 (defun concat (xs ys)
 ;; Example: (concat (list 1 2) (list 3 4))
@@ -218,28 +218,28 @@
                     (iter (+ 1 i) (tail xs)))))
         (iter 0 coll)))
 
-(defun find-index (predicate coll)
+(defun find-index (f coll)
 ;; Example: (find-index (lambda (x) (eq x 2)) (list 1 2 3 4))
     (begin
-        (defun iter (i predicate xs)
+        (defun iter (i f xs)
             (if (null? xs)
                 (- 1)
-                (if (predicate (head xs))
+                (if (f (head xs))
                     i
-                    (iter (+ 1 i) predicate (tail xs)))))
-        (iter 0 predicate coll)))
+                    (iter (+ 1 i) f (tail xs)))))
+        (iter 0 f coll)))
 
-(defun find (predicate coll)
+(defun find (f coll)
 ;; Example: (find (lambda (x) (gt x 2)) (list 1 2 3 4))
     (if (null? coll)
         nil
-        (if (predicate (head coll))
+        (if (f (head coll))
             (head coll)
-            (find predicate (tail coll)))))
+            (find f (tail coll)))))
 
-(defun find-all (predicate coll)
+(defun find-all (f coll)
 ;; Example: (find-all (lambda (x) (gt x 2)) (list 3 2 4 1))
-    (filter predicate coll))
+    (filter f coll))
 
 (defun and-then (f g)
     (lambda (x)
