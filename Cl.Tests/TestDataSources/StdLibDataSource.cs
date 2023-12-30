@@ -6,6 +6,30 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
+            // find-index
+            yield return new object[]
+            {
+                @"(find-index (lambda (x) (eq x 0)) (list 1 0 2 0))",
+                "1"
+            };
+
+            // matches
+            yield return new object[]
+            {
+                @"(matches (lambda (x) (lte x 0)) nil)",
+                "0"
+            };
+            yield return new object[]
+            {
+                @"(matches (lambda (x) (lte x 0)) (list 2 1 2))",
+                "0"
+            };
+            yield return new object[]
+            {
+                @"(matches (lambda (x) (eq x 2)) (list 2 1 2))",
+                "2"
+            };
+
             // for-each
             yield return new object[]
             {
