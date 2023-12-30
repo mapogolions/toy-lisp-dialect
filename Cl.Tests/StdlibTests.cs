@@ -17,6 +17,6 @@ namespace Cl.Tests
             Assert.That(actual.ToString(), Is.EqualTo(expected));
         }
 
-        private static IContext _ctx = BuiltIn.StdLib();
+        private static readonly IContext _ctx = BuiltIn.StdLib();
     }
 }
