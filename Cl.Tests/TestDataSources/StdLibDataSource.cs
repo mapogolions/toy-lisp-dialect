@@ -10,13 +10,13 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
-                (begin
-                    (define n 0)
-                    (for-each
-                        (lambda (x)
-                            (set! n (+ n x)))
-                        (list 1 2 3 4))
-                    n)
+                (let ((n 0))
+                    (begin
+                        (for-each
+                            (lambda (x)
+                                (set! n (+ n x)))
+                            (list 1 2 3 4))
+                        n))
                 ",
                 "10"
             };
