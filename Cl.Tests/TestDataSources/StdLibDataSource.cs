@@ -6,6 +6,23 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
+            // partial
+            yield return new object[]
+            {
+                @"
+                    (invoke
+                        (lambda ()
+                            (begin
+                                (defun add (a b) (+ a b))
+                                (define succ (partial add 1))
+                                (define pred (partial add (- 1)))
+                                (list
+                                    (succ 1)
+                                    (pred 1)))))
+                ",
+                "(2 . (0 . nil))"
+            };
+
             // call
             yield return new object[]
             {

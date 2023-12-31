@@ -264,5 +264,18 @@
             (list
                 (concat (quote f) args)))))
 
+(defun partial (f x)
+;; Example:
+;; (defun add (a b) (+ a b))
+;; (define add-one (partial add 1))
+;; (add-one 2)
+    (begin
+        (defun iter (n f args)
+            (if (lte n 1)
+                (call f (reverse args))
+                (lambda (x)
+                    (iter (+ (- 1) n) f (cons x args)))))
+        (iter (arity f) f (list x))))
+
 (defun max-arity ()
     2147483591)
