@@ -10,11 +10,11 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
-                    (invoke
-                        (lambda ()
-                            (begin
-                                (read (quote (define x 1) (define y 2)))
-                                (+ x y))))
+                (invoke
+                    (lambda ()
+                        (begin
+                            (read (quote (define x 1) (define y 2)))
+                            (+ x y))))
                 ",
                 "3"
             };
@@ -23,14 +23,14 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
-                    (invoke
-                        (lambda ()
-                            (begin
-                                (defun add (a b) (+ a b))
-                                (define succ (partial add 1))
-                                (define pred (partial add (- 1)))
-                                (list
-                                    (succ 1) (pred 1)))))
+                (invoke
+                    (lambda ()
+                        (begin
+                            (defun add (a b) (+ a b))
+                            (define succ (partial add 1))
+                            (define pred (partial add (- 1)))
+                            (list
+                                (succ 1) (pred 1)))))
                 ",
                 "(2 . (0 . nil))"
             };
@@ -39,11 +39,11 @@ namespace Cl.Tests.TestDataSources
             yield return new object[]
             {
                 @"
-                    (invoke
-                        (lambda ()
-                            (begin
-                                (defun add (a b) (+ a b))
-                                (call add (list 1 2)))))
+                (invoke
+                    (lambda ()
+                        (begin
+                            (defun add (a b) (+ a b))
+                            (call add (list 1 2)))))
                 ",
                 "3"
             };
