@@ -8,7 +8,7 @@
 
 (define g (f 10))
 (define h (g 11))
-(h) ;; or (call h)
+(h) ;; or (call h nil)
 ```
 
 #### compound function body
@@ -21,7 +21,7 @@
             (define y 11) ;; affected lexical env only
             (list x y))))
 
-(f) ;; or (call f)
+(f) ;; or (call f nil)
 ```
 
 #### `quote` vs `list`
@@ -193,11 +193,11 @@
 (define obj
     (create-inc-dec-pair 0))
 
-(call (first obj))
+(call (first obj) nil)
 
-(call (second obj))
+(call (second obj) nil)
 
-(call (second obj))
+(call (second obj) nil)
 ```
 
 #### koa-compose

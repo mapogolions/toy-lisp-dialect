@@ -251,8 +251,18 @@
 
 (defun identity (x) x)
 
-(defun call (f)
+(defun invoke (f)
     (f))
+
+(defun call (f args)
+;; Example:
+;; (defun add (a b) (+ a b))
+;; (call add (list 1 2))
+    (if (null? args)
+        (f)
+        (read
+            (list
+                (concat (quote f) args)))))
 
 (defun max-arity ()
     2147483591)

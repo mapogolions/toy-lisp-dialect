@@ -6,6 +6,19 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
+            // call
+            yield return new object[]
+            {
+                @"
+                    (invoke
+                        (lambda ()
+                            (begin
+                                (defun add (a b) (+ a b))
+                                (call add (list 1 2)))))
+                ",
+                "3"
+            };
+
             // find-index
             yield return new object[]
             {
