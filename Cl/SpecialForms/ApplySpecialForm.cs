@@ -6,13 +6,20 @@ namespace Cl.SpecialForms
 {
     public class ApplySpecialForm : ClCell
     {
-        public ApplySpecialForm(ClCallable car, ClObj cdr) : base(car, cdr) { }
+        private readonly ClSymbol _symbol;
+
+        public ApplySpecialForm(ClSymbol symbol, ClCallable car, ClObj cdr) : base(car, cdr)
+        {
+            _symbol = symbol;
+        }
 
         public override IContext Reduce(IContext ctx)
         {
             var (args, env) = EvalArgs(ctx);
             if (Car is NativeFn nativeFn)
             {
+                // check if this is a predefined `read` function, if it is then implicitly pass the context as the last argument
+                args = ClSymbol.Read.Equals(_symbol) && ctx is Context c ? args.Append(c) : args;
                 var result = nativeFn.Apply(args.ToArray());
                 return new Context(result, env);
             }

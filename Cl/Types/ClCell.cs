@@ -27,7 +27,7 @@ namespace Cl.Types
             var (value, env) = Car.Reduce(ctx);
             if (value is ClCallable callable)
             {
-                return new ApplySpecialForm(callable, Cdr).Reduce(new Context(env));
+                return new ApplySpecialForm(ClSymbol.Anonymous, callable, Cdr).Reduce(new Context(env));
             }
             throw new SyntaxError("Invalid function call");
         }

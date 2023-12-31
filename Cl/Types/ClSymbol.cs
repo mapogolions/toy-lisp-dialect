@@ -26,5 +26,7 @@ namespace Cl.Types
         public static readonly ClSymbol Lambda = new("lambda");
         public static readonly ClSymbol Defun = new("defun");
         public static readonly ClSymbol Nil = new("nil");
+        public static readonly ClSymbol Anonymous = new("anonymous");
+        public static readonly ClSymbol Read = new("read");
     }
 }

@@ -2,7 +2,7 @@ using Cl.Types;
 
 namespace Cl
 {
-    public class Context : IContext
+    public class Context : ClObj, IContext
     {
         public ClObj Value { get; }
         public IEnv Env { get; }

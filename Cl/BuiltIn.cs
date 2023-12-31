@@ -216,6 +216,18 @@ namespace Cl
             return new ClInt(clString.Value.Length);
         }
 
+        // Experimental feature
+        // Example: (read (quote (define x 1) (define y 2)))
+        public static ClObj Read(params ClObj[] args)
+        {
+            var (cell, ctx) = VarArgs.Get<ClCell, Context>(args);
+            foreach (var obj in Seq(cell))
+            {
+                ctx = (Context)obj.Reduce(ctx);
+            }
+            return ctx.Value;
+        }
+
         public static IContext StdLib(string? stdlibPath = null)
         {
             if (string.IsNullOrEmpty(stdlibPath))
@@ -284,7 +296,8 @@ namespace Cl
             (new ClSymbol("gte"), new NativeFn(Gte, arity: 2)),
             (new ClSymbol("join"), new NativeFn(Join, arity: 2)),
             (new ClSymbol("len"), new NativeFn(Len)),
-            (new ClSymbol("arity"), new NativeFn(Arity))
+            (new ClSymbol("arity"), new NativeFn(Arity)),
+            (ClSymbol.Read, new NativeFn(Read, arity: 1)) // `context` passed implicitly, so ignore it
         );
     }
 }
