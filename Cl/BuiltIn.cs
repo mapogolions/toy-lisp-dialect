@@ -216,8 +216,6 @@ namespace Cl
             return new ClInt(clString.Value.Length);
         }
 
-        // Experimental feature
-        // Example: (read (quote (define x 1) (define y 2)))
         public static ClObj Read(params ClObj[] args)
         {
             var (cell, ctx) = VarArgs.Get<ClCell, Context>(args);

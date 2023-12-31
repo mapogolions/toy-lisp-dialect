@@ -6,6 +6,19 @@ namespace Cl.Tests.TestDataSources
     {
         public IEnumerator<object[]> GetEnumerator()
         {
+            // read
+            yield return new object[]
+            {
+                @"
+                    (invoke
+                        (lambda ()
+                            (begin
+                                (read (quote (define x 1) (define y 2)))
+                                (+ x y))))
+                ",
+                "3"
+            };
+
             // partial
             yield return new object[]
             {
@@ -17,8 +30,7 @@ namespace Cl.Tests.TestDataSources
                                 (define succ (partial add 1))
                                 (define pred (partial add (- 1)))
                                 (list
-                                    (succ 1)
-                                    (pred 1)))))
+                                    (succ 1) (pred 1)))))
                 ",
                 "(2 . (0 . nil))"
             };
