@@ -23,6 +23,7 @@ namespace Cl.Types
             {
                 return new TaggedSpecialForm(tag, Cdr).Reduce(ctx);
             }
+            // Case: ((lambda (a b) (+ a b)) 1 2)
             var (value, env) = Car.Reduce(ctx);
             if (value is ClCallable callable)
             {
