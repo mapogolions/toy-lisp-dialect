@@ -110,7 +110,7 @@
     (cond
         ((null? coll) nil)
         ((lte n 0) coll)
-        ((gt n 0)
+        (else
             (skip (+ n (- 1)) (tail coll)))))
 
 (defun reverse (coll)
@@ -155,7 +155,7 @@
             (cond
                 ((null? coll) (list nil nil))
                 ((lte n 0) (list nil coll))
-                ((gt n 0)
+                (else
                     (begin
                         (define r
                             (group (+ n (- 1)) (tail coll)))
