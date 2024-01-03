@@ -22,6 +22,18 @@ namespace Cl.Tests.TestDataSources
             // partial
             yield return new object[]
             {
+                // `partial` has the same behaviour as `call` function if all args are passed
+                @"
+                (invoke
+                    (lambda ()
+                        (begin
+                            (defun add (a b c d) (+ a b c d))
+                            (partial add (list 1 2 3 4)))))
+                ",
+                "10"
+            };
+            yield return new object[]
+            {
                 @"
                 (invoke
                     (lambda ()
