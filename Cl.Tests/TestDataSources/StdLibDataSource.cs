@@ -26,6 +26,52 @@ namespace Cl.Tests.TestDataSources
                 (invoke
                     (lambda ()
                         (begin
+                            (defun add (a b c d) (+ a b c d))
+                            (define f (partial add (list 1 2)))
+                            (list
+                                ((f 3) 4)
+                                (f (list 3 4))
+                                ((f 3) (list 4))))))
+                ",
+                "(10 . (10 . (10 . nil)))"
+            };
+            yield return new object[]
+            {
+                @"
+                (invoke
+                    (lambda ()
+                        (begin
+                            (defun add (a b c d) (+ a b c d))
+                            (define f (partial add 1))
+                            (list
+                                (((f 2) 3) 4)
+                                (f (list 2 3 4))
+                                ((f 2) (list 3 4))
+                                (((f (list 2)) 3) (list 4))))))
+                ",
+                "(10 . (10 . (10 . (10 . nil))))"
+            };
+            yield return new object[]
+            {
+                @"
+                (invoke
+                    (lambda ()
+                        (begin
+                            (defun add (a b) (+ a b))
+                            (define succ (partial add (list 1)))
+                            (define pred (partial add (list (- 1))))
+                            (list
+                                (succ 1) (pred 1)))))
+                ",
+                "(2 . (0 . nil))"
+            };
+
+            yield return new object[]
+            {
+                @"
+                (invoke
+                    (lambda ()
+                        (begin
                             (defun add (a b) (+ a b))
                             (define succ (partial add 1))
                             (define pred (partial add (- 1)))

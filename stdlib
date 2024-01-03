@@ -273,5 +273,17 @@
                     (iter (+ (- 1) n) f (cons x args)))))
         (iter (arity f) f (list x))))
 
+(defun partial (f x)
+    (begin
+        (defun iter (n f args)
+            (if (gte (count args) n)
+                (call f args)
+                (lambda (x)
+                    (begin
+                        (define rest (flat-map identity (list x)))
+                        (iter n f (concat args rest))))))
+        (define rest (flat-map identity (list x)))
+        (iter (arity f) f rest)))
+
 (defun max-arity ()
     2147483591)
