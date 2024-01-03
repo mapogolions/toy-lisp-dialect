@@ -267,15 +267,6 @@
 (defun partial (f x)
     (begin
         (defun iter (n f args)
-            (if (lte n 1)
-                (call f (reverse args))
-                (lambda (x)
-                    (iter (+ (- 1) n) f (cons x args)))))
-        (iter (arity f) f (list x))))
-
-(defun partial (f x)
-    (begin
-        (defun iter (n f args)
             (if (gte (count args) n)
                 (call f args)
                 (lambda (x)
