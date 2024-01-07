@@ -155,7 +155,7 @@
         (set! x 12)
         g))
 
-(call (f)) ;; 12
+(invoke (f)) ;; 12
 ```
 
 #### counter
@@ -170,10 +170,10 @@
 (define start-from-20 (counter 20))
 
 (list
-    (call start-from-10)
-    (call start-from-20)
-    (call start-from-10)
-    (call start-from-20))
+    (invoke start-from-10)
+    (invoke start-from-20)
+    (invoke start-from-10)
+    (invoke start-from-20))
 ```
 
 #### increment/decrement
