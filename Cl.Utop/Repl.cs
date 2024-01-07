@@ -38,16 +38,15 @@ namespace Cl.Utop
                         continue;
                     }
                     using var source = new Source(snippet.ToString());
-                    snippet.Clear();
                     var obj = _reader.Read(source);
                     ctx = obj.Reduce(ctx);
                     PrintResult(ctx.Value);
                 }
                 catch (Exception ex)
                 {
-                    snippet.Clear();
-                    PrintError(ex);
+                    Console.WriteLine(ex.Message);
                 }
+                snippet.Clear();
                 Prompt();
             }
         }
@@ -55,6 +54,5 @@ namespace Cl.Utop
         private void Prompt() => Console.Write($"{_prompt} ");
         private void MultilineInput() => Console.Write(_multilineInput);
         private void PrintResult(ClObj result) => Console.WriteLine($"{_resultLine}{result}");
-        private static void PrintError(Exception ex) => Console.WriteLine($"{ex.Message}");
     }
 }
