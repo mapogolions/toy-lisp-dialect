@@ -1,6 +1,5 @@
 using Cl.Readers;
 using Cl.IO;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {
@@ -13,7 +12,7 @@ namespace Cl.Tests.ReaderTests
         public void ReadSymbol_SkipOnlyPartOfSource()
         {
             using var source = new Source("foo bar");
-            Ignore(_reader.Read(source));
+            _reader.Read(source);
             Assert.That(source.ToString(), Is.EqualTo(" bar"));
         }
 

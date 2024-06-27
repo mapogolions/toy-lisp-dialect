@@ -1,7 +1,6 @@
 using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.EvaluatorTests
 {
@@ -24,7 +23,7 @@ namespace Cl.Tests.EvaluatorTests
             _env.Bind(Var.Bar, Value.Bar);
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Var.Bar);
 
-            Ignore(expr.Reduce(_ctx));
+            expr.Reduce(_ctx);
 
             Assert.That(Object.ReferenceEquals(_env.Lookup(Var.Foo), _env.Lookup(Var.Bar)), Is.True);
         }
@@ -44,7 +43,7 @@ namespace Cl.Tests.EvaluatorTests
             var inEnv = new Env(outEnv);
             var expr = BuiltIn.ListOf(ClSymbol.Define, Var.Foo, Value.One);
 
-            Ignore(expr.Reduce(_ctx.FromEnv(inEnv)));
+            expr.Reduce(_ctx.FromEnv(inEnv));
 
             Assert.That(inEnv.Lookup(Var.Foo), Is.EqualTo(Value.One));
             Assert.That(outEnv.Lookup(Var.Foo), Is.EqualTo(Value.Foo));

@@ -2,7 +2,6 @@ using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {
@@ -15,7 +14,7 @@ namespace Cl.Tests.ReaderTests
         public void ReadDouble_SkipOnlyPartOfSource()
         {
             using var source = new Source("120.0rest");
-            Ignore(_reader.Read(source));
+            _reader.Read(source);
             Assert.That(source.ToString(), Is.EqualTo("rest"));
         }
 

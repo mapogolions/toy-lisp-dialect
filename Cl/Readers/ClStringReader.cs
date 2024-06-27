@@ -1,4 +1,5 @@
 using Cl.Errors;
+using Cl.Extensions;
 using Cl.IO;
 using Cl.Types;
 
@@ -8,7 +9,7 @@ namespace Cl.Readers
     {
         public ClString? Read(ISource source)
         {
-            if (!source.Rewind("'")) return null;
+            if (!source.Skip("'")) return null;
             string loop(string acc)
             {
                 if (source.Eof())

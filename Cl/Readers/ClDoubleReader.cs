@@ -14,7 +14,7 @@ namespace Cl.Readers
             {
                 return null;
             }
-            if (!source.Rewind("."))
+            if (!source.Skip("."))
             {
                 significand.Reverse().ForEach(ch => source.Buffer(ch));
                 return null;

@@ -2,7 +2,6 @@ using Cl.Readers;
 using Cl.Errors;
 using Cl.IO;
 using Cl.Types;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.ReaderTests
 {
@@ -15,7 +14,7 @@ namespace Cl.Tests.ReaderTests
         public void ReadString_SkipOnlyPartOfSource()
         {
             using var source = new Source("'foo'bar");
-            Ignore(_reader.Read(source));
+            _reader.Read(source);
             Assert.That(source.ToString(), Is.EqualTo("bar"));
         }
 
@@ -26,7 +25,7 @@ namespace Cl.Tests.ReaderTests
             Assert.That(_reader.Read(source)?.Value, Is.EqualTo(expected));
         }
 
-        static object[] ValidStringTestCases =
+        static readonly object[] ValidStringTestCases =
             {
                 new object[] { "'foo'", "foo" },
                 new object[] { "''", string.Empty },

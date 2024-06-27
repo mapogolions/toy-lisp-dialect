@@ -1,5 +1,4 @@
 using Cl.IO;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Tests.SourceTests
 {
@@ -19,8 +18,8 @@ namespace Cl.Tests.SourceTests
         {
             using var source = new Source("ab");
 
-            Ignore(source.Peek());
-            Ignore(source.Peek());
+            source.Peek();
+            source.Peek();
 
             Assert.That((char) source.Read(), Is.EqualTo('a'));
             Assert.That((char) source.Read(), Is.EqualTo('b'));

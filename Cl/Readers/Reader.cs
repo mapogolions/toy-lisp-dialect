@@ -1,3 +1,4 @@
+using Cl.Extensions;
 using Cl.IO;
 using Cl.Types;
 
@@ -19,9 +20,9 @@ namespace Cl.Readers
             var items = new List<ClObj> { ClSymbol.Begin };
             while (!source.Eof())
             {
-                source.RewindSpacesAndComments();
+                source.SkipComments();
                 items.Add(_reader.Read(source)!);
-                source.RewindSpacesAndComments();
+                source.SkipComments();
             }
             return BuiltIn.ListOf(items);
         }

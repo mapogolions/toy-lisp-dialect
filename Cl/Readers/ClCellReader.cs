@@ -1,7 +1,7 @@
 using Cl.Errors;
+using Cl.Extensions;
 using Cl.IO;
 using Cl.Types;
-using static Cl.Helpers.FpUniverse;
 
 namespace Cl.Readers
 {
@@ -21,15 +21,15 @@ namespace Cl.Readers
                 return cell;
             }
             var car = _reader.Read(source)!;
-            var wasDelimiter = source.RewindSpacesAndComments();
-            if (!source.Rewind("."))
+            var wasDelimiter = source.SkipComments();
+            if (!source.Skip("."))
             {
                 return new ClCell(car, ReadList(source, wasDelimiter));
             }
-            source.RewindSpacesAndComments();
+            source.SkipComments();
             var cdr = _reader.Read(source)!;
-            source.RewindSpacesAndComments();
-            if (!source.Rewind(")"))
+            source.SkipComments();
+            if (!source.Skip(")"))
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
@@ -39,9 +39,9 @@ namespace Cl.Readers
         private bool TryReadNilOrNull(ISource source, out ClCell? cell)
         {
             cell = default;
-            if (!source.Rewind("(")) return true;
-            Ignore(source.RewindSpacesAndComments());
-            if (source.Rewind(")"))
+            if (!source.Skip("(")) return true;
+            source.SkipComments();
+            if (source.Skip(")"))
             {
                 cell = ClCell.Nil;
                 return true;
@@ -51,14 +51,14 @@ namespace Cl.Readers
 
         private ClCell ReadList(ISource source, bool wasDelimiter)
         {
-            if (source.Rewind(")")) return ClCell.Nil;
+            if (source.Skip(")")) return ClCell.Nil;
             if (!wasDelimiter)
             {
                 throw new SyntaxError($"Invalid format of the {nameof(ClCell)} literal");
             }
             var car = _reader.Read(source);
-            wasDelimiter = source.RewindSpacesAndComments();
-            if (source.Rewind(")")) return new ClCell(car, ClCell.Nil);
+            wasDelimiter = source.SkipComments();
+            if (source.Skip(")")) return new ClCell(car, ClCell.Nil);
             return new ClCell(car, ReadList(source, wasDelimiter));
         }
     }

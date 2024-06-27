@@ -1,6 +1,7 @@
 using Cl.IO;
 using Cl.Types;
 using Cl.Errors;
+using Cl.Extensions;
 
 namespace Cl.Readers
 {
@@ -8,10 +9,10 @@ namespace Cl.Readers
     {
         public ClChar? Read(ISource source)
         {
-            if (!source.Rewind(@"#\")) return null;
+            if (!source.Skip(@"#\")) return null;
             foreach (var (word, ch) in SpecialChars)
             {
-                if (!source.Rewind(word)) continue;
+                if (!source.Skip(word)) continue;
                 return new ClChar(ch);
             }
             if (source.Eof())

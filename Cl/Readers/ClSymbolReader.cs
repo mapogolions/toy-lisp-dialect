@@ -1,3 +1,4 @@
+using Cl.Extensions;
 using Cl.IO;
 using Cl.Types;
 
@@ -27,7 +28,7 @@ namespace Cl.Readers
             var builinFuncitons = new [] { "+", "-", "*", "/" };
             foreach (var fun in builinFuncitons)
             {
-                if (!source.Rewind(fun)) continue;
+                if (!source.Skip(fun)) continue;
                 symbol = fun;
                 return true;
             }
