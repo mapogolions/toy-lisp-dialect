@@ -229,7 +229,7 @@ namespace Cl
         {
             if (string.IsNullOrEmpty(stdlibPath))
             {
-                stdlibPath = Path.Combine(Environment.CurrentDirectory, "stdlib");
+                stdlibPath = Path.Combine(AppContext.BaseDirectory, "stdlib");
             }
             if (!File.Exists(stdlibPath))
             {

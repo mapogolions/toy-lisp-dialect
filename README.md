@@ -2,19 +2,50 @@
 
 Yet another lisp interpreter
 
-#### Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
+Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
 
 
-#### How to use
+### Run tests
 
 ```sh
 dotnet test
-dotnet run --project .\Cl.Utop\Cl.Utop.csproj
+```
+
+### How to use
+
+
+1) using *dotnet run*
+
+```sh
+$ dotnet run --project .\Cl.Utop\Cl.Utop.csproj
+```
+
+2) using *dotnet tool*
+
+#### Install *toy-lisp*
+
+```sh
+$ dotnet pack -c Release
+$ dotnet tool install --global --add-source ./Cl.Utop/nupkg toy-lisp
+$ where toy-lisp
+```
+
+#### Run *toy-lisp*
+
+```sh
+$ toy-lisp
+```
+
+#### Uninstall *toy-lisp*
+
+```sh
+$ dotnet tool uninstall toy-lisp -g
+$ dotnet tool list -g
 ```
 
 By default REPL loads the [stdlib](./stdlib) file so you can use predefined functions written in toy lisp.
 
-#### Hello World
+### Hello World
 
 ```clojure
 (define hello-world 'Hello World!')
