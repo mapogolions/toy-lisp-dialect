@@ -4,6 +4,8 @@ Yet another lisp interpreter
 
 Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
 
+<img src="./assets/toy-lisp.png">
+
 
 ### Run tests
 
