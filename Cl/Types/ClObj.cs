@@ -35,6 +35,14 @@ namespace Cl.Types
                 _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {@this.GetType().Name}")
             };
 
+        public static ClObj operator %(ClObj @this, ClObj other) =>
+            (@this, other) switch
+            {
+                (ClInt fixnum, _) => fixnum % other,
+                (ClDouble floatingPoint, _) => floatingPoint % other,
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {@this.GetType().Name}")
+            };
+
         public override int GetHashCode()
         {
             throw new NotImplementedException();

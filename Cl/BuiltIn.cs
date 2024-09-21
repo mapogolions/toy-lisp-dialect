@@ -147,6 +147,12 @@ namespace Cl
             return a / b;
         }
 
+        public static ClObj Rem(params ClObj[] args)
+        {
+            var (a, b) = VarArgs.Get<ClObj, ClObj>(args);
+            return a % b;
+        }
+
         public static ClString Repeat(params ClObj[] args)
         {
             var (times, source) = VarArgs.Get<ClInt, ClString>(args);
@@ -281,6 +287,7 @@ namespace Cl
             (new ClSymbol("+"), new NativeFn(Sum, MaxArity)),
             (new ClSymbol("*"), new NativeFn(Product, MaxArity)),
             (new ClSymbol("/"), new NativeFn(Divide, 2)),
+            (new ClSymbol("rem"), new NativeFn(Rem, 2)),
             (new ClSymbol("repeat"), new NativeFn(Repeat, 2)),
             (new ClSymbol("upper"), new NativeFn(Upper)),
             (new ClSymbol("lower"), new NativeFn(Lower)),

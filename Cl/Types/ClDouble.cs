@@ -30,5 +30,13 @@ namespace Cl.Types
                 ClDouble floatingPont => new ClDouble(@this.Value / floatingPont.Value),
                 _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {other.GetType().Name}")
             };
+
+        public static ClObj operator %(ClDouble @this, ClObj other) =>
+            other switch
+            {
+                ClInt fixnum => new ClDouble(@this.Value % fixnum.Value),
+                ClDouble floatingPont => new ClDouble(@this.Value % floatingPont.Value),
+                _ => throw new TypeError($"Expected {nameof(ClInt)} or {nameof(ClDouble)}, but found {other.GetType().Name}")
+            };
     }
 }
