@@ -1,59 +1,59 @@
 using System.Collections;
 
-namespace Cl.Tests.TestDataSources
+namespace Cl.Tests.TestDataSources;
+
+public class CodeSnippetsDataSource : IEnumerable<object[]>
 {
-    public class CodeSnippetsDataSource : IEnumerable<object[]>
+    public IEnumerator<object[]> GetEnumerator()
     {
-        public IEnumerator<object[]> GetEnumerator()
+        yield return new object[]
         {
-            yield return new object[]
-            {
-                @"
+            @"
                     (list
                         'foo'
                         ;; comment )
                     )
                 ",
-                "(foo . nil)"
-            };
+            "(foo . nil)"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                     ( ;; some
                     )
                 ",
-                "nil"
-            };
+            "nil"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                     ;; first
 
                     ;; second
                 ",
-                "nil"
-            };
+            "nil"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                     ;; comment
                     101
                 ",
-                "101"
-            };
+            "101"
+        };
 
-            yield return new object[]
-            {
-                @";; comment",
-                "nil"
-            };
+        yield return new object[]
+        {
+            @";; comment",
+            "nil"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun count (coll)
                     (if (null? coll)
                         0
@@ -98,12 +98,12 @@ namespace Cl.Tests.TestDataSources
                     (fn 0)
                     (fn 11))
                 ",
-                "(3 . (36 . nil))"
-            };
+            "(3 . (36 . nil))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun at-index (i coll)
                     (if (or (null? coll) (lt i 0))
                         nil
@@ -116,12 +116,12 @@ namespace Cl.Tests.TestDataSources
                     (at-index (- 1) (list 0))
                     (at-index 0 (list #t #f #t)))
                 ",
-                "(2 . (nil . (#t . nil)))"
-            };
+            "(2 . (nil . (#t . nil)))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun prepend (x coll)
                     (cons x coll))
 
@@ -137,12 +137,12 @@ namespace Cl.Tests.TestDataSources
                 (join ''
                     (append ']' (prepend '[' nil)))
                 ",
-                "[]"
-            };
+            "[]"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun append (x coll)
                     (begin
                         (defun iter (coll)
@@ -155,23 +155,23 @@ namespace Cl.Tests.TestDataSources
 
                 (append 2 (list 0 1))
                 ",
-                "(0 . (1 . (2 . nil)))"
-            };
+            "(0 . (1 . (2 . nil)))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun prepend (x coll)
                     (cons x coll))
 
                 (prepend 0 (list 1 2))
                 ",
-                "(0 . (1 . (2 . nil)))"
-            };
+            "(0 . (1 . (2 . nil)))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun count (coll)
                     (if (null? coll)
                         0
@@ -183,12 +183,12 @@ namespace Cl.Tests.TestDataSources
                     (count (list 1 2 3))
                 )
                 ",
-                "(0 . (1 . (3 . nil)))"
-            };
+            "(0 . (1 . (3 . nil)))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun where (f coll)
                     (if (null? coll)
                         nil
@@ -204,12 +204,12 @@ namespace Cl.Tests.TestDataSources
                     (list
                         (- 1) 0 2 4 (- 10) 0 5))
                 ",
-                "(2 . (4 . (5 . nil)))"
-            };
+            "(2 . (4 . (5 . nil)))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun select (f coll)
                     (if (null? coll)
                         nil
@@ -222,12 +222,12 @@ namespace Cl.Tests.TestDataSources
                         (+ x 1))
                     (list 0 1))
                 ",
-                "(1 . (2 . nil))"
-            };
+            "(1 . (2 . nil))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun and-then (f g)
                     (lambda (x)
                         (g (f x))))
@@ -245,12 +245,12 @@ namespace Cl.Tests.TestDataSources
                     ((compose inc multiply-by-3) 0)
                     ((and-then inc multiply-by-3) 0))
                 ",
-                "(1 . (3 . nil))"
-            };
+            "(1 . (3 . nil))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun count-down (n)
                     (if (eq n (- 1))
                         nil
@@ -261,12 +261,12 @@ namespace Cl.Tests.TestDataSources
                     (count-down 2)
                     (count-down 3))
                 ",
-                "((2 . (1 . (0 . nil))) . (3 . (2 . (1 . (0 . nil)))))"
-            };
+            "((2 . (1 . (0 . nil))) . (3 . (2 . (1 . (0 . nil)))))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun count-up (n)
                     (begin
                         (defun iter (current acc)
@@ -278,12 +278,12 @@ namespace Cl.Tests.TestDataSources
 
                 (count-up 3)
                 ",
-                "(0 . (1 . (2 . (3 . nil))))"
-            };
+            "(0 . (1 . (2 . (3 . nil))))"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun inc (n)
                     (+ n 1))
 
@@ -294,12 +294,12 @@ namespace Cl.Tests.TestDataSources
                     (inc 11)
                     (dec 12))
                 ",
-                "(12 . 11)"
-            };
+            "(12 . 11)"
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
                 (defun counter (n)
                     (begin
                         (defun f ()
@@ -315,10 +315,9 @@ namespace Cl.Tests.TestDataSources
                     (start-from-10)
                     (start-from-10))
                 ",
-                "(11 . (12 . nil))"
-            };
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            "(11 . (12 . nil))"
+        };
     }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

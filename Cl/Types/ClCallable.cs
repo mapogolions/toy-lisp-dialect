@@ -1,4 +1,3 @@
-namespace Cl.Types
-{
-    public abstract class ClCallable : ClObj { }
-}
+namespace Cl.Types;
+
+public abstract class ClCallable : ClObj { }

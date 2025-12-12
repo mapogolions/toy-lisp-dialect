@@ -1,8 +1,6 @@
-namespace Cl.Errors
-{
+namespace Cl.Errors;
 
-    public class TypeError : Exception
-    {
-        public TypeError(string errorMessage) : base(errorMessage) { }
-    }
+
+public class TypeError(string errorMessage) : Exception(errorMessage)
+{
 }

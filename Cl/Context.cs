@@ -1,20 +1,13 @@
 using Cl.Types;
 
-namespace Cl
+namespace Cl;
+
+public class Context(ClObj value, IEnv env) : ClObj, IContext
 {
-    public class Context : ClObj, IContext
-    {
-        public ClObj Value { get; }
-        public IEnv Env { get; }
+    public ClObj Value { get; } = value;
+    public IEnv Env { get; } = env;
 
-        public Context(ClObj value, IEnv env)
-        {
-            Value = value;
-            Env = env;
-        }
+    public Context(IEnv env) : this(ClCell.Nil, env) { }
 
-        public Context(IEnv env) : this(ClCell.Nil, env) { }
-
-        public Context() : this(new Env()) { }
-    }
+    public Context() : this(new Env()) { }
 }

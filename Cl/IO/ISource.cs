@@ -1,11 +1,10 @@
 
-namespace Cl.IO
+namespace Cl.IO;
+
+public interface ISource : IDisposable
 {
-    public interface ISource : IDisposable
-    {
-        int Read();
-        void Buffer(int code);
-        int Peek();
-        bool Eof();
-    }
+    int Read();
+    void Buffer(int code);
+    int Peek();
+    bool Eof();
 }

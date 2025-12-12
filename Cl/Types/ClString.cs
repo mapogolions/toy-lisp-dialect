@@ -1,10 +1,7 @@
-namespace Cl.Types
-{
-    public class ClString : ClAtom<string>
-    {
-        public ClString(string str) : base(str) { }
+namespace Cl.Types;
 
-        public static explicit operator ClInt (ClString obj) => new ClInt(int.Parse(obj.Value));
-        public static explicit operator ClDouble (ClString obj) => new ClDouble(double.Parse(obj.Value));
-    }
+public class ClString(string str) : ClAtom<string>(str)
+{
+    public static explicit operator ClInt (ClString obj) => new(int.Parse(obj.Value));
+    public static explicit operator ClDouble (ClString obj) => new(double.Parse(obj.Value));
 }

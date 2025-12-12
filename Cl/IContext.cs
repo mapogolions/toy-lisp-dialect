@@ -1,10 +1,9 @@
 using Cl.Types;
 
-namespace Cl
+namespace Cl;
+
+public interface IContext
 {
-    public interface IContext
-    {
-        IEnv Env { get; }
-        ClObj Value { get; }
-    }
+    IEnv Env { get; }
+    ClObj Value { get; }
 }

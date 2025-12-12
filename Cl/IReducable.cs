@@ -1,7 +1,6 @@
-namespace Cl
+namespace Cl;
+
+public interface IReducable
 {
-    public interface IReducable
-    {
-        IContext Reduce(IContext ctx);
-    }
+    IContext Reduce(IContext ctx);
 }

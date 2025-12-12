@@ -1,9 +1,6 @@
-namespace Cl.Types
-{
-    public class ClNumber<T> : ClAtom<T> where T : struct, IComparable<T>
-    {
-        public ClNumber(T number) : base(number) { }
+namespace Cl.Types;
 
-        public static explicit operator ClString(ClNumber<T> obj) => new(obj.Value.ToString()!);
-     }
-}
+public class ClNumber<T>(T number) : ClAtom<T>(number) where T : struct, IComparable<T>
+{
+    public static explicit operator ClString(ClNumber<T> obj) => new(obj.Value.ToString()!);
+ }

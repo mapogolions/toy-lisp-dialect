@@ -2,72 +2,71 @@ using Cl.Errors;
 using Cl.Extensions;
 using Cl.Types;
 
-namespace Cl
+namespace Cl;
+
+public class Env : IEnv
 {
-     public class Env : IEnv
+    private readonly IEnv? _outer;
+    private readonly IDictionary<ClSymbol, ClObj> _bindings = new Dictionary<ClSymbol, ClObj>();
+
+    public Env(IEnv? outer = null)
     {
-        private readonly IEnv? _outer;
-        private readonly IDictionary<ClSymbol, ClObj> _bindings = new Dictionary<ClSymbol, ClObj>();
+        _outer = outer;
+    }
 
-        public Env(IEnv? outer = null)
+    public Env(params (ClSymbol, ClObj)[] pairs)
+    {
+        foreach (var pair in pairs)
         {
-            _outer = outer;
+            Bind(pair.Item1, pair.Item2);
         }
+    }
 
-        public Env(params (ClSymbol, ClObj)[] pairs)
+    public bool Bind(ClSymbol identifier, ClObj obj)
+    {
+        _bindings[identifier] = obj;
+        return true;
+    }
+
+    public ClObj Lookup(ClSymbol identifier)
+    {
+        if (_bindings.TryGetValue(identifier, out var obj))
         {
-            foreach (var pair in pairs)
-            {
-                Bind(pair.Item1, pair.Item2);
-            }
+            return obj;
         }
-
-        public bool Bind(ClSymbol identifier, ClObj obj)
+        var result = _outer?.Lookup(identifier);
+        if (result is null)
         {
-            _bindings[identifier] = obj;
-            return true;
-        }
-
-        public ClObj Lookup(ClSymbol identifier)
-        {
-            if (_bindings.TryGetValue(identifier, out var obj))
-            {
-                return obj;
-            }
-            var result = _outer?.Lookup(identifier);
-            if (result is null)
-            {
-                throw new UnboundVariableError($"{identifier}");
-            }
-            return result;
-        }
-
-        public bool Assign(ClSymbol identifier, ClObj obj)
-        {
-            if (_bindings.ContainsKey(identifier))
-            {
-                return Bind(identifier, obj);
-            }
-            var result = _outer?.Assign(identifier, obj) ?? false;
-            if (result)
-            {
-                return true;
-            }
             throw new UnboundVariableError($"{identifier}");
         }
+        return result;
+    }
 
-        public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
+    public bool Assign(ClSymbol identifier, ClObj obj)
+    {
+        if (_bindings.ContainsKey(identifier))
         {
-            var arity = identifiers.Count();
-            var passed = values.Count();
-            if (arity != passed)
-            {
-                var s = arity == 0 ? string.Empty : "s";
-                throw new TypeError($"Arity exception: function expects {arity} arg{s}, but passed {passed}");
-            }
-            var pairs = identifiers.ZipIfBalanced(values);
-            pairs.ForEach(x => Bind(x.Item1.Cast<ClSymbol>(), x.Item2));
+            return Bind(identifier, obj);
+        }
+        var result = _outer?.Assign(identifier, obj) ?? false;
+        if (result)
+        {
             return true;
         }
+        throw new UnboundVariableError($"{identifier}");
+    }
+
+    public bool Bind(IEnumerable<ClObj> identifiers, IEnumerable<ClObj> values)
+    {
+        var arity = identifiers.Count();
+        var passed = values.Count();
+        if (arity != passed)
+        {
+            var s = arity == 0 ? string.Empty : "s";
+            throw new TypeError($"Arity exception: function expects {arity} arg{s}, but passed {passed}");
+        }
+        var pairs = identifiers.ZipIfBalanced(values);
+        pairs.ForEach(x => Bind(x.Item1.Cast<ClSymbol>(), x.Item2));
+        return true;
     }
 }

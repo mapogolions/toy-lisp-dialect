@@ -1,18 +1,10 @@
-namespace Cl.Types
+namespace Cl.Types;
+
+public class ClFn(ClCell parameters, ClObj body, IEnv env) : ClCallable
 {
-    public class ClFn : ClCallable
-    {
-        public ClFn(ClCell parameters, ClObj body, IEnv env)
-        {
-            Parameters = parameters;
-            Body = body;
-            Env = env;
-        }
+    public ClCell Parameters { get; } = parameters;
+    public ClObj Body { get; } = body;
+    public IEnv Env { get; } = env;
 
-        public ClCell Parameters { get; }
-        public ClObj Body { get; }
-        public IEnv Env { get; }
-
-        public override string ToString() => "#<procedure>";
-    }
+    public override string ToString() => "#<procedure>";
 }

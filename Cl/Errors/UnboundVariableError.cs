@@ -1,8 +1,6 @@
 
-namespace Cl.Errors
+namespace Cl.Errors;
+
+public class UnboundVariableError(string identifier) : Exception($"Unbound variable {identifier}")
 {
-    public class UnboundVariableError : Exception
-    {
-        public UnboundVariableError(string identifier) : base($"Unbound variable {identifier}") { }
-    }
 }

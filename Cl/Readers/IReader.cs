@@ -1,10 +1,9 @@
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Readers
+namespace Cl.Readers;
+
+public interface IReader<out TClObj> where TClObj : ClObj
 {
-    public interface IReader<out TClObj> where TClObj : ClObj
-    {
-        TClObj? Read(ISource source);
-    }
+    TClObj? Read(ISource source);
 }

@@ -1,8 +1,6 @@
 
-namespace Cl.Errors
+namespace Cl.Errors;
+
+public class SyntaxError(string errorMessage) : Exception(errorMessage)
 {
-    public class SyntaxError : Exception
-    {
-        public SyntaxError(string errorMessage) : base(errorMessage) { }
-    }
 }

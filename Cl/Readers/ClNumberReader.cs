@@ -1,19 +1,18 @@
 using Cl.IO;
 
-namespace Cl.Readers
+namespace Cl.Readers;
+
+public abstract class ClNumberReader
 {
-    public abstract class ClNumberReader
+    protected static bool TryReadAtLeastOneNumber(ISource source, out string nums)
     {
-        protected bool TryReadAtLeastOneNumber(ISource source, out string nums)
+        string loop(string acc = "")
         {
-            string loop(string acc = "")
-            {
-                if (source.Eof()) return acc;
-                if (!char.IsDigit((char) source.Peek())) return acc;
-                return loop($"{acc}{(char) source.Read()}");
-            }
-            nums = loop();
-            return !string.IsNullOrEmpty(nums);
+            if (source.Eof()) return acc;
+            if (!char.IsDigit((char) source.Peek())) return acc;
+            return loop($"{acc}{(char) source.Read()}");
         }
+        nums = loop();
+        return !string.IsNullOrEmpty(nums);
     }
 }

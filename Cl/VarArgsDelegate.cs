@@ -1,4 +1,3 @@
-namespace Cl
-{
-    public delegate B VarArgsDelegate<A, B>(params A[] obj);
-}
+namespace Cl;
+
+public delegate B VarArgsDelegate<A, B>(params A[] obj);

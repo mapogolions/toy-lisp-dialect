@@ -3,24 +3,23 @@ using Cl.Extensions;
 using Cl.IO;
 using Cl.Types;
 
-namespace Cl.Readers
+namespace Cl.Readers;
+
+public class ClStringReader : IReader<ClString>
 {
-    public class ClStringReader : IReader<ClString>
+    public ClString? Read(ISource source)
     {
-        public ClString? Read(ISource source)
+        if (!source.Skip("'")) return null;
+        string loop(string acc)
         {
-            if (!source.Skip("'")) return null;
-            string loop(string acc)
+            if (source.Eof())
             {
-                if (source.Eof())
-                {
-                    throw new SyntaxError($"Invalid format of the {nameof(ClString)} literal");
-                }
-                var ch = (char) source.Read();
-                if (ch == '\'') return acc;
-                return loop($"{acc}{ch}");
+                throw new SyntaxError($"Invalid format of the {nameof(ClString)} literal");
             }
-            return new ClString(loop(string.Empty));
+            var ch = (char) source.Read();
+            if (ch == '\'') return acc;
+            return loop($"{acc}{ch}");
         }
+        return new ClString(loop(string.Empty));
     }
 }

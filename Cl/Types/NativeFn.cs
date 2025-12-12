@@ -1,19 +1,10 @@
-namespace Cl.Types
+namespace Cl.Types;
+
+public class NativeFn(VarArgsDelegate<ClObj, ClObj> fn, int arity = 1) : ClCallable
 {
-    public class NativeFn : ClCallable
-    {
-        private readonly VarArgsDelegate<ClObj, ClObj> _fn;
+    public int Arity { get; } = arity;
 
-        public NativeFn(VarArgsDelegate<ClObj, ClObj> fn, int arity = 1)
-        {
-            _fn = fn;
-            Arity = arity;
-        }
+    public ClObj Apply(params ClObj[] items) => fn(items);
 
-        public int Arity { get; }
-
-        public ClObj Apply(params ClObj[] items) => _fn(items);
-
-        public override string ToString() => "#<native>";
-    }
+    public override string ToString() => "#<native>";
 }

@@ -1,18 +1,17 @@
 using Cl.Types;
 
-namespace Cl.Tests
-{
-    internal static class Var
-    {
-        internal static ClSymbol Foo = new ClSymbol("foo");
-        internal static ClSymbol Bar = new ClSymbol("bar");
-        internal static ClSymbol Fn = new ClSymbol("fn");
-    }
+namespace Cl.Tests;
 
-    internal static class Value
-    {
-        internal static ClString Foo = new ClString("foo");
-        internal static ClString Bar = new ClString("bar");
-        internal static ClInt One = new ClInt(1);
-    }
+internal static class Var
+{
+    internal static ClSymbol Foo = new("foo");
+    internal static ClSymbol Bar = new("bar");
+    internal static ClSymbol Fn = new("fn");
+}
+
+internal static class Value
+{
+    internal static ClString Foo = new("foo");
+    internal static ClString Bar = new("bar");
+    internal static ClInt One = new(1);
 }
