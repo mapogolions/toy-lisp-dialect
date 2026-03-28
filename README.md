@@ -1,6 +1,6 @@
 ## Toy LISP dialect
 
-[![Tests](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/tests.yaml/badge.svg)](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/tests.yaml)
+[![CI](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/ci.yaml/badge.svg)](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/ci.yaml)
 
 Yet another lisp interpreter
 
