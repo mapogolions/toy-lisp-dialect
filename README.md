@@ -1,5 +1,7 @@
 ## Toy LISP dialect
 
+[![Tests](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/tests.yaml/badge.svg)](https://github.com/mapogolions/toy-lisp-dialect/actions/workflows/tests.yaml)
+
 Yet another lisp interpreter
 
 Inspired by [Liutos](https://github.com/Liutos/Camel-Lisp)
